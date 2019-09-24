@@ -25,13 +25,13 @@ const main = async () => {
   // );
   // console.log('accept invitation', acceptInvitation);
 
-  const connections = await connectionService.connections();
+  // const connections = await connectionService.connections();
   // console.log('connections', connections);
   // const id = connections[0].activity[0].connection_id;
   // const connection = await connectionService.connections(id);
   // console.log('connection', connection);
   const connectionModel = new Connection();
-  let res = await connectionModel.filterConnectionsByState();
+  let res = await connectionModel.filterConnectionsByState('active');
   // let filtered = res.filter(itm => itm.)?
   console.log('results', res);
   // res.filter(

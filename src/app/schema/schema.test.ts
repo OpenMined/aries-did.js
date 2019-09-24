@@ -4,7 +4,7 @@ const main = async () => {
   const schemaSvc = new SchemaService();
   const schema = await schemaSvc.postSchema({
     attributes: ['degree', 'name', 'age', 'average'],
-    schema_name: 'testSchema',
+    schema_name: 'zzz',
     schema_version: '1.0'
   });
   console.log('schema', schema);
