@@ -15,7 +15,11 @@ export class CredentialDefinitionService {
       const res = await request
         .post(`${apiUrl}${segment}`)
         .send({ schema_id: schemaId });
-      return res.body;
+      const id = res.body.credential_definition_id;
+      console.log('result of creds', res.body);
+      console.log('id', id);
+      // if (!id) throw new Error('no credential id found');
+      return id;
     } catch (err) {
       return err.message;
     }

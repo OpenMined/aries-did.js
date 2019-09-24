@@ -11,11 +11,8 @@ const main = async () => {
   console.log('invite', invite);
 
   // const connectInvitation = await connectionService.receiveInvitation(
-
-  //   "@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/connections/1.0/invitation", "@id": "e7727db0-93b9-49a2-84b4-35061ce7fdb6",
-  // "recipientKeys": ["3oLbdadSKsxrs5izaK
-  // dfuRGPZa1TQCNmAbkcJLDtLbXo"], "label": "Faber Agent", "serviceEndpoint": "http:/
-  // /192.168.65.3:8020"}
+  // "@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/connections/1.0/invitation", "@id": "e7727db0-93b9-49a2-84b4-35061ce7fdb6",
+  // "recipientKeys": ["3oLbdadSKsxrs5izaKdfuRGPZa1TQCNmAbkcJLDtLbXo"], "label": "Faber Agent", "serviceEndpoint": "http:// /192.168.65.3:8020"}
   // );
 
   // console.log('connection invitation', connectInvitation);
@@ -32,8 +29,6 @@ const main = async () => {
   // console.log('connection', connection);
   const connectionModel = new Connection();
   let res = await connectionModel.filterConnectionsByState('active');
-  // let filtered = res.filter(itm => itm.)?
-  console.log('results', res);
   // res.filter(
   // (itm: any) => itm.connection_id === 'b8c9b728-10f2-4ccd-b324-dd2facf85c4f'
   // );
