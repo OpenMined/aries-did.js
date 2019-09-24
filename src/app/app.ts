@@ -2,7 +2,7 @@ import * as Koa from 'koa';
 import * as HttpStatus from 'http-status-codes';
 import * as bodyParser from 'koa-bodyparser';
 
-import protocolController from './protocol/protocol.controller';
+import protocolController from './agent/modules/protocol/protocol.controller';
 import { AgentService } from './agent/agent.service';
 
 const app: Koa = new Koa();

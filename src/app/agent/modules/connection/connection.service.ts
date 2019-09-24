@@ -1,7 +1,7 @@
 import {
   IInvitationRequest,
   IInvitationRequestResponse
-} from '../core/interfaces/invitation-request.interface';
+} from '../../../core/interfaces/invitation-request.interface';
 import * as request from 'superagent';
 
 const apiUrl = 'http://localhost:8051/';

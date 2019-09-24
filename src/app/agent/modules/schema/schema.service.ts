@@ -1,5 +1,5 @@
 import * as request from 'superagent';
-import { ISchema } from '../core/interfaces/schema.interface';
+import { ISchema } from '../../../core/interfaces/schema.interface';
 
 const apiUrl = 'http://localhost:8051/';
 
@@ -16,7 +16,7 @@ export class SchemaService {
     } catch (err) {
       console.log('schema error');
 
-      throw err;
+      return err;
     }
   }
 
@@ -26,7 +26,7 @@ export class SchemaService {
       return res.body;
     } catch (err) {
       console.log('schema error');
-      throw err;
+      return err;
     }
   }
 }
