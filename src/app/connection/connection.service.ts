@@ -39,7 +39,7 @@ export class ConnectionService {
       const res = id
         ? await request(`${apiUrl}connections/${id}`)
         : await request(`${apiUrl}connections`);
-      return res.body;
+      return res.body.results;
     } catch (err) {
       console.log('connections call failed', err);
     }
@@ -58,7 +58,7 @@ export class ConnectionService {
     const invitation = {
       '@type': body.invitation['@type'],
       '@id': body.invitation['@id'],
-      serviceEndpoint: 'http://localhost:8051',
+      serviceEndpoint: body.invitation.serviceEndpoint,
       label: 'Node Controller',
       recipientKeys: body.invitation.recipientKeys
     };

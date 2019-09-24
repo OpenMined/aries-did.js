@@ -3,6 +3,7 @@ export interface IInvitation {
   '@id': string;
   recipientKeys: string[];
   label: string;
+  serviceEndpoint: string;
 }
 
 export interface IInvitationRequestResponse {
