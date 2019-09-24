@@ -34,6 +34,4 @@ app.use(protocolController.allowedMethods());
 // Application error logging.
 app.on('error', console.error);
 
-const test = new AgentService();
-
 export default app;

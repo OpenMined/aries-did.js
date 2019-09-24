@@ -16,8 +16,6 @@ export class CredentialDefinitionService {
         .post(`${apiUrl}${segment}`)
         .send({ schema_id: schemaId });
       const id = res.body.credential_definition_id;
-      console.log('result of creds', res.body);
-      console.log('id', id);
       // if (!id) throw new Error('no credential id found');
       return id;
     } catch (err) {
