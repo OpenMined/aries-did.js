@@ -1,3 +1,26 @@
+export interface ICredentialRecord {
+  credential_proposal_dict: any;
+  state: string;
+  credential_request: any;
+  updated_at: string;
+  raw_credential: any;
+  credential: any;
+  initiator: string;
+  credential_definition_id: string;
+  credential_request_metadata: any;
+  schema_id: string;
+  credential_offer: any;
+  auto_offer: boolean;
+  credential_id: string;
+  error_msg: string;
+  parent_thread_id: string;
+  created_at: string;
+  thread_id: string;
+  credential_exchange_id: string;
+  connection_id: string;
+  auto_issue: boolean;
+}
+
 export interface IRecordsResult {
   thread_id: string;
   created_at: string;
@@ -19,4 +42,68 @@ export interface IRecordsResult {
   parent_thread_id: string;
   credential_exchange_id: string;
   credential_request_metadata: {};
+}
+
+export interface ICredentialAttributes {
+  name: string;
+  'mime-type': string;
+  value: string;
+}
+
+export interface ICredentialProposal {
+  '@type': string;
+  attributes: ICredentialAttributes[];
+}
+
+export interface ICredentialSend {
+  credential_proposal: ICredentialProposal;
+  connection_id: string;
+  comment: string;
+  credential_definition_id: string;
+}
+
+export interface ICredentialSendResponse {
+  credential_proposal_dict: any;
+  state: string;
+  credential_request: any;
+  updated_at: string;
+  raw_credential: any;
+  credential: any;
+  initiator: string;
+  credential_definition_id: string;
+  credential_request_metadata: any;
+  schema_id: string;
+  credential_offer: any;
+  auto_offer: boolean;
+  credential_id: string;
+  error_msg: string;
+  parent_thread_id: string;
+  created_at: string;
+  thread_id: string;
+  credential_exchange_id: string;
+  connection_id: string;
+  auto_issue: boolean;
+}
+
+export interface ICredentialSendProposalResponse {
+  credential_proposal_dict: any;
+  state: string;
+  credential_request: any;
+  updated_at: string;
+  raw_credential: any;
+  credential: any;
+  initiator: string;
+  credential_definition_id: string;
+  credential_request_metadata: any;
+  schema_id: string;
+  credential_offer: any;
+  auto_offer: true;
+  credential_id: string;
+  error_msg: string;
+  parent_thread_id: string;
+  created_at: string;
+  thread_id: string;
+  credential_exchange_id: string;
+  connection_id: string;
+  auto_issue: true;
 }

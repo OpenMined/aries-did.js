@@ -1,1 +1,1 @@
-PORTS='8051:8051 8050:8050' ./manage start --inbound-transport http '0.0.0.0' 8050 --outbound-transport http --admin-insecure-mode --admin '0.0.0.0' 8051 --seed the_org_book_0000000000000000001 --genesis-url 'http://192.168.65.3:9000/genesis' --endpoint 'http://192.168.65.3:8050'
+c:/users/seanh/projects/von-network/manage up

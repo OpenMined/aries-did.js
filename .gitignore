@@ -2,3 +2,6 @@
 ./dist
 node_modules
 dist
+aries-cloudagent-python
+start-agent.sh
+start.sh

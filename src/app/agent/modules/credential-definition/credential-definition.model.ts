@@ -1,6 +1,5 @@
 import { Schema } from '../schema/schema.model';
 import { CredentialDefinitionService } from './credential-definition.service';
-import { SchemaService } from '../schema/schema.service';
 
 export class CredentialDefinition {
   private _credentialSvc = new CredentialDefinitionService();

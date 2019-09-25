@@ -9,7 +9,9 @@
     "lint": "tslint --project tsconfig.json --format stylish",
     "build": "tsc",
     "serve": "ts-node src/server.ts",
-    "start": "nodemon"
+    "start": "nodemon",
+    "start:test-agent": "sh start-agent.sh",
+    "start:von": "sh start.sh"
   },
   "keywords": [],
   "author": "",
@@ -22,10 +24,6 @@
     "@types/node": "^12.7.5",
     "@types/superagent": "^4.1.3",
     "expect": "^24.9.0",
-    "http-status-codes": "^1.3.2",
-    "koa": "^2.8.1",
-    "koa-bodyparser": "^4.2.1",
-    "koa-router": "^7.4.0",
     "nodemon": "^1.19.2",
     "pg": "^7.12.1",
     "reflect-metadata": "^0.1.13",
@@ -37,6 +35,11 @@
     "typescript": "^3.6.3"
   },
   "dependencies": {
-    "superagent": "^5.1.0"
+    "superagent": "^5.1.0",
+    "http-status-codes": "^1.3.2",
+    "koa": "^2.8.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0"
+
   }
 }
