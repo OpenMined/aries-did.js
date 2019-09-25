@@ -2,11 +2,10 @@ import * as Koa from 'koa';
 import * as HttpStatus from 'http-status-codes';
 import * as bodyParser from 'koa-bodyparser';
 
-import protocolController from './agent/modules/protocol/protocol.controller';
-import { AgentService } from './agent/agent.service';
+import { clientRoutes, clientMethods } from './client/routes';
 
 const app: Koa = new Koa();
-
+const client = true;
 // Generic error handling middleware.
 app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
   try {
@@ -28,8 +27,10 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
 // Middleware
 app.use(bodyParser());
 
-app.use(protocolController.routes());
-app.use(protocolController.allowedMethods());
+if (client) {
+  clientRoutes.forEach(route => app.use(route));
+  clientMethods.forEach(route => app.use(route));
+}
 
 // Application error logging.
 app.on('error', console.error);

@@ -5,6 +5,7 @@ import {
 import * as request from 'superagent';
 
 const apiUrl = 'http://localhost:8051/';
+const segment = 'connections/';
 
 export class ConnectionService {
   constructor() {}
@@ -13,20 +14,29 @@ export class ConnectionService {
     create an invitation to share with another agent.
   */
 
-  async createInvitation() {
-    const res = await request
-      .post(`${apiUrl}connections/create-invitation`)
-      .set('Content-Type', 'application/json');
-    return res.body as IInvitationRequestResponse;
+  async createInvitation(): Promise<IInvitationRequestResponse> {
+    try {
+      const res = await request
+        .post(`${apiUrl}connections/create-invitation`)
+        .set('Content-Type', 'application/json');
+      if (res.status === 200) return res.body as IInvitationRequestResponse;
+      throw new Error('Create invitation failed');
+    } catch (err) {
+      return err;
+    }
   }
 
   /*
     Receive an invitation from an outside source.
   */
 
-  async receiveInvitation(invitation: IInvitationRequest) {
+  async receiveInvitation(
+    invitation: IInvitationRequest,
+    accept: boolean = true
+  ): Promise<IInvitationRequestResponse> {
     const res = await request
       .post(`${apiUrl}connections/receive-invitation`)
+      .query({ accept: accept.toString() })
       .send(invitation);
     return res.body;
   }
@@ -50,6 +60,21 @@ export class ConnectionService {
   }
 
   /*
+    Accept request responds to an invitation that has been sent to
+    and accepted by another agent
+  */
+
+  async acceptRequest(id: string) {
+    try {
+      const res = await request(`${apiUrl}connections/${id}/accept-request`);
+      if (res.status === 200) return res.body;
+      throw new Error('accept request failed');
+    } catch (err) {
+      console.log('accept request error', err.message);
+    }
+  }
+
+  /*
     lists all connections. Optional parameter to list
     a specific connection.
   */
@@ -66,20 +91,6 @@ export class ConnectionService {
   }
 
   /*
-    Accept request responds to an invitation that has been sent to
-    and accepted by another agent
-  */
-
-  async acceptRequest(id: string) {
-    try {
-      const res = await request(`${apiUrl}connections/${id}/accept-request`);
-      return res.body;
-    } catch (err) {
-      console.log('accept request error', err.message);
-    }
-  }
-
-  /*
     Assign another connection as the inbound connection
   */
   async establishInbound(id: string, refId: string) {}
@@ -90,17 +101,6 @@ export class ConnectionService {
     sending to an external agent.
   */
 
-  async formatInvitation(body: IInvitationRequestResponse) {
-    const invitation = {
-      '@type': body.invitation['@type'],
-      '@id': body.invitation['@id'],
-      serviceEndpoint: body.invitation.serviceEndpoint,
-      label: 'Node Controller',
-      recipientKeys: body.invitation.recipientKeys
-    };
-    return JSON.stringify(invitation);
-  }
-
   /*
     send basic message to a connection (by connection id)
   */
@@ -110,6 +110,19 @@ export class ConnectionService {
       return res.body;
     } catch (err) {
       throw err.message;
+    }
+  }
+
+  /*
+    Remove existing connection record. Use this to "reject" a sent connection
+  */
+  async sendRemoveConnection(id: string): Promise<boolean> {
+    try {
+      const res = await request.get(`${apiUrl}${segment}${id}/remove`);
+      if (res.status === 200) return true;
+      return false;
+    } catch (err) {
+      return err;
     }
   }
 }
