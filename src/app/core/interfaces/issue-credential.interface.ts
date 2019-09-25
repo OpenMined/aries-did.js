@@ -107,3 +107,26 @@ export interface ICredentialSendProposalResponse {
   connection_id: string;
   auto_issue: true;
 }
+
+export interface ICredExRecordResponse {
+  credential: any;
+  credential_offer: any;
+  parent_thread_id: string;
+  credential_id: string;
+  credential_proposal_dict: any;
+  created_at: string;
+  connection_id: string;
+  updated_at: string;
+  credential_request: any;
+  credential_request_metadata: any;
+  auto_issue: boolean;
+  thread_id: string;
+  raw_credential: any;
+  schema_id: string;
+  auto_offer: boolean;
+  error_msg: string;
+  initiator: string;
+  credential_definition_id: string;
+  credential_exchange_id: string;
+  state: string;
+}

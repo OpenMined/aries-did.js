@@ -1,7 +1,7 @@
 {
   "name": "node-aries-controller",
   "version": "1.0.0",
-  "description": "",
+  "description": "An aries controller app for connecting to the aries-cloudagent-python app.",
   "main": "index.js",
   "scripts": {
     "test": "mocha -r ts-node/register **/**/*.test.ts || true",
@@ -10,8 +10,9 @@
     "build": "tsc",
     "serve": "ts-node src/server.ts",
     "start": "nodemon",
-    "start:test-agent": "sh start-agent.sh",
-    "start:von": "sh start.sh"
+    "start:agent": "sh start-agent.sh",
+    "start:von": "sh start.sh",
+    "start:test-agent": "sh start-test-agent.sh"
   },
   "keywords": [],
   "author": "",
