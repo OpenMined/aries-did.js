@@ -1,7 +1,6 @@
 import { IInvitation } from '../../core/interfaces/invitation-request.interface';
 
-export const invitationValid = (invite: IInvitation) => {
-  const inviteKeys = ['connection_id', 'invitation', 'invitation_url'];
+export const invitationValid = (invite: IInvitation): boolean => {
   const invitationKeys = [
     '@type',
     '@id',
@@ -9,5 +8,9 @@ export const invitationValid = (invite: IInvitation) => {
     'label',
     'serviceEndpoint'
   ];
-  console.log(Object.keys(invite));
+  for (const key in invite) {
+    if (!invitationKeys.some(itm => key === itm)) return false;
+    return true;
+  }
+  return true;
 };

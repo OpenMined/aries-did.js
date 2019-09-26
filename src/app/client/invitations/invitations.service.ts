@@ -22,7 +22,7 @@ export class InvitationService {
   }
 
   async acceptInvitation(invite: IInvitation) {
-    console.log(invitationValid(invite));
+    if (!invitationValid(invite)) throw new Error('invalid invitation');
     try {
       const res = await this._connection.invitationResponse(invite);
       return res;
