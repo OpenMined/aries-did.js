@@ -1,8 +1,8 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
-import { Relationships } from './relationships.model';
+import { RelationshipService } from './relationships.service';
 
-const relationship = new Relationships();
+const relationship = new RelationshipService();
 
 const routerOpts: Router.IRouterOptions = {
   prefix: '/relationships'
@@ -15,11 +15,15 @@ router.get('/', async (ctx: Koa.Context) => {
   ctx.body = res;
 });
 
-router.post('', '/', async (ctx: Koa.Context) => {
-  // const agentSvc = new AgentService();
-  // const res = agentSvc.createInvitation();
-  // ctx.body = res;
-  return ctx;
+router.post('/', async (ctx: Koa.Context) => {
+  try {
+    const invite = await relationship.createInvitation();
+    console.log('invite', invite);
+    ctx.body = invite;
+  } catch (err) {
+    ctx.status = 500;
+    ctx.throw('invitation failed to create on the server');
+  }
 });
 
 export default router;
