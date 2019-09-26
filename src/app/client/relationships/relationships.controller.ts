@@ -17,9 +17,9 @@ router.get('/', async (ctx: Koa.Context) => {
 
 router.post('/', async (ctx: Koa.Context) => {
   try {
-    const invite = await relationship.createInvitation();
-    console.log('invite', invite);
-    ctx.body = invite;
+    // const invite = await relationship.createInvitation();
+    // ctx.body = invite;
+    ctx.body = 'new relationship';
   } catch (err) {
     ctx.status = 500;
     ctx.throw('invitation failed to create on the server');

@@ -1,4 +1,4 @@
-import { ConnectionService } from './connection.service';
+import { ConnectionService, IConnectionParams } from './connection.service';
 import {
   ConnectionState,
   IConnectionsResult
@@ -28,12 +28,13 @@ export class Connection {
     Get all connections or enter an id to get a specific connection
   */
   async getConnections(
-    id?: string
+    id?: string | null,
+    params: IConnectionParams = {}
   ): Promise<IConnectionsResult | IConnectionsResult[]> {
     try {
       const res = id
-        ? await this.connectionSvc.connections(id)
-        : await this.connectionSvc.connections();
+        ? await this.connectionSvc.connections(id, params)
+        : await this.connectionSvc.connections(null, params);
       return res;
     } catch (err) {
       return err;

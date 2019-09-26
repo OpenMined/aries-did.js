@@ -3,9 +3,22 @@ import {
   IInvitationRequestResponse
 } from '../../../core/interfaces/invitation-request.interface';
 import * as request from 'superagent';
+import { MessageState } from '../../../core/interfaces/agent.interface';
 
 const apiUrl = 'http://localhost:8051/';
 const segment = 'connections/';
+
+export type ConnectionInitiator = 'self' | 'external';
+
+export interface IConnectionParams {
+  alias?: string;
+  initiator?: string;
+  invitation_key?: string;
+  my_did?: string;
+  state?: MessageState;
+  their_did?: string;
+  their_role?: string;
+}
 
 export class ConnectionService {
   constructor() {}
@@ -32,7 +45,8 @@ export class ConnectionService {
 
   async receiveInvitation(
     invitation: IInvitationRequest,
-    accept: boolean = true
+    accept: boolean = true,
+    params?: IConnectionParams
   ): Promise<IInvitationRequestResponse> {
     const res = await request
       .post(`${apiUrl}connections/receive-invitation`)
@@ -79,11 +93,11 @@ export class ConnectionService {
     a specific connection.
   */
 
-  async connections(id?: string) {
+  async connections(id: string | null = null, params: IConnectionParams = {}) {
     try {
       const res = id
-        ? await request(`${apiUrl}connections/${id}`)
-        : await request(`${apiUrl}connections`);
+        ? await request.get(`${apiUrl}connections/${id}`).query(params)
+        : await request.get(`${apiUrl}connections`).query(params);
       return res.body.results;
     } catch (err) {
       console.log('connections call failed', err);

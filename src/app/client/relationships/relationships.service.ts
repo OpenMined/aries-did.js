@@ -19,13 +19,4 @@ export class RelationshipService {
     const result = {};
     return res;
   }
-
-  async createInvitation() {
-    try {
-      const res = await this._connections.createInvitation();
-      return res;
-    } catch (err) {
-      return err;
-    }
-  }
 }
