@@ -19,7 +19,7 @@ export class Connection {
       label: 'Node Controller',
       recipientKeys: body.invitation.recipientKeys
     };
-    return JSON.stringify(invitation);
+    return invitation;
   }
 
   constructor() {}
@@ -41,10 +41,11 @@ export class Connection {
     }
   }
 
-  async createInvitation(): Promise<IInvitationRequestResponse> {
+  async createInvitation(): Promise<IInvitation> {
     try {
       const res = await this.connectionSvc.createInvitation();
-      return res;
+
+      return this.formatInvitation(res);
     } catch (err) {
       return err;
     }
