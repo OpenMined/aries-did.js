@@ -1,7 +1,8 @@
-import { ConnectionService, IConnectionParams } from './connection.service';
+import { ConnectionService } from './connection.service';
 import {
   ConnectionState,
-  IConnectionsResult
+  IConnectionsResult,
+  IConnectionParams
 } from '../../../core/interfaces/connection.interface';
 import {
   IInvitation,
@@ -28,8 +29,8 @@ export class Connection {
     Get all connections or enter an id to get a specific connection
   */
   async getConnections(
-    id?: string | null,
-    params: IConnectionParams = {}
+    params: IConnectionParams = {},
+    id?: string | null
   ): Promise<IConnectionsResult | IConnectionsResult[]> {
     try {
       const res = id
@@ -52,14 +53,16 @@ export class Connection {
   }
 
   async filterConnectionsByState(state?: ConnectionState) {
-    try {
-      const res = await this.connectionSvc.connections();
-      return state
-        ? res.filter((itm: IConnectionsResult) => itm.state === state)
-        : res;
-    } catch (err) {
-      return err;
-    }
+    // try {
+    //   const res = await this.connectionSvc.connections();
+    //   if (Array.isArray) {
+    //   return state
+    //     ? res.filter((itm: IConnectionsResult) => itm.state === state)
+    //     : res;
+    //   }
+    // } catch (err) {
+    //   return err;
+    // }
   }
 
   /*

@@ -1,7 +1,4 @@
-import {
-  ConnectionService,
-  IConnectionParams
-} from '../../agent/modules/connection/connection.service';
+import { ConnectionService } from '../../agent/modules/connection/connection.service';
 
 const invitationResponseKeys = [
   'connection_id',

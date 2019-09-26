@@ -1,7 +1,7 @@
 import { Connection } from '../../agent/modules/connection/connection.model';
-import { IConnectionParams } from '../../agent/modules/connection/connection.service';
 import { IInvitation } from '../../core/interfaces/invitation-request.interface';
 import { invitationValid } from './invitations-validators';
+import { IConnectionParams } from '../../core/interfaces/connection.interface';
 
 export class InvitationService {
   _connection = new Connection();
@@ -16,9 +16,13 @@ export class InvitationService {
   }
 
   async getInvitations(params?: IConnectionParams) {
-    const res = await this._connection.getConnections(null, params);
-    // console.log('invitations result', res);
-    return res;
+    try {
+      const res = await this._connection.getConnections(params);
+      // console.log('invitations result', res);
+      return res;
+    } catch (err) {
+      return err;
+    }
   }
 
   async acceptInvitation(invite: IInvitation) {

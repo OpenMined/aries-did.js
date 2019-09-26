@@ -11,8 +11,13 @@ const routerOpts: Router.IRouterOptions = {
 const router: Router = new Router(routerOpts);
 
 router.get('/', async (ctx: Koa.Context) => {
-  const res = await relationship.getRelationships();
-  ctx.body = res;
+  try {
+    const params = ctx.body;
+    const res = await relationship.getRelationships(params);
+    ctx.body = res;
+  } catch (err) {
+    ctx.throw(400, 'failed to get relationships');
+  }
 });
 
 router.post('/', async (ctx: Koa.Context) => {

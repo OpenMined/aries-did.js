@@ -1,7 +1,6 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import { InvitationService } from './invitations.service';
-import { IConnectionParams } from '../../agent/modules/connection/connection.service';
 
 const invitationSvc = new InvitationService();
 
@@ -46,7 +45,7 @@ router.post('/', async (ctx: Koa.Context) => {
       const req = await invitationSvc.acceptInvitation(invite);
       ctx.body = req;
     } catch (err) {
-      ctx.throw(401, 'invalid request');
+      ctx.throw(400, 'invalid request');
     }
     return ctx.body;
   } else {
