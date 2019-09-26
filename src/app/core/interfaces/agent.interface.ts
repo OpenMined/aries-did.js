@@ -1,4 +1,4 @@
-export type MessageState = 'active' | 'inactive';
+export type MessageState = 'active' | 'inactive' | 'response' | 'invitation';
 
 export interface IConnection {
   connectionId: string;

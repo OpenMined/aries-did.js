@@ -48,6 +48,7 @@ export class ConnectionService {
     accept: boolean = true,
     params?: IConnectionParams
   ): Promise<IInvitationRequestResponse> {
+    console.log('invitation', invitation);
     const res = await request
       .post(`${apiUrl}connections/receive-invitation`)
       .query({ accept: accept.toString() })
