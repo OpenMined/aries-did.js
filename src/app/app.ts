@@ -1,12 +1,26 @@
 import * as Koa from 'koa';
 import * as HttpStatus from 'http-status-codes';
 import * as bodyParser from 'koa-bodyparser';
+import * as cors from '@koa/cors';
 
 import { clientRoutes, clientMethods } from './client/routes';
 
 const app: Koa = new Koa();
 const client = true;
 // Generic error handling middleware.
+
+app.use(
+  cors({
+    origin: '*',
+    allowHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Access-Control-Allow-Origin'
+    ],
+    allowMethods: 'GET, HEAD, PUT, POST, DELETE, PATCH'
+  })
+);
+
 app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
   try {
     await next();
