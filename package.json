@@ -12,7 +12,8 @@
     "start": "nodemon",
     "start:agent": "sh start-agent.sh",
     "start:von": "sh start.sh",
-    "start:test-agent": "sh start-test-agent.sh"
+    "start:test-agent": "sh start-test-agent.sh",
+    "start:acme": "sh start-acme.sh"
   },
   "keywords": [],
   "author": "",

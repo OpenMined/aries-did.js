@@ -17,7 +17,7 @@ export class Connection {
       '@type': body.invitation['@type'],
       '@id': body.invitation['@id'],
       serviceEndpoint: body.invitation.serviceEndpoint,
-      label: 'Node Controller',
+      label: body.invitation.label,
       recipientKeys: body.invitation.recipientKeys
     };
     return invitation;
@@ -47,29 +47,15 @@ export class Connection {
   async createInvitation(): Promise<IInvitation> {
     try {
       const res = await this.connectionSvc.createInvitation();
-
       return this.formatInvitation(res);
     } catch (err) {
       return err;
     }
   }
 
-  async filterConnectionsByState(state?: ConnectionState) {
-    // try {
-    //   const res = await this.connectionSvc.connections();
-    //   if (Array.isArray) {
-    //   return state
-    //     ? res.filter((itm: IConnectionsResult) => itm.state === state)
-    //     : res;
-    //   }
-    // } catch (err) {
-    //   return err;
-    // }
-  }
-
   /*
     respond to an invitation. 
-    Setting autoAccept to true will automatically accept the invitation
+    Setting autoAccept to true ** deprecated ** will automatically accept the invitation
     You can optionally choose to reject it by setting accept to be false.
   */
 
@@ -86,6 +72,32 @@ export class Connection {
       return res;
     } catch (err) {
       console.log('invitation response failed');
+      return err;
+    }
+  }
+
+  async acceptInvitation(id: string, accept = true) {
+    try {
+      const res = await this.connectionSvc.acceptInvitation(id);
+      return res;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async requestResponse(id: string, accept = true) {
+    if (accept) {
+      try {
+        let res = await this.connectionSvc.acceptRequest(id);
+        return res;
+      } catch (err) {
+        return err;
+      }
+    }
+    try {
+      let res = await this.connectionSvc.sendRemoveConnection(id);
+      return 'removed';
+    } catch (err) {
       return err;
     }
   }

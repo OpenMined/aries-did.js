@@ -3,21 +3,43 @@ import { Connection } from '../../agent/modules/connection/connection.model';
 
 const agentConfig = new AgentConfig();
 
-const connection = new Connection(agentConfig.agentUrl);
-const testConnection = new Connection(agentConfig.testAgentUrl);
+const alice = new Connection(agentConfig.agentUrl);
+const faber = new Connection(agentConfig.testAgentUrl);
+const acme = new Connection(agentConfig.ACME_AGENT_URL);
+console.log(agentConfig.testAgentUrl);
+console.log(agentConfig.agentUrl);
 
 const createIvitation = () => {};
 
 const acceptInvitation = () => {};
 
-const newInvitation = (sender: Connection, receiver: Connection) => {
-  let connectionId;
+const newRelationship = (sender: Connection, receiver: Connection) => {
+  let connectionId: string;
   sender.createInvitation().then(itm =>
     receiver.invitationResponse(itm).then(accept => {
-      console.log(accept);
+      receiver.acceptInvitation(accept.connection_id).then(itm => {
+        console.log('invitation response', itm);
+        sender.getConnections({ state: 'request' }).then(itms => {
+          if (Array.isArray(itms)) {
+            console.log(itms[0].connection_id);
+            // console.log(sender);
+            sender.requestResponse(itms[0].connection_id).then(itm => {
+              console.log(itm);
+              // receiver.getConnections().then(itms => {
+              //   if (Array.isArray(itms)) {
+              //     receiver
+              //       .requestResponse(itms[0].connection_id)
+              //       .then(res => console.log(res));
+              //   }
+              // });
+            });
+          }
+        });
+      });
     })
   );
   // sender.getConnections().then(itm => console.log(itm));
 };
 
-newInvitation(connection, testConnection);
+newRelationship(alice, faber);
+newRelationship(acme, alice);

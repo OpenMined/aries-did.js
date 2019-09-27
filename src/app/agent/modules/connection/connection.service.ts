@@ -9,7 +9,6 @@ import {
   IConnectionsResult
 } from '../../../core/interfaces/connection.interface';
 
-const apiUrl = 'http://localhost:8051/';
 const segment = 'connections/';
 
 export class ConnectionService {
@@ -25,7 +24,7 @@ export class ConnectionService {
   async createInvitation(): Promise<IInvitationRequestResponse> {
     try {
       const res = await request
-        .post(`${apiUrl}connections/create-invitation`)
+        .post(`${this.apiUrl}connections/create-invitation`)
         .set('Content-Type', 'application/json');
       if (res.status === 200) return res.body as IInvitationRequestResponse;
       throw new Error('Create invitation failed');
@@ -45,7 +44,7 @@ export class ConnectionService {
   ): Promise<IInvitationRequestResponse> {
     console.log('invitation', invitation);
     const res = await request
-      .post(`${apiUrl}connections/receive-invitation`)
+      .post(`${this.apiUrl}connections/receive-invitation`)
       .send(invitation);
     return res.body;
   }
@@ -59,7 +58,7 @@ export class ConnectionService {
   async acceptInvitation(id: string) {
     try {
       const res = await request.post(
-        `${apiUrl}connections/${id}/accept-invitation`
+        `${this.apiUrl}connections/${id}/accept-invitation`
       );
 
       return res.body;
@@ -75,11 +74,13 @@ export class ConnectionService {
 
   async acceptRequest(id: string) {
     try {
-      const res = await request(`${apiUrl}connections/${id}/accept-request`);
-      if (res.status === 200) return res.body;
-      throw new Error('accept request failed');
+      const res = await request.post(
+        `${this.apiUrl}connections/${id}/accept-request`
+      );
+      return res.body;
     } catch (err) {
       console.log('accept request error', err.message);
+      return err;
     }
   }
 
@@ -94,8 +95,8 @@ export class ConnectionService {
   ): Promise<IConnectionsResult | IConnectionsResult[]> {
     try {
       const res = id
-        ? await request.get(`${apiUrl}connections/${id}`).query(params)
-        : await request.get(`${apiUrl}connections`).query(params);
+        ? await request.get(`${this.apiUrl}connections/${id}`).query(params)
+        : await request.get(`${this.apiUrl}connections`).query(params);
       return res.body.results;
     } catch (err) {
       console.log('connections call failed', err);
@@ -119,7 +120,9 @@ export class ConnectionService {
   */
   async sendMessage(id: string) {
     try {
-      const res = await request.get(`${apiUrl}connections/${id}/send-message`);
+      const res = await request.get(
+        `${this.apiUrl}connections/${id}/send-message`
+      );
       return res.body;
     } catch (err) {
       throw err.message;
@@ -129,11 +132,10 @@ export class ConnectionService {
   /*
     Remove existing connection record. Use this to "reject" a sent connection
   */
-  async sendRemoveConnection(id: string): Promise<boolean> {
+  async sendRemoveConnection(id: string): Promise<any> {
     try {
-      const res = await request.get(`${apiUrl}${segment}${id}/remove`);
-      if (res.status === 200) return true;
-      return false;
+      const res = await request.post(`${this.apiUrl}${segment}${id}/remove`);
+      return res;
     } catch (err) {
       return err;
     }
