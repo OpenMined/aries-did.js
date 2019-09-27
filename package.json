@@ -13,7 +13,8 @@
     "start:agent": "sh start-agent.sh",
     "start:von": "sh start.sh",
     "start:test-agent": "sh start-test-agent.sh",
-    "start:acme": "sh start-acme.sh"
+    "start:acme": "sh start-acme.sh",
+    "data:relationships": "nodemon --exec ts-node ./src/app/test/scripts/relationships-tests.ts"
   },
   "keywords": [],
   "author": "",
