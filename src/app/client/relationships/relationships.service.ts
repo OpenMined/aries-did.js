@@ -4,9 +4,11 @@ import {
   IConnectionsResult
 } from '../../core/interfaces/connection.interface';
 import { IRelationshipResponse } from './relationships.interface';
+import AgentConfig from '../../config';
 
 export class RelationshipService {
-  private _connections = new Connection();
+  private _agentConfig = new AgentConfig();
+  private _connections = new Connection(this._agentConfig.apiUrl);
   constructor() {}
 
   mapRelationships(itm: IConnectionsResult): IRelationshipResponse {

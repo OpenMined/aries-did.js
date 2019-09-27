@@ -13,7 +13,10 @@ const apiUrl = 'http://localhost:8051/';
 const segment = 'connections/';
 
 export class ConnectionService {
-  constructor() {}
+  apiUrl: string;
+  constructor(apiUrl: string) {
+    this.apiUrl = apiUrl;
+  }
 
   /*
     create an invitation to share with another agent.
@@ -43,7 +46,6 @@ export class ConnectionService {
     console.log('invitation', invitation);
     const res = await request
       .post(`${apiUrl}connections/receive-invitation`)
-      .query({ accept: accept.toString() })
       .send(invitation);
     return res.body;
   }

@@ -4,22 +4,26 @@ import * as bodyParser from 'koa-bodyparser';
 import * as cors from '@koa/cors';
 
 import { clientRoutes, clientMethods } from './client/routes';
+import AgentConfig from './config';
 
+const config = new AgentConfig();
 const app: Koa = new Koa();
 const client = true;
 // Generic error handling middleware.
 
-app.use(
-  cors({
-    origin: '*',
-    allowHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Access-Control-Allow-Origin'
-    ],
-    allowMethods: 'GET, HEAD, PUT, POST, DELETE, PATCH'
-  })
-);
+const options = {
+  origin: '*',
+  allowHeaders: [
+    'Content-Type',
+    'content-type',
+    'Authorization',
+    'Accept',
+    'Origin'
+  ],
+  allowMethods: 'GET, HEAD, PUT, POST, DELETE, PATCH, OPTIONS'
+};
+
+app.use(cors(options));
 
 app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
   try {
@@ -33,12 +37,6 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
   }
 });
 
-// Initial route
-// app.use(async (ctx: Koa.Context) => {
-//   ctx.body = 'Hello world';
-// });
-
-// Middleware
 app.use(bodyParser());
 
 if (client) {

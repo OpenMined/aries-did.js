@@ -10,7 +10,7 @@ import {
 } from '../../../core/interfaces/invitation-request.interface';
 
 export class Connection {
-  private connectionSvc = new ConnectionService();
+  private connectionSvc: ConnectionService;
 
   formatInvitation(body: IInvitationRequestResponse) {
     const invitation = {
@@ -23,7 +23,9 @@ export class Connection {
     return invitation;
   }
 
-  constructor() {}
+  constructor(apiUrl: string) {
+    this.connectionSvc = new ConnectionService(apiUrl);
+  }
 
   /*
     Get all connections or enter an id to get a specific connection

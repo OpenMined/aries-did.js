@@ -12,7 +12,7 @@ router.get('/', async (ctx: Koa.Context) => {
   ctx.body = 'GET ALL';
 });
 
-router.post('invitation', '/', async (ctx: Koa.Context) => {
+router.post('agent', '/', async (ctx: Koa.Context) => {
   // const agentSvc = new AgentService();
   // const res = agentSvc.createInvitation();
   // ctx.body = res;
