@@ -5,9 +5,7 @@ const agentConfig = new AgentConfig();
 
 const alice = new Connection(agentConfig.agentUrl);
 const faber = new Connection(agentConfig.testAgentUrl);
-const acme = new Connection(agentConfig.ACME_AGENT_URL);
-console.log(agentConfig.testAgentUrl);
-console.log(agentConfig.agentUrl);
+const acme = new Connection(agentConfig.acmeAgentUrl);
 
 const createIvitation = () => {};
 
@@ -15,7 +13,8 @@ const acceptInvitation = () => {};
 
 const newRelationship = (sender: Connection, receiver: Connection) => {
   let connectionId: string;
-  sender.createInvitation().then(itm =>
+  sender.createInvitation().then(itm => {
+    console.log('invite', itm);
     receiver.invitationResponse(itm).then(accept => {
       receiver.acceptInvitation(accept.connection_id).then(itm => {
         console.log('invitation response', itm);
@@ -36,8 +35,8 @@ const newRelationship = (sender: Connection, receiver: Connection) => {
           }
         });
       });
-    })
-  );
+    });
+  });
   // sender.getConnections().then(itm => console.log(itm));
 };
 
