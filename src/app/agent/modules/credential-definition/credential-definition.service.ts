@@ -4,7 +4,10 @@ const apiUrl = 'http://localhost:8051/';
 const segment = 'credential-definitions';
 
 export class CredentialDefinitionService {
-  constructor() {}
+  private _apiUrl: string;
+  constructor(apiUrl: string) {
+    this._apiUrl = apiUrl;
+  }
 
   /*
     send a credential definition to the ledger. If it exists already it will
@@ -13,11 +16,10 @@ export class CredentialDefinitionService {
   async sendCredentialDefinition(schemaId: string) {
     try {
       const res = await request
-        .post(`${apiUrl}${segment}`)
+        .post(`${this._apiUrl}${segment}`)
         .send({ schema_id: schemaId });
-      const id = res.body.credential_definition_id;
       // if (!id) throw new Error('no credential id found');
-      return id;
+      return res.body;
     } catch (err) {
       return err.message;
     }
@@ -28,7 +30,7 @@ export class CredentialDefinitionService {
   */
   async getCredentialDefinition(id: string) {
     try {
-      const res = await request.get(`${apiUrl}${segment}/${id}`);
+      const res = await request.get(`${this._apiUrl}${segment}/${id}`);
       return res.body;
     } catch (err) {
       return err.message;

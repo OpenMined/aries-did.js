@@ -1,37 +1,31 @@
 import { SchemaService } from './schema.service';
-import { ISchema } from '../../../core/interfaces/schema.interface';
+import {
+  ISchema,
+  ISchemaResponse
+} from '../../../core/interfaces/schema.interface';
 
 export class Schema {
-  private _schemaSvc = new SchemaService();
-  private _schemaIds: Set<string> = new Set<string>(null);
-
-  get listSchemaIds() {
-    return this._schemaIds.values();
-  }
-
-  private _addSchema(id: string) {
-    this._schemaIds.add(id);
-  }
-
-  private _removeSchema(id: string) {
-    this._schemaIds.delete(id);
+  private _schemaSvc: SchemaService;
+  constructor(_apiUrl: string) {
+    this._schemaSvc = new SchemaService(_apiUrl);
   }
 
   // creates a schema and if none is created then it will return an error
 
-  async createSchema(schema: ISchema) {
+  async createSchema(schema: ISchema): Promise<ISchemaResponse> {
     try {
       const res = await this._schemaSvc.postSchema(schema);
-      if (Object.keys(res).includes('schema_id')) {
-        this._addSchema(res.schema_id);
-      }
+
       // TODO: point to documentation on what to troubleshoot if the schema's not creating
-      else throw new Error('no schema found');
-      return res.schema_id;
+      return res;
     } catch (err) {
       throw err.message;
     }
   }
-
-  constructor() {}
+  async getSchemaById(id: string) {
+    try {
+      const res = await this._schemaSvc.getSchemaById(id);
+      return res;
+    } catch (err) {}
+  }
 }

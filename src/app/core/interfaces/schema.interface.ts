@@ -3,3 +3,7 @@ export interface ISchema {
   schema_version: string;
   schema_name: string;
 }
+
+export interface ISchemaResponse {
+  schema_id: string;
+}

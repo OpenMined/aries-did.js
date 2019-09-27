@@ -1,17 +1,36 @@
-import { SchemaService } from './schema.service';
 import { Schema } from './schema.model';
-import { CredentialDefinition } from '../credential-definition/credential-definition.model';
+import TestAgentConfig from '../../agent-test-config';
+import { expect } from 'chai';
+import 'mocha';
 
-const main = async () => {
-  const schema = new Schema();
-  const schemaDef = {
-    attributes: ['degree', 'name', 'age', 'average'],
-    schema_name: 'zzz',
-    schema_version: '1.0'
-  };
-  const res = await schema.createSchema(schemaDef);
-  const schemas = schema.listSchemaIds;
-  const credDef = new CredentialDefinition(schema);
-};
+const agentConfig = new TestAgentConfig();
+const schema = new Schema(agentConfig.agentUrl);
 
-main();
+let schemaId: string;
+
+describe('create new schema', async function() {
+  it('should return a schema id', async function() {
+    const schemaDef = {
+      attributes: ['degree', 'name', 'age', 'average'],
+      schema_name: 'zzz',
+      schema_version: '1.0'
+    };
+    const res = await schema.createSchema(schemaDef);
+    expect(res).to.not.be.undefined;
+    expect(res).to.haveOwnProperty('schema_id');
+    schemaId = res.schema_id;
+  });
+  it('should not return a schema id', async function() {
+    const res = await schema.createSchema({
+      attributes: [],
+      schema_name: '',
+      schema_version: ''
+    });
+    expect(res).to.not.haveOwnProperty('schema_id');
+  });
+  it('should return a credDef id', async function() {
+    const res = await schema.getSchemaById(schemaId);
+    expect(res).to.not.be.undefined;
+    expect(res).to.be.an.instanceof(Object);
+  });
+});
