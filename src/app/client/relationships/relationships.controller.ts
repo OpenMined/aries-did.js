@@ -3,7 +3,9 @@ import * as Router from 'koa-router';
 import { RelationshipService } from './relationships.service';
 import AgentConfig from '../../config';
 
-const relationship = new RelationshipService();
+const agentConfig = new AgentConfig();
+
+const relationship = new RelationshipService(agentConfig.agentUrl);
 
 const routerOpts: Router.IRouterOptions = {
   prefix: '/relationships'

@@ -14,7 +14,7 @@
     "start:von": "sh start.sh",
     "start:test-agent": "sh start-test-agent.sh",
     "start:acme": "sh start-acme.sh",
-    "data:relationships": "nodemon --exec ts-node ./src/app/test/scripts/relationships-tests.ts",
+    "data:relationships": "nodemon --exec ts-node src/data-gen.ts",
     "debug": "node --inspect-brk --require ts-node/register src/server.ts"
   },
   "keywords": [],

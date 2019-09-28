@@ -24,6 +24,7 @@ export class Connection {
   }
 
   constructor(apiUrl: string) {
+    console.log('api url', apiUrl);
     this.connectionSvc = new ConnectionService(apiUrl);
   }
 

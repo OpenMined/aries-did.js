@@ -7,9 +7,10 @@ import { IRelationshipResponse } from './relationships.interface';
 import AgentConfig from '../../config';
 
 export class RelationshipService {
-  private _agentConfig = new AgentConfig();
-  private _connections = new Connection(this._agentConfig.apiUrl);
-  constructor() {}
+  _connections: Connection;
+  constructor(apiUrl: string) {
+    this._connections = new Connection(apiUrl);
+  }
 
   mapRelationships(itm: IConnectionsResult): IRelationshipResponse {
     return {
