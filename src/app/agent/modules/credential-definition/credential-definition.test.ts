@@ -13,9 +13,9 @@ let schemaId: string;
 
 beforeEach('test', async function() {
   const schemaDef = {
-    attributes: ['degree', 'name', 'age', 'average'],
-    schema_name: 'zzz',
-    schema_version: '1.0'
+    schema_version: '1.0',
+    schema_name: 'workplz',
+    attributes: ['blarg', 'this', 'sucks', 'really']
   };
   const res = await schema.createSchema(schemaDef);
   schemaId = res.schema_id;

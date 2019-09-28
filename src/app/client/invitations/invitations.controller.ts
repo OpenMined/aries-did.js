@@ -24,10 +24,12 @@ const invitationKeys = ['@type', 'recipientkeys', 'label', 'serviceEndpoint'];
 
 router.get('/', async (ctx: Koa.Context) => {
   const params = ctx.query;
-
-  // console.log('ctx query');
-  const res = await invitationSvc.getInvitations(params);
-  ctx.body = res;
+  try {
+    const res = await invitationSvc.getInvitations(params);
+    return (ctx.body = res);
+  } catch (err) {
+    ctx.throw(400, err.message);
+  }
 });
 
 /*

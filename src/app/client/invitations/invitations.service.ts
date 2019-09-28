@@ -22,7 +22,6 @@ export class InvitationService {
   async getInvitations(params?: IConnectionParams) {
     try {
       const res = await this._connection.getConnections(params);
-      // console.log('invitations result', res);
       return res;
     } catch (err) {
       return err;

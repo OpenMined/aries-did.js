@@ -22,6 +22,7 @@ const options = {
   ],
   allowMethods: 'GET, HEAD, PUT, POST, DELETE, PATCH, OPTIONS'
 };
+app.use(bodyParser());
 
 app.use(cors(options));
 
@@ -36,8 +37,6 @@ app.use(async (ctx: Koa.Context, next: () => Promise<any>) => {
     ctx.app.emit('error', error, ctx);
   }
 });
-
-app.use(bodyParser());
 
 if (client) {
   clientRoutes.forEach(route => app.use(route));
