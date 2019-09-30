@@ -83,3 +83,18 @@ export interface IConnectionActivity {
   direction: string;
   connection_id: string;
 }
+
+export interface IAcceptRequestResponse {
+  routing_state: string;
+  accept: string;
+  updated_at: string;
+  created_at: string;
+  my_did: string;
+  their_did: string;
+  invitation_mode: string;
+  state: ConnectionState;
+  invitation_key: string;
+  initiator: ConnectionInitiator;
+  connection_id: string;
+  their_label: string;
+}

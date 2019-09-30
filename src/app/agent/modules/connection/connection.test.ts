@@ -43,9 +43,26 @@ describe('create new invitation', async () => {
   });
   it('should accept an invitation', async () => {
     accept = await agentConnection.acceptInvitation(receive.connection_id);
-    console.log('accept result', accept);
     expect(accept).to.haveOwnProperty('their_label');
     expect(accept).to.haveOwnProperty('connection_id');
     expect(accept.their_label).to.equal('Faber');
+  });
+  it('should respond to an invitation', async () => {
+    const invite = await agentConnection.createInvitation();
+    const receive = await testConnection.invitationResponse(invite);
+    const accept = await testConnection.acceptInvitation(receive.connection_id);
+    const connection = await agentConnection.getConnections({
+      state: 'request',
+      initiator: 'self'
+    });
+    if (Array.isArray(connection)) {
+      const connToGet = connection[0];
+      const responseResponse = await agentConnection.requestResponse(
+        connToGet.connection_id
+      );
+      expect(responseResponse).to.haveOwnProperty('routing_state');
+      expect(responseResponse).to.haveOwnProperty('initiator');
+      expect(responseResponse.initiator).to.equal('self');
+    }
   });
 });
