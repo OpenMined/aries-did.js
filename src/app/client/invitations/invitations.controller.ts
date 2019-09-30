@@ -1,8 +1,12 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import { InvitationService } from './invitations.service';
+import AgentConfig from '../../../app/config';
+import { Connection } from '../../../app/agent/modules/connection/connection.model';
 
-const invitationSvc = new InvitationService();
+const agentConfig = new AgentConfig();
+const connection = new Connection(agentConfig.agentUrl);
+const invitationSvc = new InvitationService(connection);
 
 const routerOpts: Router.IRouterOptions = {
   prefix: '/invitations'
@@ -42,7 +46,9 @@ router.post('/', async (ctx: Koa.Context) => {
   const params = ctx.query;
   const keys = Object.keys(params);
   if (keys.some(itm => itm === 'accept')) {
+    console.log('this is the test', keys);
     const invite = ctx.request.body;
+    console.log('invitation', invite);
     try {
       const req = await invitationSvc.acceptInvitation(invite);
       ctx.body = req;
@@ -53,7 +59,14 @@ router.post('/', async (ctx: Koa.Context) => {
   } else {
     try {
       const invite = await invitationSvc.createInvitation();
-      ctx.body = invite;
+      const formatInvite = {
+        type: invite['@type'],
+        id: invite['@id'],
+        serviceEndpoint: invite.serviceEndpoint,
+        label: invite.label,
+        recipientkeys: invite.recipientkeys
+      };
+      ctx.body = formatInvite;
     } catch (err) {
       ctx.status = 500;
       ctx.throw('invitation failed to create on the server');

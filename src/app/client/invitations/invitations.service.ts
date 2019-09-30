@@ -2,14 +2,14 @@ import { Connection } from '../../agent/modules/connection/connection.model';
 import { IInvitation } from '../../core/interfaces/invitation-request.interface';
 import { invitationValid } from './invitations-validators';
 import { IConnectionParams } from '../../core/interfaces/connection.interface';
-import AgentConfig from '../../config';
 
 export class InvitationService {
   _connection: Connection;
-  constructor() {
-    const agentConfig = new AgentConfig();
-    this._connection = new Connection(agentConfig.apiUrl);
+
+  constructor(connection: Connection) {
+    this._connection = connection;
   }
+
   async createInvitation() {
     try {
       const res = await this._connection.createInvitation();
@@ -32,7 +32,8 @@ export class InvitationService {
     if (!invitationValid(invite)) throw new Error('invalid invitation');
     try {
       const res = await this._connection.invitationResponse(invite);
-      return res;
+      const accept = await this._connection.acceptInvitation(res.connection_id);
+      return accept;
     } catch (err) {
       return err;
     }

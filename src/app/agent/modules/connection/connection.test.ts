@@ -27,7 +27,6 @@ before('create an invitation object', async () => {
 describe('create new invitation', async () => {
   it('should create a new invitation', async () => {
     const invite = await agentConnection.createInvitation();
-    console.log('invitation', invite);
     expect(invite).to.haveOwnProperty('@type');
     expect(invite).to.haveOwnProperty('@id');
     expect(invite).to.haveOwnProperty('recipientKeys');
@@ -50,7 +49,7 @@ describe('create new invitation', async () => {
   it('should respond to an invitation', async () => {
     const invite = await agentConnection.createInvitation();
     const receive = await testConnection.invitationResponse(invite);
-    const accept = await testConnection.acceptInvitation(receive.connection_id);
+    await testConnection.acceptInvitation(receive.connection_id);
     const connection = await agentConnection.getConnections({
       state: 'request',
       initiator: 'self'
