@@ -17,6 +17,7 @@ let invite: IInvitation;
 before('start app server', async function() {
   // server = await app.listen(agent.port);
   invite = await testAgent.createInvitation();
+  console.log(invite);
 });
 
 describe('API should handle invitations', async function() {

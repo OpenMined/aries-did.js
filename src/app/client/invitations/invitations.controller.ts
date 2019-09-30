@@ -46,9 +46,7 @@ router.post('/', async (ctx: Koa.Context) => {
   const params = ctx.query;
   const keys = Object.keys(params);
   if (keys.some(itm => itm === 'accept')) {
-    console.log('this is the test', keys);
     const invite = ctx.request.body;
-    console.log('invitation', invite);
     try {
       const req = await invitationSvc.acceptInvitation(invite);
       ctx.body = req;

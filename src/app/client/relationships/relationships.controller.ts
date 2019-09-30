@@ -16,14 +16,22 @@ const router: Router = new Router(routerOpts);
 router.get('/', async (ctx: Koa.Context) => {
   try {
     const params = ctx.query;
-    const res = await relationship.getRelationships(params);
-    ctx.body = res;
+    console.log('parameters', params);
+    if (params.id) {
+      console.log('id exists');
+      const res = await relationship.getRelationships(params, params.id);
+      ctx.body = res;
+    } else {
+      const res = await relationship.getRelationships(params);
+      ctx.body = res;
+    }
   } catch (err) {
     ctx.throw(400, 'failed to get relationships');
   }
 });
 
 router.post('/', async (ctx: Koa.Context) => {
+  // console.log('post run', ctx.query.params);
   try {
     // const invite = await relationship.createInvitation();
     // ctx.body = invite;
