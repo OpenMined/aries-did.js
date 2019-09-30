@@ -63,4 +63,18 @@ describe('create new invitation', async () => {
       expect(responseResponse.initiator).to.equal('self');
     }
   });
+  it('should get a single connection', async () => {
+    const connections = await agentConnection.getConnections();
+    if (Array.isArray(connections)) {
+      const connToGet = connections[0];
+      const connection = await agentConnection.getConnections(
+        {},
+        connToGet.connection_id
+      );
+      console.log('the connection', connection);
+      if (!Array.isArray(connection)) {
+        expect(connection.state).to.not.be.undefined;
+      }
+    }
+  });
 });

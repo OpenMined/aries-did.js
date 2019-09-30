@@ -93,11 +93,12 @@ export class ConnectionService {
     id: string | null = null,
     params: IConnectionParams = {}
   ): Promise<IConnectionsResult | IConnectionsResult[]> {
+    console.log('the id', id);
     try {
       const res = id
         ? await request.get(`${this.apiUrl}connections/${id}`)
         : await request.get(`${this.apiUrl}connections`).query(params);
-      return res.body.results;
+      return res.body.results || res.body;
     } catch (err) {
       console.log('connections call failed', err);
       return err;
@@ -107,7 +108,9 @@ export class ConnectionService {
   /*
     Assign another connection as the inbound connection
   */
-  async establishInbound(id: string, refId: string) {}
+  async establishInbound(id: string, refId: string) {
+    return 'method not implemented';
+  }
 
   /*
 
