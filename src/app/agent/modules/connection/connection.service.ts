@@ -138,7 +138,7 @@ export class ConnectionService {
     try {
       const url = `${this.apiUrl}${segment}${id}/remove`;
       const res = await request.post(url);
-      console.log('return result from the remove connection', res);
+      // console.log('return result from the remove connection', res);
       return res.body;
     } catch (err) {
       return err;

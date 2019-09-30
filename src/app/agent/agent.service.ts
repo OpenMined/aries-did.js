@@ -27,8 +27,8 @@ export class AgentService {
 
   constructor(connection: Connection, schema?: Schema) {
     this._connection = connection;
-    this._schema = schema || new Schema();
-    this._credDef = new CredentialDefinition(this._schema);
+    // this._schema = schema || new Schema();
+    // this._credDef = new CredentialDefinition(this._schema);
   }
 
   detectConnection() {}
