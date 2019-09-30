@@ -106,4 +106,25 @@ export class Connection {
       return err;
     }
   }
+  async removeAllConnections() {
+    try {
+      let connections = await this.connectionSvc.connections();
+      if (Array.isArray(connections)) {
+        for (let connection of connections) {
+          let res = await this.removeConnection(connection.connection_id);
+        }
+      }
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async removeConnection(id: string) {
+    try {
+      const res = await this.connectionSvc.sendRemoveConnection(id);
+      return res;
+    } catch (err) {
+      return err;
+    }
+  }
 }

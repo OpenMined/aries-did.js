@@ -23,7 +23,7 @@ before('create an invitation object', async () => {
   invite = await testConnection.createInvitation();
 });
 
-describe('create new invitation', async () => {
+describe('connection model results', async () => {
   it('should create a new invitation', async () => {
     const invite = await agentConnection.createInvitation();
     expect(invite).to.haveOwnProperty('@type');
@@ -76,5 +76,25 @@ describe('create new invitation', async () => {
         expect(connection.state).to.not.be.undefined;
       }
     }
+  });
+  it('should remove a single connection', async () => {
+    const connections = await agentConnection.getConnections();
+    if (Array.isArray(connections)) {
+      await agentConnection.removeConnection(connections[0].connection_id);
+      const connection = await agentConnection.getConnections(
+        {},
+        connections[0].connection_id
+      );
+      if (!Array.isArray(connection)) {
+        console.log('the removed connection', connection);
+        expect(connection.accept).to.be.undefined;
+      }
+    }
+  });
+  it('should remove all connections', async () => {
+    await agentConnection.removeAllConnections();
+    const res = await agentConnection.getConnections();
+    // console.log('the result', res);
+    expect(res).to.be.empty;
   });
 });

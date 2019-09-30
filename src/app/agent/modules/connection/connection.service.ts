@@ -93,7 +93,6 @@ export class ConnectionService {
     id: string | null = null,
     params: IConnectionParams = {}
   ): Promise<IConnectionsResult | IConnectionsResult[]> {
-    console.log('the id', id);
     try {
       const res = id
         ? await request.get(`${this.apiUrl}connections/${id}`)
@@ -137,10 +136,28 @@ export class ConnectionService {
   */
   async sendRemoveConnection(id: string): Promise<any> {
     try {
-      const res = await request.post(`${this.apiUrl}${segment}${id}/remove`);
-      return res;
+      const url = `${this.apiUrl}${segment}${id}/remove`;
+      const res = await request.post(url);
+      console.log('return result from the remove connection', res);
+      return res.body;
     } catch (err) {
       return err;
+    }
+  }
+
+  /*
+    remove all connections
+  */
+  async removeAllConnections() {
+    const connections = this.connections();
+    if (Array.isArray(connections)) {
+      for (const connection of connections) {
+        try {
+          await this.sendRemoveConnection(connection.connection_id);
+        } catch (err) {
+          return err;
+        }
+      }
     }
   }
 }
