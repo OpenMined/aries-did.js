@@ -1,8 +1,7 @@
-import { ConnectionService } from './connection.service';
-import { Connection } from './connection.model';
-
 import { expect } from 'chai';
 import 'mocha';
+
+import { Connection } from './connection.model';
 
 import TestAgentConfig from '../../agent-test-config';
 import {

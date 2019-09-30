@@ -29,7 +29,6 @@ export class RelationshipService {
     // console.log('relationships', res);
     if (Array.isArray(res)) {
       let relationships = res.map(itm => this.mapRelationships(itm));
-      console.log(relationships);
       return relationships;
     }
 

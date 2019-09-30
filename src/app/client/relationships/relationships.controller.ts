@@ -14,9 +14,8 @@ const routerOpts: Router.IRouterOptions = {
 const router: Router = new Router(routerOpts);
 
 router.get('/', async (ctx: Koa.Context) => {
-  // console.log(agentConfig.agentUrl);
   try {
-    const params = ctx.body;
+    const params = ctx.query;
     const res = await relationship.getRelationships(params);
     ctx.body = res;
   } catch (err) {

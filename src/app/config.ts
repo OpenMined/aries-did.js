@@ -11,6 +11,7 @@ export const AGENT_URL = process.env.AGENT_URL;
 export const TEST_AGENT_URL = process.env.TEST_AGENT_URL;
 export const DEBUG = process.env.DEBUG === 'true';
 export const ACME_AGENT_URL = process.env.ACME_AGENT_URL;
+export const PORT = process.env.PORT;
 
 export default class AgentConfig implements IAgentConfig {
   [key: string]: string;
@@ -23,7 +24,8 @@ export default class AgentConfig implements IAgentConfig {
       agentUrl: AGENT_URL,
       testAgentUrl: TEST_AGENT_URL,
       acmeAgentUrl: ACME_AGENT_URL,
-      debug: DEBUG
+      debug: DEBUG,
+      port: PORT
     }
   ) {
     for (let key in config) {

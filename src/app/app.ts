@@ -4,9 +4,7 @@ import * as bodyParser from 'koa-bodyparser';
 import * as cors from '@koa/cors';
 
 import { clientRoutes, clientMethods } from './client/routes';
-import AgentConfig from './config';
 
-const config = new AgentConfig();
 const app: Koa = new Koa();
 const client = true;
 // Generic error handling middleware.

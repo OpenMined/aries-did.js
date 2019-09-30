@@ -15,24 +15,18 @@ const schemaDef = {
   schema_name: 'test'
 };
 
-before('start app server', async function() {
-  server = app.listen(agent.port);
-});
+before('start app server', async function() {});
 
 describe('create new credential definition from API', async function() {
   it('should return a cred-def id', async function() {
-    const res = await request(server)
+    const res = await request(app.callback())
       .post('/credential-definitions')
       .send(schemaDef);
-    console.log('the real result', res.body);
     expect(res.body).to.haveOwnProperty('id');
     expect(res.body.id).to.not.be.empty;
   });
   it('should not return a cred-def id', async function() {
-    const res = await request(server).post('/credential-definitions');
+    const res = await request(app.callback()).post('/credential-definitions');
     expect(res.body).to.be.empty;
   });
-});
-after('close server', function() {
-  server.close();
 });
