@@ -23,7 +23,6 @@ beforeEach('test', async function() {
 describe('create new credDef', async function() {
   it('should return a credential definition id', async function() {
     const res = await credDef.createCredentialDefinition(schemaId);
-    console.log('test result', res);
     expect(res).to.not.be.undefined;
     expect(res).to.haveOwnProperty('credential_definition_id');
   });

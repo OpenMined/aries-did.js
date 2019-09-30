@@ -16,7 +16,6 @@ export class SchemaService {
     try {
       // console.log('the schema I send', schema);
       const res = await request.post(`${this._apiUrl}schemas`).send(schema);
-      console.log('schema ruesult', res.body);
       return res.body;
     } catch (err) {
       console.log('schema error');

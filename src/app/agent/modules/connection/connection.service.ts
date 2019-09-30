@@ -1,6 +1,7 @@
 import {
   IInvitationRequest,
-  IInvitationRequestResponse
+  IInvitationRequestResponse,
+  IReceiveInvitationRequestResponse
 } from '../../../core/interfaces/invitation-request.interface';
 import * as request from 'superagent';
 import { MessageState } from '../../../core/interfaces/agent.interface';
@@ -41,8 +42,7 @@ export class ConnectionService {
     invitation: IInvitationRequest,
     accept: boolean = true,
     params?: IConnectionParams
-  ): Promise<IInvitationRequestResponse> {
-    console.log('invitation', invitation);
+  ): Promise<IReceiveInvitationRequestResponse> {
     const res = await request
       .post(`${this.apiUrl}connections/receive-invitation`)
       .send(invitation);

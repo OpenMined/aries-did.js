@@ -15,7 +15,6 @@ export class CredDefService {
 
   async createCredDef(schema: ISchema): Promise<any> {
     try {
-      console.log('schema here');
       const sendSchema = {
         schema_version: schema.schema_version,
         schema_name: schema.schema_name,
@@ -27,7 +26,6 @@ export class CredDefService {
       const res = await this._credDef.createCredentialDefinition(
         newSchema.schema_id
       );
-      console.log('service result', res);
       return { id: res.credential_definition_id };
     } catch (err) {
       return err;

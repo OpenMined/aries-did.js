@@ -1,3 +1,9 @@
+import {
+  RoutingState,
+  ConnectionInitiator,
+  ConnectionState
+} from './connection.interface';
+
 export interface IInvitation {
   '@type': string;
   '@id': string;
@@ -10,6 +16,39 @@ export interface IInvitationRequestResponse {
   connection_id: string;
   invitation: IInvitation;
   invitation_url: string;
+}
+
+export interface IReceiveInvitationRequestResponse {
+  created_at: string;
+  connection_id: string;
+  state: ConnectionState;
+  initiator: ConnectionInitiator;
+  invitation_key: string;
+  updated_at: string;
+  their_label: string;
+  invitation_mode: string;
+  accept: string;
+  routing_state: RoutingState;
+}
+
+export interface IAcceptApplicationRequestResponse {
+  their_did: string;
+  initiator: string;
+  inbound_connection_id: string;
+  invitation_key: string;
+  their_role: ConnectionInitiator;
+  invitation_mode: string;
+  their_label: string;
+  accept: string;
+  routing_state: RoutingState;
+  state: ConnectionState;
+  error_msg: string;
+  alias: string;
+  request_id: string;
+  my_did: string;
+  updated_at: string;
+  created_at: string;
+  connection_id: string;
 }
 
 export interface IInvitationRequest {

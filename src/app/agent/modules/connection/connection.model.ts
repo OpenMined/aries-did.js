@@ -6,7 +6,9 @@ import {
 } from '../../../core/interfaces/connection.interface';
 import {
   IInvitation,
-  IInvitationRequestResponse
+  IInvitationRequestResponse,
+  IReceiveInvitationRequestResponse,
+  IAcceptApplicationRequestResponse
 } from '../../../core/interfaces/invitation-request.interface';
 
 export class Connection {
@@ -24,7 +26,6 @@ export class Connection {
   }
 
   constructor(apiUrl: string) {
-    console.log('api url', apiUrl);
     this.connectionSvc = new ConnectionService(apiUrl);
   }
 
@@ -64,7 +65,7 @@ export class Connection {
     invitation: IInvitation,
     autoAccept: boolean = true,
     accept?: boolean
-  ) {
+  ): Promise<IReceiveInvitationRequestResponse> {
     try {
       const res = await this.connectionSvc.receiveInvitation(
         invitation,
@@ -77,7 +78,10 @@ export class Connection {
     }
   }
 
-  async acceptInvitation(id: string, accept = true) {
+  async acceptInvitation(
+    id: string,
+    accept = true
+  ): Promise<IAcceptApplicationRequestResponse> {
     try {
       const res = await this.connectionSvc.acceptInvitation(id);
       return res;
