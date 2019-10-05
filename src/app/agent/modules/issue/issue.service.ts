@@ -1,5 +1,5 @@
 import { IIssueSend } from 'src/app/core/interfaces/issue-credential.interface';
-
+import * as request from 'superagent';
 /*
 {
   "credential_proposal": {
@@ -25,10 +25,18 @@ import { IIssueSend } from 'src/app/core/interfaces/issue-credential.interface';
 
 export class IssueService {
   private _url: string;
+  private _segment: string = 'issue-credential/';
 
   constructor(url: string) {
     this._url = url;
   }
 
-  issueCredentialSend(cred: IIssueSend) {}
+  async issueCredentialSend(cred: IIssueSend) {
+    try {
+      console.log('the credential to send', cred);
+      return await request.post(`${this._url}${this._segment}send`).send(cred);
+    } catch (err) {
+      return err;
+    }
+  }
 }

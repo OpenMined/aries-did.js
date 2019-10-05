@@ -56,9 +56,10 @@ export interface ICredentialProposal {
 }
 
 export interface IIssueSend {
-  '@type': string;
-  attribues: ICredentialAttributes[];
-  credential_definition_id: string;
+  credential_proposal: ICredentialProposal;
+  credential_definition_id: {
+    credential_definition_id: string;
+  };
   comment: string;
   connection_id: string;
 }
