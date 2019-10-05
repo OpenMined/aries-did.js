@@ -11,7 +11,7 @@ let schemaId: string;
 describe('create new schema', async function() {
   it('should return a schema id', async function() {
     const schemaDef = {
-      attributes: ['verr', 'pretty', 'people', 'are'],
+      attributes: ['name', 'score', 'issued'],
       schema_name: 'SchoolSchema',
       schema_version: '1.0'
     };

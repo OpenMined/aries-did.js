@@ -46,7 +46,7 @@ export interface IRecordsResult {
 
 export interface ICredentialAttributes {
   name: string;
-  'mime-type': string;
+  'mime-type'?: string;
   value: string;
 }
 
@@ -55,11 +55,12 @@ export interface ICredentialProposal {
   attributes: ICredentialAttributes[];
 }
 
-export interface ICredentialSend {
-  credential_proposal: ICredentialProposal;
-  connection_id: string;
-  comment: string;
+export interface IIssueSend {
+  '@type': string;
+  attribues: ICredentialAttributes[];
   credential_definition_id: string;
+  comment: string;
+  connection_id: string;
 }
 
 export interface ICredentialSendResponse {

@@ -15,7 +15,6 @@ const agent = new AgentConfig();
 const testAgent = new Connection(agent.testAgentUrl);
 const agentConn = new Connection(agent.agentUrl);
 
-let server: any;
 let invite: IInvitation;
 
 before('start app server', async function() {
@@ -32,8 +31,6 @@ describe('API should handle relationships', async function() {
   });
   it('should get a single relationship record', async function() {
     const received = await agentConn.invitationResponse(invite);
-    // console.log('received', received);
-    // const acceptInvite =
     const record = await request(app.callback()).get(
       `/relationships?id=${received.connection_id}`
     );

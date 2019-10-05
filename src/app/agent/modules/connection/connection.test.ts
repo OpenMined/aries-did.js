@@ -21,7 +21,7 @@ let receive: IReceiveInvitationRequestResponse;
 let accept: IAcceptApplicationRequestResponse;
 
 before('create an invitation object', async () => {
-  // await testConnection.removeAllConnections();
+  await testConnection.removeAllConnections();
   invite = await testConnection.createInvitation();
   const agentInvite = await agentConnection.createInvitation();
   const receive = await testConnection.invitationResponse(agentInvite);
