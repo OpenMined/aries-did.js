@@ -1,0 +1,5 @@
+{
+  "attributes": ["name", "grade", "issued"],
+  "schema_name": "SchoolSchema",
+  "schema_version": "1.0"
+}
