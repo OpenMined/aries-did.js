@@ -13,6 +13,7 @@ import { IConnectionsResult } from 'src/app/core/interfaces/connection.interface
 import { Issue } from '../issue/issue.model';
 import { Schema } from '../schema/schema.model';
 import { CredentialDefinition } from '../credential-definition/credential-definition.model';
+import { ICredDefSendResponse } from '../credential-definition/credential-definition.service';
 
 const agentConfig = new TestAgentConfig();
 
@@ -30,7 +31,7 @@ let invite: IInvitation;
 // let receive: IReceiveInvitationRequestResponse;
 // let accept: IAcceptApplicationRequestResponse;
 
-let credId: string;
+let credId: ICredDefSendResponse;
 
 const schemaDef = {
   attributes: ['kind', 'score', 'issued'],
@@ -41,26 +42,28 @@ const schemaDef = {
 let activeConnection: IConnectionsResult;
 
 before('create an invitation object for issue cred test', async function() {
-  // await testConnection.removeAllConnections();
+  // await agentConnection.removeAllConnections();
   // invite = await testConnection.createInvitation();
-  const agentInvite = await agentConnection.createInvitation();
-  const receive = await testConnection.invitationResponse(agentInvite);
-  await agentConnection.acceptInvitation(receive.connection_id);
+  // const agentInvite = await agentConnection.createInvitation();
+  // const receive = await testConnection.invitationResponse(agentInvite);
+  // await agentConnection.acceptInvitation(receive.connection_id);
   const getConnections = function(): boolean {
     let bool = false;
-    agentConnection.getConnections({ state: 'active' }).then(connections => {
-      if (Array.isArray(connections)) {
-        if (connections.length > 0) {
-          activeConnection = connections[0];
-          // console.log('each connection', activeConnection);
-          bool = true;
+    agentConnection
+      .getConnections({ state: 'active', initiator: 'external' })
+      .then(connections => {
+        if (Array.isArray(connections)) {
+          if (connections.length > 0) {
+            activeConnection = connections[0];
+            // console.log('each connection', activeConnection);
+            bool = true;
+          } else {
+            bool = false;
+          }
         } else {
           bool = false;
         }
-      } else {
-        bool = false;
-      }
-    });
+      });
     return bool;
   };
   let x = 0;
@@ -125,9 +128,14 @@ describe('issue credential from agent API', async function() {
       connection_id,
       'test cred',
       attrs,
-      credId
+      credId.credential_definition_id
     );
+    console.log();
     console.log('credential result', res);
     expect(res).not.to.be.undefined;
   });
+});
+
+after('all credential issue test', async function() {
+  // await agentConnection.removeAllConnections();
 });

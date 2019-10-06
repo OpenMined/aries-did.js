@@ -21,7 +21,7 @@ let receive: IReceiveInvitationRequestResponse;
 let accept: IAcceptApplicationRequestResponse;
 
 before('create an invitation object', async () => {
-  await testConnection.removeAllConnections();
+  // await testConnection.removeAllConnections();
   invite = await testConnection.createInvitation();
   const agentInvite = await agentConnection.createInvitation();
   const receive = await testConnection.invitationResponse(agentInvite);
@@ -51,12 +51,31 @@ describe('connection model results', async () => {
     expect(accept.their_label).to.equal('Faber');
   });
   it('should respond to an invitation', async () => {
-    const connection = await agentConnection.getConnections({
+    let connection = await agentConnection.getConnections({
       state: 'request',
       initiator: 'self'
     });
     console.log('connections', connection);
     if (Array.isArray(connection)) {
+      if (connection.length < 1) {
+        let x = 0;
+        while (x < 7) {
+          let response = await agentConnection.getConnections({
+            state: 'request',
+            initiator: 'self'
+          });
+
+          if (Array.isArray(response)) {
+            if (response.length < 7) {
+              x += 1;
+              break;
+            } else {
+              connection = response;
+            }
+          }
+        }
+      }
+
       const connToGet = connection[0];
       console.log('the connection to get', connToGet);
       const responseResponse = await agentConnection.requestResponse(

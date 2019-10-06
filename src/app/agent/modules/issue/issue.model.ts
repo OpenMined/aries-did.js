@@ -45,8 +45,7 @@ export class Issue {
 
     return {
       name: attrs.name,
-      value: attrs.value,
-      'mime-type': 'image/url'
+      value: attrs.value
     };
   }
 

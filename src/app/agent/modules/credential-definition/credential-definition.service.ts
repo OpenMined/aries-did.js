@@ -1,5 +1,8 @@
 import * as request from 'superagent';
 
+export interface ICredDefSendResponse {
+  credential_definition_id: string;
+}
 const apiUrl = 'http://localhost:8051/';
 const segment = 'credential-definitions';
 
@@ -13,7 +16,9 @@ export class CredentialDefinitionService {
     send a credential definition to the ledger. If it exists already it will
     return an existing credential definition
   */
-  async sendCredentialDefinition(schemaId: string) {
+  async sendCredentialDefinition(
+    schemaId: string
+  ): Promise<ICredDefSendResponse> {
     try {
       const res = await request
         .post(`${this._apiUrl}${segment}`)

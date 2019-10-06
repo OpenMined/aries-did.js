@@ -33,7 +33,7 @@ export class IssueService {
 
   async issueCredentialSend(cred: IIssueSend) {
     try {
-      console.log('the credential to send', cred);
+      console.log('the credential to send', JSON.stringify(cred, null, 2));
       return await request.post(`${this._url}${this._segment}send`).send(cred);
     } catch (err) {
       return err;
