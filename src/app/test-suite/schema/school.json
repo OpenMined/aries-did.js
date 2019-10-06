@@ -1,5 +1,5 @@
 {
   "attributes": ["name", "grade", "issued"],
-  "schema_name": "SchoolSchema",
+  "schema_name": "ZZSchoolSchema",
   "schema_version": "1.0"
 }
