@@ -14,7 +14,6 @@ export class SchemaService {
   */
   async postSchema(schema: ISchema) {
     try {
-      // console.log('the schema I send', schema);
       const res = await request.post(`${this._apiUrl}schemas`).send(schema);
       return res.body;
     } catch (err) {
@@ -32,8 +31,7 @@ export class SchemaService {
       const res = await request.get(`${this._apiUrl}schemas/${id}`);
       return res.body;
     } catch (err) {
-      console.log('schema error');
-      return err;
+      throw new Error(err.message);
     }
   }
 }

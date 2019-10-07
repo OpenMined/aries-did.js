@@ -39,9 +39,7 @@ export class AgentController implements IAgentModel {
   }
 
   async addSchema(data: any) {
-    console.log(data);
     let ret = await this.schema.createSchema(data);
-    console.log('');
     this._schemaList = [...this._schemaList, ret];
   }
 

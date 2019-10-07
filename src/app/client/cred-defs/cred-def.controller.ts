@@ -16,14 +16,8 @@ const router = new Router(routerOpts);
 
 router.post('/', async (ctx: Koa.Context) => {
   let schema = ctx.request.body;
-  // const schemaDef = {
-  //   attributes: ['degree', 'name', 'age', 'average'],
-  //   schema_name: 'zzz',
-  //   schema_version: '1.0'
-  // };
   try {
     const res = await credDefSvc.createCredDef(schema);
-    // console.log('res', res);
     return (ctx.body = res);
   } catch (err) {
     ctx.throw(401, err);

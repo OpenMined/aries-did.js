@@ -5,10 +5,24 @@ import {
 } from 'src/app/core/interfaces/issue-credential.interface';
 import { IssueService } from './issue.service';
 
+export type IssueCredentialRecordStateType =
+  | 'offer_sent'
+  | 'offer_received'
+  | 'request_sent';
+export type IssueCredentialFilterType = 'state' | 'credential_exchange_id';
+
 export class Issue {
   private _issueSvc: IssueService;
-  constructor(url: string) {
-    this._issueSvc = new IssueService(url);
+
+  /*
+    Issue credential filter has no query parameters on the API so we must filter here
+  */
+  filterIssueCrendentials(
+    key: IssueCredentialFilterType,
+    val: IssueCredentialRecordStateType | string,
+    records: any[]
+  ) {
+    return records.filter(itm => itm[key] === val);
   }
 
   private formatSendCred(
@@ -64,6 +78,22 @@ export class Issue {
     };
   }
 
+  constructor(url: string) {
+    this._issueSvc = new IssueService(url);
+  }
+
+  async records() {
+    try {
+      let res = await this._issueSvc.getIssueCredentialRecords();
+      return res.body.results;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+  /*
+    This does not work correctly as a result of what appears to be an AcaPy bug.
+  */
+
   async issueAndSendCred(
     connId: string,
     comment: string,
@@ -73,8 +103,8 @@ export class Issue {
     const cred = this.formatSendCred(connId, comment, attrs, credDefId);
     try {
       if (cred != null) {
-        // console.log('credential definition', cred);
-        return await this._issueSvc.issueCredentialSend(cred);
+        let res = await this._issueSvc.issueCredentialSend(cred);
+        return res.body;
       } else {
         throw new Error('cred not defined');
       }
@@ -83,6 +113,11 @@ export class Issue {
     }
   }
 
+  /*
+    Issue an offer to another agent through the admin agent API for AcaPy.
+    The foreign agent must then use send request in response to the offer that is
+    sent
+  */
   async issueOfferSend(
     connId: string,
     comment: string,
@@ -93,7 +128,6 @@ export class Issue {
     try {
       if (credOffer != null) {
         const res = await this._issueSvc.sendOffer(credOffer);
-        console.log('issue offer send result', res);
         return res.body;
       } else {
         throw new Error('cred offer not defined');
@@ -102,16 +136,23 @@ export class Issue {
       throw new Error(err.message);
     }
   }
+  /*
+    issue an offer in response to a proposal from a foreign agent;
+  */
 
   async sendOfferById(credExId: string) {
     try {
       let res = await this._issueSvc.postById(credExId, 'send-offer');
+      console.log('send offer by Id result', res);
       return res.body;
     } catch (err) {
       throw new Error(err.message);
     }
   }
 
+  /*
+    send a request in response to a credential offer from a foreign agent;
+  */
   async sendRequestById(credExId: string) {
     try {
       let res = await this._issueSvc.postById(credExId, 'send-request');
@@ -121,6 +162,9 @@ export class Issue {
     }
   }
 
+  /*
+    send an issued credential in response to a request from a foreign agent
+  */
   async sendIssueById(credExId: string) {
     try {
       let res = await this._issueSvc.postById(credExId, 'issue');
@@ -129,6 +173,10 @@ export class Issue {
       throw new Error(err.message);
     }
   }
+
+  /*
+    store a credential record in response to an issued credential stage from a foreign agent
+  */
 
   async sendStoreById(credExId: string) {
     try {

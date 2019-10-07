@@ -21,8 +21,7 @@ export class IssueService {
 
   async getIssueCredentialRecords() {
     try {
-      let res = await request.get(`${this._url}${this._segment}records`);
-      return res.body;
+      return await request.get(`${this._url}${this._segment}records`);
     } catch (err) {
       throw new Error(err.message);
     }
@@ -30,10 +29,7 @@ export class IssueService {
 
   async issueCredentialSend(cred: IIssueSend) {
     try {
-      let res = await request
-        .post(`${this._url}${this._segment}send`)
-        .send(cred);
-      return res.body;
+      return await request.post(`${this._url}${this._segment}send`).send(cred);
     } catch (err) {
       return err;
     }
@@ -48,11 +44,13 @@ export class IssueService {
       throw new Error(err.message);
     }
   }
+
   async postById(credExId: string, route: IssueCredByIdRouteType) {
     try {
-      return await request
-        .post(`${this._url}${this._segment}${credExId}/${route}`)
-        .send();
+      // console.log(`${this._url}${this._segment}records/${credExId}/${route}`);
+      return await request.post(
+        `${this._url}${this._segment}records/${credExId}/${route}`
+      );
     } catch (err) {
       throw new Error(err.message);
     }

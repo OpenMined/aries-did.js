@@ -83,7 +83,6 @@ describe('connection model results', async () => {
       }
 
       const connToGet = connection[0];
-      console.log('the connection to get', connToGet);
       const responseResponse = await agentConnection.requestResponse(
         connToGet.connection_id
       );

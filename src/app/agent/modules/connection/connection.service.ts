@@ -63,7 +63,7 @@ export class ConnectionService {
 
       return res.body;
     } catch (err) {
-      console.log('accept invitation failed', err);
+      throw new Error('accept invitation failed');
     }
   }
 
@@ -79,8 +79,7 @@ export class ConnectionService {
       );
       return res.body;
     } catch (err) {
-      console.log('accept request error', err.message);
-      return err;
+      throw new Error(err.message);
     }
   }
 
@@ -99,8 +98,7 @@ export class ConnectionService {
         : await request.get(`${this.apiUrl}connections`).query(params);
       return res.body.results || res.body;
     } catch (err) {
-      console.log('connections call failed', err);
-      return err;
+      throw new Error('connections call failed');
     }
   }
 
