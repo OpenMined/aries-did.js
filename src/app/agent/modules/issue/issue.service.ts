@@ -1,27 +1,15 @@
-import { IIssueSend } from 'src/app/core/interfaces/issue-credential.interface';
+import {
+  IIssueSend,
+  IIssueOffer
+} from 'src/app/core/interfaces/issue-credential.interface';
 import * as request from 'superagent';
-/*
-{
-  "credential_proposal": {
-    "@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/credential-preview",
-    "attributes": [
-      {
-        "name": "favourite_drink",
-        "mime-type": "image/jpeg",
-        "value": "martini"
-      }
-    ]
-  },
-  "credential_definition_id": "WgWxqztrNooG92RXvxSTWv:3:CL:20:tag",
-  "comment": "string",
-  "connection_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-}
 
-*/
-
-/*
-  definition for the format of a sent credential;
-*/
+export type IssueCredByIdRouteType =
+  | 'send-offer'
+  | 'send-request'
+  | 'issue'
+  | 'store'
+  | 'remove';
 
 export class IssueService {
   private _url: string;
@@ -31,12 +19,42 @@ export class IssueService {
     this._url = url;
   }
 
+  async getIssueCredentialRecords() {
+    try {
+      let res = await request.get(`${this._url}${this._segment}records`);
+      return res.body;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
   async issueCredentialSend(cred: IIssueSend) {
     try {
-      console.log('the credential to send', JSON.stringify(cred, null, 2));
-      return await request.post(`${this._url}${this._segment}send`).send(cred);
+      let res = await request
+        .post(`${this._url}${this._segment}send`)
+        .send(cred);
+      return res.body;
     } catch (err) {
       return err;
+    }
+  }
+
+  async sendOffer(cred: IIssueOffer) {
+    try {
+      return await request
+        .post(`${this._url}${this._segment}send-offer`)
+        .send(cred);
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+  async postById(credExId: string, route: IssueCredByIdRouteType) {
+    try {
+      return await request
+        .post(`${this._url}${this._segment}${credExId}/${route}`)
+        .send();
+    } catch (err) {
+      throw new Error(err.message);
     }
   }
 }

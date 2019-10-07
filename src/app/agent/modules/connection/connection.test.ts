@@ -54,7 +54,7 @@ describe('connection model results', async () => {
   });
   // TODO: fix this test - there's a time delay but I've set up auto accept on all the
   // actual calls so this is kind of moot at present.
-  /*
+
   it('CONNECTION: should respond to an invitation', async () => {
     let connection = await agentConnection.getConnections({
       state: 'request',
@@ -92,7 +92,7 @@ describe('connection model results', async () => {
       expect(responseResponse.initiator).to.equal('self');
     }
   });
-  */
+
   it('should get a single connection', async () => {
     const connections = await agentConnection.getConnections();
     if (Array.isArray(connections)) {
@@ -136,16 +136,16 @@ describe('connection model results', async () => {
   });
   it('should remove a single connection', async () => {
     // TODO: this works but there's a delay.. not sure how to fix at this time
-    // const connections = await agentConnection.getConnections();
-    // if (Array.isArray(connections)) {
-    //   const id = connections[0].connection_id;
-    //   console.log('the id ', id);
-    //   await agentConnection.removeConnection(id);
-    //   const connection = await agentConnection.getConnections({}, id);
-    //   if (!Array.isArray(connection)) {
-    //     expect(connection.accept).to.be.undefined;
-    //   }
-    // }
+    const connections = await agentConnection.getConnections();
+    if (Array.isArray(connections)) {
+      const id = connections[0].connection_id;
+      console.log('the id ', id);
+      await agentConnection.removeConnection(id);
+      const connection = await agentConnection.getConnections({}, id);
+      if (!Array.isArray(connection)) {
+        expect(connection.accept).to.be.undefined;
+      }
+    }
   });
   it('should remove all connections', async () => {
     // await agentConnection.removeAllConnections();

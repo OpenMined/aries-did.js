@@ -51,17 +51,28 @@ export interface ICredentialAttributes {
 }
 
 export interface ICredentialProposal {
-  '@type': string;
   attributes: ICredentialAttributes[];
 }
 
 export interface IIssueSend {
   credential_proposal: ICredentialProposal;
-  credential_definition_id: {
-    credential_definition_id: string;
-  };
+  // credential_definition_id: {
+  credential_definition_id: string;
+  // };
   comment: string;
   connection_id: string;
+}
+
+export interface ICredentialPreview {
+  attributes: ICredentialAttributes[];
+}
+
+export interface IIssueOffer {
+  'auto-issue': boolean;
+  connection_id: string;
+  comment: string;
+  credential_definition_id: string;
+  credential_preview: ICredentialPreview;
 }
 
 export interface ICredentialSendResponse {

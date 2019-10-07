@@ -1,6 +1,7 @@
 import {
   ICredentialAttributes,
-  IIssueSend
+  IIssueSend,
+  IIssueOffer
 } from 'src/app/core/interfaces/issue-credential.interface';
 import { IssueService } from './issue.service';
 
@@ -10,27 +11,41 @@ export class Issue {
     this._issueSvc = new IssueService(url);
   }
 
-  private formatInvitation(
+  private formatSendCred(
     connId: string,
     comment: string,
     attrs: ICredentialAttributes[],
-    credId: string
+    credDefId: string
   ): IIssueSend | null {
     const formatAttrs = this.formatAttrs(attrs);
     if (Array.isArray(formatAttrs)) {
       return {
         connection_id: connId,
         comment,
-        credential_definition_id: {
-          credential_definition_id: credId
-        },
+        credential_definition_id: credDefId,
         credential_proposal: {
-          '@type':
-            'did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/credential-preview',
           attributes: formatAttrs
         }
       };
     } else return null;
+  }
+
+  private formatSendOffer(
+    connection_id: string,
+    comment: string,
+    attributes: ICredentialAttributes[],
+    credential_definition_id: string,
+    autoIssue: boolean = true
+  ): IIssueOffer {
+    return {
+      connection_id,
+      comment,
+      credential_definition_id,
+      credential_preview: {
+        attributes: attributes
+      },
+      'auto-issue': autoIssue
+    };
   }
 
   private formatAttrs(attrs: ICredentialAttributes | ICredentialAttributes[]) {
@@ -53,17 +68,83 @@ export class Issue {
     connId: string,
     comment: string,
     attrs: ICredentialAttributes[],
-    credId: string
+    credDefId: string
   ) {
-    const cred = this.formatInvitation(connId, comment, attrs, credId);
+    const cred = this.formatSendCred(connId, comment, attrs, credDefId);
     try {
       if (cred != null) {
+        // console.log('credential definition', cred);
         return await this._issueSvc.issueCredentialSend(cred);
       } else {
         throw new Error('cred not defined');
       }
     } catch (err) {
       return err;
+    }
+  }
+
+  async issueOfferSend(
+    connId: string,
+    comment: string,
+    attrs: ICredentialAttributes[],
+    credDefId: string
+  ) {
+    const credOffer = this.formatSendOffer(connId, comment, attrs, credDefId);
+    try {
+      if (credOffer != null) {
+        const res = await this._issueSvc.sendOffer(credOffer);
+        console.log('issue offer send result', res);
+        return res.body;
+      } else {
+        throw new Error('cred offer not defined');
+      }
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  async sendOfferById(credExId: string) {
+    try {
+      let res = await this._issueSvc.postById(credExId, 'send-offer');
+      return res.body;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  async sendRequestById(credExId: string) {
+    try {
+      let res = await this._issueSvc.postById(credExId, 'send-request');
+      return res.body;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  async sendIssueById(credExId: string) {
+    try {
+      let res = await this._issueSvc.postById(credExId, 'issue');
+      return res.body;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  async sendStoreById(credExId: string) {
+    try {
+      let res = await this._issueSvc.postById(credExId, 'store');
+      return res.body;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+
+  async removeById(credExId: string) {
+    try {
+      let res = await this._issueSvc.postById(credExId, 'remove');
+      return res.body;
+    } catch (err) {
+      throw new Error(err.message);
     }
   }
 }

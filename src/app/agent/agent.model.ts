@@ -3,8 +3,13 @@ import { Schema } from './modules/schema/schema.model';
 import { Issue } from './modules/issue/issue.model';
 import { CredentialDefinition } from './modules/credential-definition/credential-definition.model';
 import { ISchema } from '../core/interfaces/schema.interface';
+import { Proof } from './modules/proof/proof.model';
 
 const moduleKeys = ['connection', 'schema', 'issue', 'credDef'];
+
+export type ModuleType = [
+  'connection' | 'schema' | 'issue' | 'credDef' | 'proof'
+];
 
 interface IAgent {
   [key: string]: string;
@@ -23,6 +28,7 @@ export class AgentController implements IAgentModel {
   schema: Schema;
   issue: Issue;
   credDef: CredentialDefinition;
+  proof: Proof;
   // cred: Credential;
 
   private _schemas: ISchema[];
@@ -35,10 +41,11 @@ export class AgentController implements IAgentModel {
   async addSchema(data: any) {
     console.log(data);
     let ret = await this.schema.createSchema(data);
+    console.log('');
     this._schemaList = [...this._schemaList, ret];
   }
 
-  getModel(key: 'connection' | 'schema' | 'issue' | 'credDef') {
+  getModel(key: 'connection' | 'schema' | 'issue' | 'credDef' | 'proof') {
     return this[key];
   }
 

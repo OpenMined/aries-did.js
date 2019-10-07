@@ -1,9 +1,13 @@
 import { AgentController } from 'src/app/agent/agent.model';
-import { Results } from './results';
+import { Results, IResult } from './results';
 
 export interface IRunner {
   agent: AgentController;
   agentUnderTest: AgentController;
+}
+export interface ITest {
+  name: string;
+  fn: () => Promise<boolean>;
 }
 
 export class Runner<T> implements IRunner {
@@ -19,5 +23,21 @@ export class Runner<T> implements IRunner {
     this.agent = agent;
     this.agentUnderTest = agentUnderTest;
     this.store = new Results(module);
+  }
+
+  async runTests(tests: Array<ITest>) {
+    for (let test of tests) {
+      await this.runTest(test.name, test.fn);
+    }
+  }
+
+  addResult(res: IResult) {
+    this.store.addResults({ ...res });
+  }
+
+  async runTest(name: string, test: () => Promise<boolean>) {
+    const pass = await test();
+    console.log('test results', pass);
+    this.addResult({ name, pass });
   }
 }
