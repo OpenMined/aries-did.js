@@ -1,9 +1,9 @@
-import { Agent } from '../agent/agent.model';
+import { AgentController } from '../agent/agent.model';
 
 export class Client {
-  agent: Agent;
+  agent: AgentController;
 
-  constructor(agent: Agent) {
+  constructor(agent: AgentController) {
     this.agent = agent;
   }
 }

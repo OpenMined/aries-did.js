@@ -42,11 +42,6 @@ const schemaDef = {
 let activeConnection: IConnectionsResult;
 
 before('create an invitation object for issue cred test', async function() {
-  // await agentConnection.removeAllConnections();
-  // invite = await testConnection.createInvitation();
-  // const agentInvite = await agentConnection.createInvitation();
-  // const receive = await testConnection.invitationResponse(agentInvite);
-  // await agentConnection.acceptInvitation(receive.connection_id);
   const getConnections = function(): boolean {
     let bool = false;
     agentConnection
@@ -77,25 +72,6 @@ before('create an invitation object for issue cred test', async function() {
   }
   return;
 });
-
-/*
-
-{
-  "credential_definition_id": "WgWxqztrNooG92RXvxSTWv:3:CL:20:tag",
-  "credential_proposal": {
-    "@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/credential-preview",
-    "attributes": [
-      {
-        "name": "favourite_drink",
-        "mime-type": "image/jpeg",
-        "value": "martini"
-      }
-    ]
-  },
-  "connection_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "comment": "string"
-}
-*/
 
 beforeEach('create a new cred def for creating a issue test', async function() {
   const res = await schema.createSchema(schemaDef);

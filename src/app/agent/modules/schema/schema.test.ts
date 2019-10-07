@@ -8,11 +8,13 @@ const schema = new Schema(agentConfig.agentUrl);
 
 let schemaId: string;
 
-describe('create new schema', async function() {
+const prefix = 'SCHEMA: ';
+
+describe(prefix + 'create new schema', async function() {
   it('should return a schema id', async function() {
     const schemaDef = {
       attributes: ['name', 'score', 'issued'],
-      schema_name: 'SchoolSchema',
+      schema_name: 'A test schema',
       schema_version: '1.0'
     };
     const res = await schema.createSchema(schemaDef);
