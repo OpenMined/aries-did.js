@@ -8,7 +8,14 @@ import { IssueService } from './issue.service';
 export type IssueCredentialRecordStateType =
   | 'offer_sent'
   | 'offer_received'
-  | 'request_sent';
+  | 'request_sent'
+  | 'proposal_sent'
+  | 'proposal_received'
+  | 'request_received'
+  | 'issued'
+  | 'credential_received'
+  | 'stored';
+
 export type IssueCredentialFilterType = 'state' | 'credential_exchange_id';
 
 export class Issue {
@@ -165,9 +172,26 @@ export class Issue {
   /*
     send an issued credential in response to a request from a foreign agent
   */
-  async sendIssueById(credExId: string) {
+  async sendIssueById(
+    credExId: string,
+    attributes: ICredentialAttributes[],
+    comment: string,
+    // TODO: this is hard-coded until it becomes a problem
+    type: string = 'did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/credential-preview'
+  ) {
+    let credential_preview = {
+      credential_preview: {
+        '@type': type,
+        attributes
+      },
+      comment
+    };
     try {
-      let res = await this._issueSvc.postById(credExId, 'issue');
+      let res = await this._issueSvc.postById(
+        credExId,
+        'issue',
+        credential_preview
+      );
       return res.body;
     } catch (err) {
       throw new Error(err.message);
@@ -193,6 +217,14 @@ export class Issue {
       return res.body;
     } catch (err) {
       throw new Error(err.message);
+    }
+  }
+
+  async removeAllRecords() {
+    let records = await this.records();
+    for (let record of records) {
+      // console.log('the record', record);
+      this.removeById(record.credential_exchange_id);
     }
   }
 }

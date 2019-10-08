@@ -36,7 +36,6 @@ before('PROOF: create a  relationship', async function() {
         if (Array.isArray(connections)) {
           if (connections.length > 0) {
             activeConnection = connections[0];
-            // console.log('each connection', activeConnection);
             bool = true;
           } else {
             bool = false;

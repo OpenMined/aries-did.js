@@ -49,7 +49,7 @@ export class Connection {
   async createInvitation(): Promise<IInvitation> {
     try {
       const res = await this.connectionSvc.createInvitation();
-      return this.formatInvitation(res);
+      return res.invitation;
     } catch (err) {
       return err;
     }

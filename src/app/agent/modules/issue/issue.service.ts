@@ -1,6 +1,7 @@
 import {
   IIssueSend,
-  IIssueOffer
+  IIssueOffer,
+  ICredentialPreview
 } from 'src/app/core/interfaces/issue-credential.interface';
 import * as request from 'superagent';
 
@@ -45,12 +46,16 @@ export class IssueService {
     }
   }
 
-  async postById(credExId: string, route: IssueCredByIdRouteType) {
+  async postById(
+    credExId: string,
+    route: IssueCredByIdRouteType,
+    params?: any
+  ) {
+    const path = `${this._url}${this._segment}records/${credExId}/${route}`;
     try {
-      // console.log(`${this._url}${this._segment}records/${credExId}/${route}`);
-      return await request.post(
-        `${this._url}${this._segment}records/${credExId}/${route}`
-      );
+      return params
+        ? await request.post(path).send(params)
+        : await request.post(path);
     } catch (err) {
       throw new Error(err.message);
     }
