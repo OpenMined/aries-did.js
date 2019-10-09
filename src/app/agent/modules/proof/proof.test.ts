@@ -27,6 +27,8 @@ const agentIssue = new Issue(agentConfig.agentUrl);
 const schema = new Schema(agentConfig.agentUrl);
 let activeConnection: IConnectionsResult;
 
+const PREFIX = 'PROOF';
+
 before('PROOF: create a  relationship', async function() {
   const getConnections = function(): boolean {
     let bool = false;
@@ -58,4 +60,17 @@ before('PROOF: create a  relationship', async function() {
   return;
 });
 
-describe('PROOF: controller tests', async function() {});
+describe('PROOF: controller tests', async function() {
+  it(`${PREFIX}should fetch a single presentation exchange record by ID`, async function() {});
+  it(`${PREFIX}should fetch credentials for a presentation request from the wallet by ID`, async function() {});
+  it(`${PREFIX}should fetch credentials for a presentation request from the wallet by ID and referent`, async function() {});
+  it(`${PREFIX}should send a presentation proposal`, async function() {});
+  it(`${PREFIX}should send a free presentation request not bound to any proposal`, async function() {});
+  it(`${PREFIX}send a presentation request in reference to a proposal (by presex ID)`, async function() {});
+  it(`${PREFIX}should verify a received presentation (by presex id)`, async function() {});
+  it(`${PREFIX}should verify a received presentation (by presex Id)`, async function() {});
+  it(`${PREFIX}should send a free presentation request not bound to any proposal`, async function() {});
+  it(`${PREFIX}should should remove an existing presentation exchange record (by presex ID)`, async function() {});
+
+  it(`${PREFIX} should get all records`, async function() {});
+});

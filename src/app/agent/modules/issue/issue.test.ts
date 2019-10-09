@@ -95,7 +95,6 @@ beforeEach(
   `${prefix}create a new cred def for creating a issue test`,
   async function() {
     const res = await schema.createSchema(schemaDef);
-    // console.log('schema result', res);
     expect(res).to.not.be.undefined;
     expect(res).to.haveOwnProperty('schema_id');
     let schemaId = res.schema_id;
@@ -105,7 +104,6 @@ beforeEach(
 // TODO: this doesn't actually work correctly
 describe(`${prefix}credential model tests`, async function() {
   it(`${prefix}should issue a credential offer`, async function() {
-    // console.log('the active connection ', activeConnection);
     let connection_id = activeConnection.connection_id;
 
     let res = await agentIssue.issueAndSendCred(
@@ -169,6 +167,8 @@ describe(`${prefix}credential model tests`, async function() {
     );
     expect(filtered).to.not.be.undefined;
     expect(filtered.length).to.be.greaterThan(0);
+    expect(records).to.not.be.undefined;
+    expect(records.length).to.be.greaterThan(0);
     let record = filtered[0].credential_exchange_id;
     let response = await testAgentIssue.sendRequestById(record);
     expect(response).to.not.be.undefined;
@@ -188,9 +188,7 @@ describe(`${prefix}credential model tests`, async function() {
       attrs,
       'issuing the cred'
     );
-    console.log('issued id', issue);
     expect(issue).to.not.be.undefined;
-    // console.log('issue result', issue);
   });
   it(`${prefix}should store a received credential`, async function() {
     let records = await testAgentIssue.records();
@@ -203,7 +201,6 @@ describe(`${prefix}credential model tests`, async function() {
       filtered[0].credential_exchange_id
     );
     expect(stored).to.not.be.undefined;
-    console.log('stored result', stored);
   });
 });
 
