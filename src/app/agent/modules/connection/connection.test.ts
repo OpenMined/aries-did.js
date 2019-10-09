@@ -149,7 +149,7 @@ describe('connection model results', async () => {
   });
   it('should remove all connections', async () => {
     // await agentConnection.removeAllConnections();
-    // const res = await agentConnection.getConnections();
+    const res = await agentConnection.getConnections();
     // expect(res).to.be.empty;
   });
 });

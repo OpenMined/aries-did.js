@@ -18,8 +18,31 @@ export interface IProofRecordsResponse {
   result: IProofRecord[];
 }
 
-export interface IRestrictions {}
+export interface IRestrictions {
+  schema_name: string;
+  schema_version: string;
+  credential_definition_id: string;
+}
 // TODO: expand this to be generics on requestedAttributes, requested_predicates;
+
+interface IAttribute<T> {
+  restrictions: IRestrictions;
+  name: string;
+  non_revoked?: any;
+}
+
+export type ProofAttributeType<T> = {
+  [K in keyof T]: IAttribute<T[K]>;
+};
+
+interface IProofRequestSpecific<T> {
+  requested_attributes: ProofAttributeType<T>;
+}
+
+export interface IProofRequest<T> {
+  connection_id: string;
+  proof_request: IProofRequestSpecific<T>;
+}
 
 export interface IProofProposalRequestResponseSend {
   name: string;
@@ -30,7 +53,15 @@ export interface IProofProposalRequestResponseSend {
   connection_id: string;
 }
 
-export interface IProofRequestedAttributes {}
+export const attributeTitleTransform = function<T>(
+  key: ProofAttributeType<T>
+): ProofAttributeType<T> {
+  return key;
+};
+
+export interface IProofRequestedAttributes {
+  requested_attributes: ProofAttributeType<string>;
+}
 
 export interface IProofProposalRequestResponse {
   auto_present: boolean;

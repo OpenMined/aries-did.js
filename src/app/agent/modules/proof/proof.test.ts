@@ -9,67 +9,82 @@ import {
   IReceiveInvitationRequestResponse,
   IAcceptApplicationRequestResponse
 } from 'src/app/core/interfaces/invitation-request.interface';
-import { IConnectionsResult } from 'src/app/core/interfaces/connection.interface';
-import { Issue } from '../issue/issue.model';
 import { Schema } from '../schema/schema.model';
 import { CredentialDefinition } from '../credential-definition/credential-definition.model';
-import { ICredDefSendResponse } from '../credential-definition/credential-definition.service';
+import { Proof } from './proof.model';
 
 const agentConfig = new TestAgentConfig();
 
 // The required modules;
 const agentConnection = new Connection(agentConfig.agentUrl);
-const testConnection = new Connection(agentConfig.testAgentUrl);
-const credDef = new CredentialDefinition(agentConfig.agentUrl);
 
-const agentIssue = new Issue(agentConfig.agentUrl);
+const proof = new Proof(
+  agentConfig.agentUrl,
+  new Schema(agentConfig.agentUrl),
+  new CredentialDefinition(agentConfig.agentUrl)
+);
 
-const schema = new Schema(agentConfig.agentUrl);
-let activeConnection: IConnectionsResult;
+const schemaDef = {
+  attributes: ['name', 'score', 'issued'],
+  schema_name: 'A test schema',
+  schema_version: '1.0'
+};
 
-const PREFIX = 'PROOF';
+const PREFIX = 'PROOF: ';
+
+let connection_id: string;
 
 before('PROOF: create a  relationship', async function() {
-  const getConnections = function(): boolean {
-    let bool = false;
-    agentConnection
-      .getConnections({ state: 'active', initiator: 'external' })
-      .then(connections => {
-        if (Array.isArray(connections)) {
-          if (connections.length > 0) {
-            activeConnection = connections[0];
-            bool = true;
-          } else {
-            bool = false;
-          }
-        } else {
-          bool = false;
-        }
-      });
-    return bool;
-  };
-  let x = 0;
-  while (x <= 7) {
-    if (x === 7) return 'no connections';
-    let connections = getConnections();
+  const invite = await agentConnection.createInvitation();
+  const accept = await agentConnection.invitationResponse(invite);
+  connection_id = accept.connection_id;
+  const response = await agentConnection.acceptInvitation(connection_id, true);
+  // console.log(response);
 
-    connections ? (x = 7) : (x += 1);
-
-    break;
-  }
   return;
 });
 
 describe('PROOF: controller tests', async function() {
-  it(`${PREFIX}should fetch a single presentation exchange record by ID`, async function() {});
-  it(`${PREFIX}should fetch credentials for a presentation request from the wallet by ID`, async function() {});
-  it(`${PREFIX}should fetch credentials for a presentation request from the wallet by ID and referent`, async function() {});
-  it(`${PREFIX}should send a presentation proposal`, async function() {});
-  it(`${PREFIX}should send a free presentation request not bound to any proposal`, async function() {});
-  it(`${PREFIX}send a presentation request in reference to a proposal (by presex ID)`, async function() {});
-  it(`${PREFIX}should verify a received presentation (by presex id)`, async function() {});
-  it(`${PREFIX}should verify a received presentation (by presex Id)`, async function() {});
-  it(`${PREFIX}should send a free presentation request not bound to any proposal`, async function() {});
+  // it(`${PREFIX}should fetch credentials for a presentation request from the wallet by ID`, async function() {});
+  // it(`${PREFIX}should fetch credentials for a presentation request from the wallet by ID and referent`, async function() {});
+  it(`${PREFIX}should send a presentation proposal`, async function() {
+    const res = await proof.sendProposal();
+    expect(res).to.equal('method not implemented');
+  });
+  it(`${PREFIX}should send a free presentation request not bound to any proposal`, async function() {
+    const res = await proof.sendPresentation();
+    expect(res).to.equal('method not implemented');
+  });
+  it(`${PREFIX}send a presentation request in reference to a proposal (by presex ID)`, async function() {
+    const res = await proof.sendPresentation();
+    expect(res).to.equal('method not implemented');
+  });
+  it(`${PREFIX}should fetch a single presentation exchange record by ID`, async function() {
+    const res = await proof.records();
+    expect(res).to.not.be.undefined;
+    expect(res).to.have.own.property('connection_id');
+  });
+  it(`${PREFIX}should build a proof request`, async function() {
+    const keys = ['proof request', 'connection_id', 'name'];
+    const res = await proof.buildProofRequest(
+      schemaDef,
+      connection_id,
+      'test proof'
+    );
+    expect(res).to.not.be.undefined;
+    for (let key of keys) {
+      expect(res).to.have.ownProperty(key);
+    }
+  });
+  it(`${PREFIX}should verify a received presentation (by presex id)`, async function() {
+    const res = await proof.verifyProofRequest();
+    expect(res).to.not.be.undefined;
+    expect(res).to.have.own.property('connection_id');
+  });
+  it(`${PREFIX}should send a free presentation request not bound to any proposal`, async function() {
+    const res = await proof.sendPresentation();
+    expect(res).to.equal('method not implemented');
+  });
   it(`${PREFIX}should should remove an existing presentation exchange record (by presex ID)`, async function() {});
 
   it(`${PREFIX} should get all records`, async function() {});
