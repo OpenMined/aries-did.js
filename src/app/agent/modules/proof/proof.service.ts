@@ -59,14 +59,12 @@ export class ProofService {
   */
   async postProof(
     proof: IProofRequest<any>,
-    segment?: 'send-proposal' | 'send-request'
+    endSegment?: 'send-proposal' | 'send-request'
   ) {
     try {
-      const res = segment
-        ? await request.post(`${this._url}${segment}`).send(proof)
-        : await request.post(`${this._url}send-request`).send(proof);
+      const path = `${this._url}${segment}send-request`;
+      const res = await request.post(path).send(proof);
       if (res.status !== 200) {
-        console.log('post proof request', res);
         throw new Error(
           `Error getting proof request with status ${res.status}`
         );

@@ -98,10 +98,14 @@ export class Proof {
     // const res = presExId ? await this._proofSvc.postProof(proofRequest, 'send-presentation', presExId) :
     try {
       const res = await this._proofSvc.postProof(proofRequest);
-      // console.log(res);
       // if (!res) throw new Error('no proof request made');
-      return res.body;
+      if (res.status === 200) return res.body;
+      else
+        throw new Error(
+          `Proof request presentation failed with status ${res.status}`
+        );
     } catch (err) {
+      console.log('error message', err);
       throw new Error(err.message);
     }
   }

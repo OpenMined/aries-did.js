@@ -33,16 +33,16 @@ const schemaDef = {
 
 const PREFIX = 'PROOF: ';
 
-let connection_id: string;
+let connectionId: string;
 
 describe('PROOF: controller tests', async function() {
   before('PROOF: create a  relationship', async function() {
     let testAgentInvite = await testAgentConnection.createInvitation();
     const receive = await agentConnection.invitationResponse(testAgentInvite);
-    const accept = await agentConnection.acceptInvitation(
-      receive.connection_id
-    );
-
+    // const accept = await agentConnection.acceptInvitation(
+    //   receive.connection_id
+    // );
+    connectionId = receive.connection_id;
     return;
   });
   // it(`${PREFIX}should fetch credentials for a presentation request from the wallet by ID`, async function() {});
@@ -64,37 +64,32 @@ describe('PROOF: controller tests', async function() {
     const keys = ['proof_request', 'connection_id', 'version'];
     const res = await proof.buildProofRequest(
       schemaDef,
-      connection_id,
+      connectionId,
       'test proof'
     );
-    // console.log(JSON.stringify(res));
     expect(res).to.not.be.undefined;
-    // console.log(res);
     for (let key of keys) {
       expect(res).to.have.property(key);
     }
     expect(res.proof_request.name).to.equal('test proof');
   });
   it(`${PREFIX}should send a free presentation request not bound to any proposal`, async function() {
-    const connections = await agentConnection.getConnections({
-      state: 'active'
-    });
-    console.log();
-    if (Array.isArray(connections)) {
-      const proofRequest = await proof.buildProofRequest(
-        schemaDef,
-        connection_id,
-        'test proof'
-      );
-      console.log('the proof request', proofRequest);
-      const res = await proof.sendProofRequest(proofRequest);
-      expect(res).to.equal('method not implemented');
-    }
+    // const connections = await agentConnection.getConnections({
+    // state: 'active'
+    // });
+    // if (Array.isArray(connections)) {
+    const proofRequest = await proof.buildProofRequest(
+      schemaDef,
+      connectionId,
+      'test proof'
+    );
+    // console.log('the proof request', JSON.stringify(proofRequest));
+    const res = await proof.sendProofRequest(proofRequest);
+    expect(res).to.haveOwnProperty('presentation_exchange_id');
   });
   it(`${PREFIX}should verify a received presentation (by presex id)`, async function() {
     const res = await proof.verifyProofRequest();
     expect(res).to.not.be.undefined;
-    expect(res).to.have.own.property('connection_id');
   });
 
   it(`${PREFIX}should should remove an existing presentation exchange record (by presex ID)`, async function() {});

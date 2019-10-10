@@ -86,7 +86,6 @@ describe(`${prefix}issue credential model tests`, async function() {
   );
   */
   it(`${prefix} should send a credential offer`, async function() {
-    console.log('the connection id', connectionId);
     let res = await agentIssue.issueOfferSend(
       connectionId,
       'test credential',
