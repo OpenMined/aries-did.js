@@ -4,11 +4,7 @@ import 'mocha';
 import { Connection } from '../connection/connection.model';
 
 import TestAgentConfig from '../../agent-test-config';
-import {
-  IInvitation,
-  IReceiveInvitationRequestResponse,
-  IAcceptApplicationRequestResponse
-} from 'src/app/core/interfaces/invitation-request.interface';
+
 import { Schema } from '../schema/schema.model';
 import { CredentialDefinition } from '../credential-definition/credential-definition.model';
 import { Proof } from './proof.model';
@@ -25,9 +21,15 @@ const proof = new Proof(
   new CredentialDefinition(agentConfig.agentUrl)
 );
 
+const testAgentProof = new Proof(
+  agentConfig.agentUrl,
+  new Schema(agentConfig.testAgentUrl),
+  new CredentialDefinition(agentConfig.testAgentUrl)
+);
+
 const schemaDef = {
   attributes: ['name', 'score', 'issued'],
-  schema_name: 'ATestSchema',
+  schema_name: 'TestSchemaTwors',
   schema_version: '1.0'
 };
 
@@ -39,9 +41,6 @@ describe('PROOF: controller tests', async function() {
   before('PROOF: create a  relationship', async function() {
     let testAgentInvite = await testAgentConnection.createInvitation();
     const receive = await agentConnection.invitationResponse(testAgentInvite);
-    // const accept = await agentConnection.acceptInvitation(
-    //   receive.connection_id
-    // );
     connectionId = receive.connection_id;
     return;
   });
@@ -88,7 +87,15 @@ describe('PROOF: controller tests', async function() {
     expect(res).to.haveOwnProperty('presentation_exchange_id');
   });
   it(`${PREFIX}should verify a received presentation (by presex id)`, async function() {
-    const res = await proof.verifyProofRequest();
+    let testProofs = await testAgentProof.records();
+    if (Array.isArray(testProofs)) {
+      while (testProofs.length < 1) {
+        testProofs = await testAgentProof.records();
+      }
+    }
+    const res = await proof.verifyProofRequest(
+      testProofs[0].presentation_exchange_id
+    );
     expect(res).to.not.be.undefined;
   });
 
@@ -103,6 +110,8 @@ describe('PROOF: controller tests', async function() {
   after('clear connections', async function() {
     await agentConnection.removeAllConnections();
     await testAgentConnection.removeAllConnections();
+    // await proof.removeAllProofRequests();
+    // await testAgentProof.removeAllProofRequests();
     return;
   });
 });

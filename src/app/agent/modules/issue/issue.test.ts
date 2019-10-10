@@ -53,8 +53,6 @@ const schemaDef = {
   schema_version: '1.0'
 };
 
-let activeConnection: IConnectionsResult;
-
 describe(`${prefix}issue credential model tests`, async function() {
   before(
     `${prefix}create an invitation object for issue cred test`,

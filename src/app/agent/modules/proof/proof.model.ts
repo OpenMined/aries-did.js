@@ -44,7 +44,13 @@ export class Proof {
   }
 
   async records(id?: string) {
-    return await this._proofSvc.getProofRecords();
+    try {
+      let res = await this._proofSvc.getProofRecords();
+      if (res.body.results) return res.body.results;
+      return res.body;
+    } catch (err) {
+      throw new Error('error in records with message: ' + err.message);
+    }
   }
 
   /*
@@ -114,9 +120,11 @@ export class Proof {
     send a verification of the proof request received from the foreign agent
   */
 
-  async verifyProofRequest() // id: string
-  {
-    return;
+  async verifyProofRequest(id: string) {
+    try {
+      let res = await this._proofSvc.postByPresExId('verify-presentation', id);
+      return res;
+    } catch (err) {}
   }
   async removeAllProofRequests() {
     const requests = await this._proofSvc.getProofRecords();

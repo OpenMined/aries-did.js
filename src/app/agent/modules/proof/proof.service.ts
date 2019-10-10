@@ -23,14 +23,14 @@ export class ProofService {
     fetch all present-proof exchange records or a single if it is provided
     @param presExId - presentation exchange id.
   */
-  async getProofRecords(presExId?: string): Promise<IProofRecordsResponse> {
+  async getProofRecords(presExId?: string) {
     try {
       const baseUrl = this._url + segment + 'records';
       const res = presExId
-        ? await request.get(`${baseUrl}/presExId`)
+        ? await request.get(`${baseUrl}presExId`)
         : await request.get(baseUrl);
-      if (!res.body) throw new Error('no records found');
-      return res.body;
+      // if (!res.body) throw new Error('no records found');
+      return res;
     } catch (err) {
       return err;
     }
@@ -80,14 +80,15 @@ export class ProofService {
     to respond to a request in reference to a proposal
   */
   async postByPresExId(
-    data: IProposalSend,
+    // data: IProposalSend,
     segment: ProofPostRouteSegmentType,
     presExId: string
   ): Promise<IProofRecordsResponse> {
     try {
-      const res = await request
-        .post(`${this._url}${segment}records/${presExId}/${segment}`)
-        .send(data);
+      const res = await request.post(
+        `${this._url}${segment}records/${presExId}/${segment}`
+      );
+      // .send(data);
       if (res.status === 200) return res.body;
       throw new Error(`send proposal failed with status ${res.status}`);
     } catch (err) {
