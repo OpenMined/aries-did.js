@@ -93,9 +93,10 @@ export class ConnectionService {
     params: IConnectionParams = {}
   ): Promise<IConnectionsResult | IConnectionsResult[]> {
     try {
-      const res = id
-        ? await request.get(`${this.apiUrl}connections/${id}`)
-        : await request.get(`${this.apiUrl}connections`).query(params);
+      const res =
+        id != null
+          ? await request.get(`${this.apiUrl}connections/${id}`)
+          : await request.get(`${this.apiUrl}connections`).query(params);
       return res.body.results || res.body;
     } catch (err) {
       throw new Error('connections call failed');

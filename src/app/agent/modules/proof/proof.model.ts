@@ -55,7 +55,7 @@ export class Proof {
     schema: ISchema,
     connection_id: string,
     name: string
-  ): Promise<IProofRequest<T>> {
+  ): Promise<any> {
     const schemaResponse = await this._schema.createSchema(schema);
     const credDef = await this._credDef.createCredentialDefinition(
       schemaResponse.schema_id
@@ -76,14 +76,16 @@ export class Proof {
     }
 */
     const proofRequest = {
+      version: '1.0',
       connection_id,
       proof_request: {
         requested_attributes: {
           prop1: data
         },
-        name: 'proof request'
+        requested_predicates: {},
+        name
       }
-    } as IProofRequest<any>;
+    };
     return proofRequest;
   }
 
@@ -92,9 +94,16 @@ export class Proof {
     include an ID to send in response to a proposal.
   */
 
-  async sendProofRequest(presExId?: string) {
-    // const res = presExId ? await this._proofSvc.postByPresExId(presExId)
-    return;
+  async sendProofRequest(proofRequest: IProofRequest<any>, presExId?: string) {
+    // const res = presExId ? await this._proofSvc.postProof(proofRequest, 'send-presentation', presExId) :
+    try {
+      const res = await this._proofSvc.postProof(proofRequest);
+      // console.log(res);
+      if (!res) throw new Error('no proof request made');
+      return res.body;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
 
   /*
@@ -104,5 +113,13 @@ export class Proof {
   async verifyProofRequest() // id: string
   {
     return;
+  }
+  async removeAllProofRequests() {
+    const requests = await this._proofSvc.getProofRecords();
+    if (Array.isArray(requests)) {
+      for (const request of requests) {
+        await this._proofSvc.remove(request.presentation_exchange_id);
+      }
+    }
   }
 }

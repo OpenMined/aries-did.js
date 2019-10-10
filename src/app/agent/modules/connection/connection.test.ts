@@ -16,82 +16,88 @@ const agentConnection = new Connection(agentConfig.agentUrl);
 const testConnection = new Connection(agentConfig.testAgentUrl);
 
 let invite: IInvitation;
-let myInvite: IInvitation;
+let testAgentInvite: IInvitation;
+
 let receive: IReceiveInvitationRequestResponse;
 let accept: IAcceptApplicationRequestResponse;
 
 const prefix = 'CONNECTION: ';
 
-before(prefix + 'create an invitation object', async () => {
-  // await testConnection.removeAllConnections();
-  invite = await testConnection.createInvitation();
-  const agentInvite = await agentConnection.createInvitation();
-  const receive = await testConnection.invitationResponse(agentInvite);
-  await testConnection.acceptInvitation(receive.connection_id);
-});
-
 describe('connection model results', async () => {
-  it('should create a new invitation', async () => {
-    const invite = await agentConnection.createInvitation();
-    expect(invite).to.haveOwnProperty('@type');
-    expect(invite).to.haveOwnProperty('@id');
-    expect(invite).to.haveOwnProperty('recipientKeys');
-    expect(invite).to.haveOwnProperty('label');
-    expect(invite).to.haveOwnProperty('serviceEndpoint');
+  before(prefix + 'create an invitation object', async () => {
+    invite = await agentConnection.createInvitation();
+    testAgentInvite = await testConnection.createInvitation();
+    const receive = await agentConnection.invitationResponse(testAgentInvite);
+    const accept = await agentConnection.acceptInvitation(
+      receive.connection_id
+    );
+    const testConnections = await testConnection.getConnections();
+    console.log('the test connection', testConnections);
+    // await testConnection.acceptInvitation(receive.connection_id);
   });
-  it('should receive an invitation', async () => {
-    receive = await agentConnection.invitationResponse(invite);
+  it('should create a new invitation', async function() {
+    const agentInvite = await agentConnection.createInvitation();
+    expect(agentInvite).to.haveOwnProperty('@type');
+    expect(agentInvite).to.haveOwnProperty('@id');
+    expect(agentInvite).to.haveOwnProperty('recipientKeys');
+    expect(agentInvite).to.haveOwnProperty('label');
+    expect(agentInvite).to.haveOwnProperty('serviceEndpoint');
+  });
+  it('should receive an invitation', async function() {
+    receive = await agentConnection.invitationResponse(testAgentInvite);
     expect(receive).to.haveOwnProperty('connection_id');
     expect(receive).to.haveOwnProperty('created_at');
     expect(receive).to.haveOwnProperty('state');
     expect(receive.initiator).to.equal('external');
   });
-  it('should accept an invitation', async () => {
+  it('should accept an invitation', async function() {
+    // console.log('recevied connection', receive.connection_id);
     accept = await agentConnection.acceptInvitation(receive.connection_id);
     expect(accept).to.haveOwnProperty('their_label');
     expect(accept).to.haveOwnProperty('connection_id');
     expect(accept.their_label).to.equal('Faber');
+    const testConnections = await testConnection.getConnections();
+    // console.log(testConnections);
   });
+  /*
+  
+  it('should responsd to an invitation', async function() {
+    // const responseResponse = await agentConnection.requestResponse(
+    //   accept.connection_id
+    //   // receive.connection_id
+    // );
+    // expect(responseResponse).to.exist;
+  });
+  /*
+
+  it('CONNECTION: should respond to an invitation', async function() {
+    let connection = await testConnection.getConnections();
+    console.log('connections', connection);
+
+    if (Array.isArray(connection)) {
+      const responseResponse = await testConnection.requestResponse(
+        connection[0].connection_id
+        // receive.connection_id
+      );
+      expect(responseResponse).to.haveOwnProperty('initiator');
+      expect(responseResponse.initiator).to.equal('self');
+      console.log('the response', responseResponse);
+    }
+  });
+  */
+  it('should have active connections', async function() {
+    const agentRes = await agentConnection.getConnections();
+    const testAgentRes = await testConnection.getConnections();
+    // console.log('test agent connections', testAgentRes);
+    expect(agentRes).to.not.be.empty;
+    expect(testAgentRes).to.not.be.empty;
+    // console.log(res);
+  });
+
   // TODO: fix this test - there's a time delay but I've set up auto accept on all the
   // actual calls so this is kind of moot at present.
 
-  it('CONNECTION: should respond to an invitation', async () => {
-    let connection = await agentConnection.getConnections({
-      state: 'request',
-      initiator: 'self'
-    });
-    console.log('connections', connection);
-    if (Array.isArray(connection)) {
-      if (connection.length < 1) {
-        let x = 0;
-        while (x < 7) {
-          console.log('counter', x);
-          let response = await agentConnection.getConnections({
-            state: 'request',
-            initiator: 'self'
-          });
-
-          if (Array.isArray(response)) {
-            if (response.length < 7) {
-              x += 1;
-              break;
-            } else {
-              connection = response;
-            }
-          }
-        }
-      }
-
-      const connToGet = connection[0];
-      const responseResponse = await agentConnection.requestResponse(
-        connToGet.connection_id
-      );
-      expect(responseResponse).to.haveOwnProperty('routing_state');
-      expect(responseResponse).to.haveOwnProperty('initiator');
-      expect(responseResponse.initiator).to.equal('self');
-    }
-  });
-
+  /*
   it('should get a single connection', async () => {
     const connections = await agentConnection.getConnections();
     if (Array.isArray(connections)) {
@@ -107,8 +113,7 @@ describe('connection model results', async () => {
   });
   it('should make a connection active', async () => {
     const connections = await testConnection.getConnections({
-      state: 'response',
-      initiator: 'self'
+      state: 'request'
     });
     expect(connections).to.not.be.empty;
     if (Array.isArray(connections)) {
@@ -124,7 +129,7 @@ describe('connection model results', async () => {
   });
   it('agent should have an active connection', async () => {
     let activeConnections = await agentConnection.getConnections({
-      state: 'active'
+      state: 'request'
     });
     expect(activeConnections).to.exist;
 
@@ -147,9 +152,10 @@ describe('connection model results', async () => {
     //   }
     // }
   });
+  */
   it('should remove all connections', async () => {
-    // await agentConnection.removeAllConnections();
-    const res = await agentConnection.getConnections();
+    await testConnection.removeAllConnections();
+    await agentConnection.removeAllConnections();
     // expect(res).to.be.empty;
   });
 });

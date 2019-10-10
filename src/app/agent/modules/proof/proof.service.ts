@@ -2,7 +2,8 @@ import * as request from 'superagent';
 import {
   IProofRecordsResponse,
   IProofProposalRequestResponseSend,
-  IProposalSend
+  IProposalSend,
+  IProofRequest
 } from '../../../core/interfaces/proof.interface';
 
 export type ProofPostRouteSegmentType =
@@ -11,7 +12,7 @@ export type ProofPostRouteSegmentType =
   | 'verify-presentation'
   | 'remove';
 
-const segment = 'present-proof';
+const segment = 'present-proof/';
 export class ProofService {
   private _url: string;
   constructor(url: string) {
@@ -56,10 +57,24 @@ export class ProofService {
       const baseUrl = apiUrl + segment + 'records';
 
   */
-  async postProof(segment: 'send-proposal' | 'send-request') {
+  async postProof(
+    proof: IProofRequest<any>,
+    segment?: 'send-proposal' | 'send-request'
+  ) {
     try {
-      const res = await request.post(`${this._url}${segment}`);
-    } catch (err) {}
+      const res = segment
+        ? await request.post(`${this._url}${segment}`).send(proof)
+        : await request.post(`${this._url}send-request`).send(proof);
+      if (res.status !== 200) {
+        // console.log(res);
+        throw new Error(
+          `Error getting proof request with status ${res.status}`
+        );
+      }
+      return res;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
 
   /*
@@ -79,6 +94,17 @@ export class ProofService {
       throw new Error(`send proposal failed with status ${res.status}`);
     } catch (err) {
       return err;
+    }
+  }
+
+  /*
+  remove proof by Id
+  */
+  async remove(presExId: string) {
+    try {
+      let res = await request.post(`${this._url}records/${presExId}`);
+    } catch (err) {
+      throw new Error(err.message);
     }
   }
 }

@@ -150,7 +150,7 @@ export class Issue {
   async sendOfferById(credExId: string) {
     try {
       let res = await this._issueSvc.postById(credExId, 'send-offer');
-      console.log('send offer by Id result', res);
+      // console.log('send offer by Id result', res);
       return res.body;
     } catch (err) {
       throw new Error(err.message);

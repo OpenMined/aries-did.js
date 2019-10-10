@@ -111,9 +111,10 @@ export class Connection {
       let connections = await this.connectionSvc.connections();
       if (Array.isArray(connections)) {
         for (let connection of connections) {
-          let res = await this.removeConnection(connection.connection_id);
+          await this.removeConnection(connection.connection_id);
         }
       }
+      return;
     } catch (err) {
       return err;
     }

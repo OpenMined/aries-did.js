@@ -19,6 +19,7 @@ const agentConfig = new TestAgentConfig();
 
 // The required modules;
 const agentConnection = new Connection(agentConfig.agentUrl);
+const testAgentConnection = new Connection(agentConfig.testAgentUrl);
 const credDef = new CredentialDefinition(agentConfig.agentUrl);
 
 const agentIssue = new Issue(agentConfig.agentUrl);
@@ -26,13 +27,10 @@ const testAgentIssue = new Issue(agentConfig.testAgentUrl);
 
 const schema = new Schema(agentConfig.agentUrl);
 
-let invite: IInvitation;
-// let myInvite: IInvitation;
-// let receive: IReceiveInvitationRequestResponse;
-// let accept: IAcceptApplicationRequestResponse;
-
 let credId: ICredDefSendResponse;
 const prefix = 'ISSUE: ';
+
+let connectionId: string;
 
 let attrs = [
   {
@@ -57,32 +55,39 @@ const schemaDef = {
 
 let activeConnection: IConnectionsResult;
 
-before(
-  `${prefix}create an invitation object for issue cred test`,
-  async function() {
-    await agentIssue.removeAllRecords();
-    await testAgentIssue.removeAllRecords();
-  }
-);
+describe(`${prefix}issue credential model tests`, async function() {
+  before(
+    `${prefix}create an invitation object for issue cred test`,
+    async function() {
+      let testAgentInvite = await testAgentConnection.createInvitation();
+      const receive = await agentConnection.invitationResponse(testAgentInvite);
 
-beforeEach(
-  `${prefix}create a new cred def for creating a issue test`,
-  async function() {
-    const res = await schema.createSchema(schemaDef);
-    expect(res).to.not.be.undefined;
-    expect(res).to.haveOwnProperty('schema_id');
-    let schemaId = res.schema_id;
-    credId = await credDef.createCredentialDefinition(schemaId);
-  }
-);
-describe(`${prefix}credential model tests`, async function() {
+      connectionId = receive.connection_id;
+    }
+  );
+
+  beforeEach(
+    `${prefix}create a new cred def for creating a issue test`,
+    async function() {
+      const res = await schema.createSchema(schemaDef);
+      expect(res).to.not.be.undefined;
+      expect(res).to.haveOwnProperty('schema_id');
+      let schemaId = res.schema_id;
+      credId = await credDef.createCredentialDefinition(schemaId);
+    }
+  );
   // TODO: this doesn't actually work correctly
   it(`${prefix}should issue a credential offer`, async function() {
-    /* 
-    let connection_id = activeConnection.connection_id;
+    /*
+    let connections = await agentConnection.getConnections({ state: 'active' });
+    if (Array.isArray(connections)) {
+      activeConnection = connections.filter(
+        itm => itm.their_label !== 'AliceSmith'
+      )[0];
+    }
 
     let res = await agentIssue.issueAndSendCred(
-      connection_id,
+      activeConnection.connection_id,
       'test cred',
       attrs,
       credId.credential_definition_id
@@ -91,15 +96,18 @@ describe(`${prefix}credential model tests`, async function() {
     */
   });
   it(`${prefix} should send a credential offer`, async function() {
-    let connections = await agentConnection.getConnections({ state: 'active' });
-    if (Array.isArray(connections)) {
-      activeConnection = connections.filter(
-        itm => itm.their_label !== 'AliceSmith'
-      )[0];
-    }
-    let connId = activeConnection.connection_id;
+    // let connections = await agentConnection.getConnections({ state: 'active' });
+    // if (Array.isArray(connections)) {
+    //   activeConnection = connections.filter(
+    //     itm => itm.their_label !== 'AliceSmith'
+    //   )[0];
+    // }
+    // let connId = activeConnection.connection_id;
+    // const connections = await agentConnection.getConnections();
+    // const testConnections = await testAgentConnection.getConnections();
+    // console.log('test agent connection', testConnections);
     let res = await agentIssue.issueOfferSend(
-      connId,
+      connectionId,
       'test credential',
       attrs,
       credId.credential_definition_id
@@ -113,6 +121,8 @@ describe(`${prefix}credential model tests`, async function() {
     expect(res).to.be.an.instanceOf(Array);
   });
   it(`${prefix} should get all testagent active records`, async function() {
+    // const testConnections = await testAgentConnection.getConnections();
+    // console.log('test agent connection', testConnections);
     let res = await testAgentIssue.records();
     expect(res).to.not.be.undefined;
     expect(res).to.be.an.instanceOf(Array);
@@ -166,6 +176,7 @@ describe(`${prefix}credential model tests`, async function() {
       'request_received',
       records
     );
+    // console.log(filtered);
     let issue = await agentIssue.sendIssueById(
       filtered[0].credential_exchange_id,
       attrs,
@@ -180,11 +191,15 @@ describe(`${prefix}credential model tests`, async function() {
       'credential_received',
       records
     );
+    // console.log(filtered);
     let stored = await testAgentIssue.sendStoreById(
       filtered[0].credential_exchange_id
     );
     expect(stored).to.not.be.undefined;
   });
+  after('all credential issue test', async function() {
+    const testConnections = await testAgentConnection.getConnections();
+    await agentIssue.removeAllRecords();
+    await testAgentIssue.removeAllRecords();
+  });
 });
-
-after('all credential issue test', async function() {});
