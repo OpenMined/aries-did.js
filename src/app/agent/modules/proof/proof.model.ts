@@ -1,12 +1,9 @@
 import { ProofService } from './proof.service';
-import {
-  IProposalSend,
-  IProofRequest,
-  ProofAttributeType
-} from 'src/app/core/interfaces/proof.interface';
+import { IProofRequest } from 'src/app/core/interfaces/proof.interface';
 import { Schema } from '../schema/schema.model';
 import { CredentialDefinition } from '../credential-definition/credential-definition.model';
 import { ISchema } from 'src/app/core/interfaces/schema.interface';
+import * as uuid from 'uuid/v1';
 
 /*
   the chain for creating proof requests requires an established relationships
@@ -19,6 +16,9 @@ import { ISchema } from 'src/app/core/interfaces/schema.interface';
   build the 
 
 */
+interface IObject {
+  [key: string]: string;
+}
 
 export class Proof {
   private _schema: Schema;
@@ -28,10 +28,6 @@ export class Proof {
   /*
     unimplemented methods
   */
-
-  sendPresentation() {
-    return 'method not implemented';
-  }
 
   sendProposal() {
     return 'method not implemented';
@@ -60,38 +56,37 @@ export class Proof {
   async buildProofRequest<T>(
     schema: ISchema,
     connection_id: string,
-    name: string
+    name: string,
+    names: string[]
   ): Promise<any> {
+    let requested_attributes: any = {};
+
     const schemaResponse = await this._schema.createSchema(schema);
     const credDef = await this._credDef.createCredentialDefinition(
       schemaResponse.schema_id
     );
-    const data = {
-      name,
-      restrictions: {
-        schema_name: schema.schema_name,
-        schema_version: schema.schema_version,
-        credential_definition_id: credDef.credential_definition_id
-      }
-    };
-    /*
-    function asProofAttribute<T>(
-      data: ProofAttributeType<T>
-    ): ProofAttributeType<T> {
-      return data;
-    }
-*/
+
     const proofRequest = {
       version: '1.0',
       connection_id,
       proof_request: {
-        requested_attributes: {
-          prop1: data
-        },
+        requested_attributes: {},
         requested_predicates: {},
         name
       }
     };
+    for (let val of names) {
+      requested_attributes[uuid()] = {
+        name: val,
+        restrictions: {
+          schema_name: schema.schema_name,
+          schema_version: schema.schema_version,
+          credential_definition_id: credDef.credential_definition_id
+        }
+      };
+    }
+    proofRequest.proof_request.requested_attributes = requested_attributes;
+    console.log('proof request', JSON.stringify(proofRequest));
     return proofRequest;
   }
 
@@ -124,14 +119,20 @@ export class Proof {
     try {
       let res = await this._proofSvc.postByPresExId('verify-presentation', id);
       return res;
-    } catch (err) {}
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
   async removeAllProofRequests() {
-    const requests = await this._proofSvc.getProofRecords();
+    const results = await this._proofSvc.getProofRecords();
+    const requests = results.body.results;
     if (Array.isArray(requests)) {
       for (const request of requests) {
         await this._proofSvc.remove(request.presentation_exchange_id);
       }
     }
+    return;
   }
+
+  sendPresentation(id: string) {}
 }

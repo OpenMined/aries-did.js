@@ -22,13 +22,13 @@ const proof = new Proof(
 );
 
 const testAgentProof = new Proof(
-  agentConfig.agentUrl,
+  agentConfig.testAgentUrl,
   new Schema(agentConfig.testAgentUrl),
   new CredentialDefinition(agentConfig.testAgentUrl)
 );
 
 const schemaDef = {
-  attributes: ['name', 'score', 'issued'],
+  attributes: ['kind', 'score', 'issued'],
   schema_name: 'TestSchemaTwors',
   schema_version: '1.0'
 };
@@ -42,6 +42,9 @@ describe('PROOF: controller tests', async function() {
     let testAgentInvite = await testAgentConnection.createInvitation();
     const receive = await agentConnection.invitationResponse(testAgentInvite);
     connectionId = receive.connection_id;
+    await testAgentProof.removeAllProofRequests();
+    await proof.removeAllProofRequests();
+
     return;
   });
   // it(`${PREFIX}should fetch credentials for a presentation request from the wallet by ID`, async function() {});
@@ -51,26 +54,24 @@ describe('PROOF: controller tests', async function() {
     expect(res).to.equal('method not implemented');
   });
   it(`${PREFIX}should send a free presentation request not bound to any proposal`, async function() {
-    const res = await proof.sendPresentation();
+    const res = await proof.sendPresentation('zz');
     expect(res).to.equal('method not implemented');
   });
   it(`${PREFIX}send a presentation request in reference to a proposal (by presex ID)`, async function() {
-    const res = await proof.sendPresentation();
+    const res = await proof.sendPresentation('zz');
     expect(res).to.equal('method not implemented');
   });
 
   it(`${PREFIX}should build a proof request object`, async function() {
     const keys = ['proof_request', 'connection_id', 'version'];
-    const res = await proof.buildProofRequest(
-      schemaDef,
-      connectionId,
-      'test proof'
-    );
+    const res = await proof.buildProofRequest(schemaDef, connectionId, 'bob', [
+      'kind'
+    ]);
     expect(res).to.not.be.undefined;
     for (let key of keys) {
       expect(res).to.have.property(key);
     }
-    expect(res.proof_request.name).to.equal('test proof');
+    expect(res.proof_request.name).to.equal('bob');
   });
   it(`${PREFIX}should send a free presentation request not bound to any proposal`, async function() {
     // const connections = await agentConnection.getConnections({
@@ -80,7 +81,8 @@ describe('PROOF: controller tests', async function() {
     const proofRequest = await proof.buildProofRequest(
       schemaDef,
       connectionId,
-      'test proof'
+      'bob',
+      ['kind']
     );
     // console.log('the proof request', JSON.stringify(proofRequest));
     const res = await proof.sendProofRequest(proofRequest);
@@ -108,10 +110,9 @@ describe('PROOF: controller tests', async function() {
     expect(res).to.have.own.property('connection_id');
   });
   after('clear connections', async function() {
-    await agentConnection.removeAllConnections();
-    await testAgentConnection.removeAllConnections();
-    // await proof.removeAllProofRequests();
-    // await testAgentProof.removeAllProofRequests();
+    // await agentConnection.removeAllConnections();
+    // await testAgentConnection.removeAllConnections();
+    console.log('run');
     return;
   });
 });

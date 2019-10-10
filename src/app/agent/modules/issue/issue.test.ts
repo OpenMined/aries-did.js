@@ -4,12 +4,7 @@ import 'mocha';
 import { Connection } from '../connection/connection.model';
 
 import TestAgentConfig from '../../agent-test-config';
-import {
-  IInvitation,
-  IReceiveInvitationRequestResponse,
-  IAcceptApplicationRequestResponse
-} from 'src/app/core/interfaces/invitation-request.interface';
-import { IConnectionsResult } from 'src/app/core/interfaces/connection.interface';
+
 import { Issue } from '../issue/issue.model';
 import { Schema } from '../schema/schema.model';
 import { CredentialDefinition } from '../credential-definition/credential-definition.model';

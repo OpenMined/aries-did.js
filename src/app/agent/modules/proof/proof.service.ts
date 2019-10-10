@@ -101,7 +101,9 @@ export class ProofService {
   */
   async remove(presExId: string) {
     try {
-      let res = await request.post(`${this._url}records/${presExId}`);
+      const path = `${this._url}${segment}records/${presExId}/remove`;
+      let res = await request.post(path);
+      return res;
     } catch (err) {
       throw new Error(err.message);
     }
