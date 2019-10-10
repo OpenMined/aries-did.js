@@ -99,7 +99,7 @@ export class Proof {
     try {
       const res = await this._proofSvc.postProof(proofRequest);
       // console.log(res);
-      if (!res) throw new Error('no proof request made');
+      // if (!res) throw new Error('no proof request made');
       return res.body;
     } catch (err) {
       throw new Error(err.message);

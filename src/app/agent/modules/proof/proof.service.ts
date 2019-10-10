@@ -66,7 +66,7 @@ export class ProofService {
         ? await request.post(`${this._url}${segment}`).send(proof)
         : await request.post(`${this._url}send-request`).send(proof);
       if (res.status !== 200) {
-        // console.log(res);
+        console.log('post proof request', res);
         throw new Error(
           `Error getting proof request with status ${res.status}`
         );

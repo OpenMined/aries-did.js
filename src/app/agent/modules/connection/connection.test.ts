@@ -31,9 +31,7 @@ describe('connection model results', async () => {
     const accept = await agentConnection.acceptInvitation(
       receive.connection_id
     );
-    const testConnections = await testConnection.getConnections();
-    console.log('the test connection', testConnections);
-    // await testConnection.acceptInvitation(receive.connection_id);
+    // const testConnections = await testConnection.getConnections();
   });
   it('should create a new invitation', async function() {
     const agentInvite = await agentConnection.createInvitation();
