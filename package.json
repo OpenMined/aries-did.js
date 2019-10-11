@@ -4,7 +4,7 @@
   "description": "An aries controller app for connecting to the aries-cloudagent-python app.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register **/**/*.test.ts || true",
+    "test": "mocha --reporter=nyan -r ts-node/register **/**/*.test.ts || true",
     "test-watch": "nodemon --exec npm test",
     "lint": "tslint --project tsconfig.json --format stylish",
     "build": "tsc",
@@ -16,7 +16,7 @@
     "start:acme": "sh start-acme.sh",
     "data:relationships": "nodemon --exec ts-node src/data-gen.ts",
     "debug": "node --inspect-brk --require ts-node/register src/server.ts",
-    "start:test-suite": "nodemon --exec ts-node src/app/test-suite/app.ts"
+    "start:test-suite": "mocha --reporter=xunit --reporter-options output=results.xml -r ts-node/register **/**/*.test.ts || true"
   },
   "keywords": [],
   "author": "",

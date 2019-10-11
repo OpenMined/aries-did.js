@@ -86,7 +86,7 @@ export class Proof {
       };
     }
     proofRequest.proof_request.requested_attributes = requested_attributes;
-    console.log('proof request', JSON.stringify(proofRequest));
+    // console.log('proof request', JSON.stringify(proofRequest));
     return proofRequest;
   }
 
