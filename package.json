@@ -16,7 +16,24 @@
     "start:acme": "sh start-acme.sh",
     "data:relationships": "nodemon --exec ts-node src/data-gen.ts",
     "debug": "node --inspect-brk --require ts-node/register src/server.ts",
-    "start:test-suite": "nodemon --exec ts-node src/app/test-suite/app.ts"
+    "test-suite": "nodemon --exec npm run start:test-suite",
+    "start:test-suite": "rm -rf dist && npm run build:config && tsc && ava",
+    "build:config": "copyfiles -f \"**/**/**.env\" dist/app"
+  },
+  "ava": {
+    "compileEnhancements": false,
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "files": [
+      "**/**/*.spec.*",
+      "!src/app/agent",
+      "!src/app/agent"
+    ],
+    "tap": true
   },
   "keywords": [],
   "author": "",
