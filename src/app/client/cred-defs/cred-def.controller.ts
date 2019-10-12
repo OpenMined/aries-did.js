@@ -20,7 +20,7 @@ router.post('/', async (ctx: Koa.Context) => {
     const res = await credDefSvc.createCredDef(schema);
     return (ctx.body = res);
   } catch (err) {
-    ctx.throw(401, err);
+    ctx.throw(400, err);
   }
 });
 

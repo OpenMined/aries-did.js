@@ -1,14 +1,16 @@
 import * as request from 'superagent';
 
-const apiUrl = 'http://localhost:8051/';
 const segment = 'credential/';
 
-export class ControllerService {
-  constructor() {}
+export class CredentialService {
+  private _url: string;
+  constructor(apiUrl: string) {
+    this._url = apiUrl;
+  }
 
   async getCredentialById(id: string) {
     try {
-      const res = await request.get(`${apiUrl}${segment}${id}`);
+      const res = await request.get(`${this._url}${segment}${id}`);
       return res.body;
     } catch (err) {
       throw err.message;
@@ -17,7 +19,7 @@ export class ControllerService {
 
   async removeCredentialById(id: string) {
     try {
-      const res = await request.post(`${apiUrl}${segment}${id}`);
+      const res = await request.post(`${this._url}${segment}${id}`);
       return res.body;
     } catch (err) {
       throw err.message;
@@ -26,7 +28,7 @@ export class ControllerService {
 
   async getCredentials() {
     try {
-      const res = await request.get(`${apiUrl}${segment}`);
+      const res = await request.get(`${this._url}${segment}`);
       return res.body;
     } catch (err) {
       throw err.message;

@@ -53,6 +53,7 @@ export class AgentController implements IAgentModel {
     this.schema = new Schema(url);
     this.issue = new Issue(url);
     this.credDef = new CredentialDefinition(url);
+    this.proof = new Proof(url, this.schema, this.credDef);
     if (schema) this.loadSchemas(schema);
   }
 
