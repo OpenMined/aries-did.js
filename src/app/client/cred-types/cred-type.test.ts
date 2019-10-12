@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import 'mocha';
 const request = require('supertest');
 
-import app from '../../../app/app';
+import app from '../../app';
 
 const agent = new AgentConfig();
 

@@ -11,7 +11,7 @@ export class CredentialService {
   async getCredentialById(id: string) {
     try {
       const res = await request.get(`${this._url}${segment}${id}`);
-      return res.body;
+      return res;
     } catch (err) {
       throw err.message;
     }
@@ -20,7 +20,7 @@ export class CredentialService {
   async removeCredentialById(id: string) {
     try {
       const res = await request.post(`${this._url}${segment}${id}`);
-      return res.body;
+      return res;
     } catch (err) {
       throw err.message;
     }
@@ -29,9 +29,9 @@ export class CredentialService {
   async getCredentials() {
     try {
       const res = await request.get(`${this._url}${segment}`);
-      return res.body;
+      return res;
     } catch (err) {
-      throw err.message;
+      throw new Error(err.message);
     }
   }
 }

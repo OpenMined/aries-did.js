@@ -1,6 +1,6 @@
 import relationshipsController from './relationships/relationships.controller';
 import invitationsController from './invitations/invitations.controller';
-import credDefController from './cred-defs/cred-def.controller';
+import credDefController from './cred-types/cred-type.controller';
 
 export const clientRoutes = [
   relationshipsController.routes(),

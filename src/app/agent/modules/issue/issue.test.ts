@@ -85,7 +85,6 @@ describe(`${prefix}issue credential model tests`, async function() {
       attrs,
       credId.credential_definition_id
     );
-    // console.log('credential result', res);
     expect(res.schema_id).to.not.be.undefined;
   });
   it(`${prefix} should get active records`, async function() {
@@ -94,8 +93,6 @@ describe(`${prefix}issue credential model tests`, async function() {
     expect(res).to.be.an.instanceOf(Array);
   });
   it(`${prefix} should get all testagent active records`, async function() {
-    // const testConnections = await testAgentConnection.getConnections();
-    // console.log('test agent connection', testConnections);
     let res = await testAgentIssue.records();
     expect(res).to.not.be.undefined;
     expect(res).to.be.an.instanceOf(Array);
@@ -143,10 +140,6 @@ describe(`${prefix}issue credential model tests`, async function() {
     }
   });
   it(`${prefix} should issue a credential`, async function() {
-    // await testAgentConnection.getConnections();
-    // await testAgentConnection.getConnections();
-    // await testAgentConnection.getConnections();
-
     let records = await agentIssue.records();
 
     let filtered = agentIssue.filterIssueCrendentials(
@@ -171,7 +164,6 @@ describe(`${prefix}issue credential model tests`, async function() {
   });
   it(`${prefix}should store a received credential`, async function() {
     let records = await testAgentIssue.records();
-    // console.log('the records', records);
     let filtered = agentIssue.filterIssueCrendentials(
       'state',
       'credential_received',
@@ -186,8 +178,8 @@ describe(`${prefix}issue credential model tests`, async function() {
   after('all credential issue test', async function() {
     await agentConnection.removeAllConnections();
     await testAgentConnection.removeAllConnections();
-    // await agentIssue.removeAllRecords();
-    // await testAgentIssue.removeAllRecords();
+    await agentIssue.removeAllRecords();
+    await testAgentIssue.removeAllRecords();
     return;
   });
 });

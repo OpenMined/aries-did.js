@@ -34,14 +34,21 @@ if (cluster.isWorker) {
 */
 
 router.get('/', async (ctx: Koa.Context) => {
-  // if (!cluster.isMaster) {
-  // }
   const params = ctx.query;
+
   try {
-    const res = await invitationSvc.getInvitations(params);
-    return (ctx.body = res);
+    const invite = await invitationSvc.createInvitation();
+    const formatInvite = {
+      type: invite['@type'],
+      id: invite['@id'],
+      serviceEndpoint: invite.serviceEndpoint,
+      label: invite.label,
+      recipientkeys: invite.recipientkeys
+    };
+    ctx.body = formatInvite;
   } catch (err) {
-    ctx.throw(400, err.message);
+    ctx.status = 500;
+    ctx.throw('invitation failed to create on the server');
   }
 });
 
@@ -54,8 +61,6 @@ router.get('/', async (ctx: Koa.Context) => {
 router.post('/', async (ctx: Koa.Context) => {
   const params = ctx.query;
   const keys = Object.keys(params);
-  console.log('cluster id', cluster.worker.id);
-  console.log(clientApp);
 
   if (keys.some(itm => itm === 'accept')) {
     const invite = ctx.request.body;
@@ -67,20 +72,6 @@ router.post('/', async (ctx: Koa.Context) => {
     }
     return ctx.body;
   } else {
-    try {
-      const invite = await invitationSvc.createInvitation();
-      const formatInvite = {
-        type: invite['@type'],
-        id: invite['@id'],
-        serviceEndpoint: invite.serviceEndpoint,
-        label: invite.label,
-        recipientkeys: invite.recipientkeys
-      };
-      ctx.body = formatInvite;
-    } catch (err) {
-      ctx.status = 500;
-      ctx.throw('invitation failed to create on the server');
-    }
   }
 });
 

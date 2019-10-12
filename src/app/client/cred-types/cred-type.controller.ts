@@ -1,6 +1,6 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
-import { CredDefService } from './cred-def.service';
+import { CredDefService } from './cred-type.service';
 
 import AgentConfig from '../../config';
 
