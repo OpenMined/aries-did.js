@@ -52,20 +52,23 @@ describe(`${prefix}issue credential model tests`, async function() {
   before(
     `${prefix}create an invitation object for issue cred test`,
     async function() {
-      //   let testAgentInvite = await testAgentConnection.createInvitation();
-      //   const receive = await agentConnection.invitationResponse(testAgentInvite);
-      //   connectionId = receive.connection_id;
-      //   const res = await schema.createSchema(schemaDef);
-      //   expect(res).to.not.be.undefined;
-      //   expect(res).to.haveOwnProperty('schema_id');
-      //   let schemaId = res.schema_id;
-      //   credId = await credDef.createCredentialDefinition(schemaId);
-      //   await testAgentIssue.removeAllRecords();
-      //   await agentIssue.removeAllRecords();
-      //   return;
+      let testAgentInvite = await testAgentConnection.createInvitation();
+      const receive = await agentConnection.invitationResponse(testAgentInvite);
+
+      connectionId = receive.connection_id;
+      const testConnections = await testAgentConnection.getConnections({
+        state: 'request'
+      });
+      console.log('test connections', testConnections);
+      if (Array.isArray(testConnections)) {
+        await testAgentConnection.sendTrustPing(
+          testConnections[0].connection_id
+        );
+        await agentConnection.sendTrustPing(receive.connection_id);
+      }
     }
   );
-  /*
+
   beforeEach(
     `${prefix}create a new cred def for creating a issue test`,
     async function() {
@@ -76,16 +79,21 @@ describe(`${prefix}issue credential model tests`, async function() {
       credId = await credDef.createCredentialDefinition(schemaId);
     }
   );
-  */
+
   it(`${prefix} should send a credential offer`, async function() {
-    let res = await agentIssue.issueOfferSend(
-      connectionId,
-      'test credential',
-      attrs,
-      credId.credential_definition_id
-    );
-    // console.log('credential result', res);
-    expect(res.schema_id).to.not.be.undefined;
+    const connections = await agentConnection.getConnections({
+      state: 'active'
+    });
+    console.log('agent connections', connections);
+    if (Array.isArray(connections)) {
+      let res = await agentIssue.issueOfferSend(
+        connections[0].connection_id,
+        'test credential',
+        attrs,
+        credId.credential_definition_id
+      );
+      expect(res.schema_id).to.not.be.undefined;
+    }
   });
   it(`${prefix} should get active records`, async function() {
     let res = await agentIssue.records();
@@ -93,8 +101,6 @@ describe(`${prefix}issue credential model tests`, async function() {
     expect(res).to.be.an.instanceOf(Array);
   });
   it(`${prefix} should get all testagent active records`, async function() {
-    // const testConnections = await testAgentConnection.getConnections();
-    // console.log('test agent connection', testConnections);
     let res = await testAgentIssue.records();
     expect(res).to.not.be.undefined;
     expect(res).to.be.an.instanceOf(Array);
@@ -142,10 +148,6 @@ describe(`${prefix}issue credential model tests`, async function() {
     }
   });
   it(`${prefix} should issue a credential`, async function() {
-    // await testAgentConnection.getConnections();
-    // await testAgentConnection.getConnections();
-    // await testAgentConnection.getConnections();
-
     let records = await agentIssue.records();
 
     let filtered = agentIssue.filterIssueCrendentials(
@@ -170,13 +172,11 @@ describe(`${prefix}issue credential model tests`, async function() {
   });
   it(`${prefix}should store a received credential`, async function() {
     let records = await testAgentIssue.records();
-    // console.log('the records', records);
     let filtered = agentIssue.filterIssueCrendentials(
       'state',
       'credential_received',
       records
     );
-    // console.log(filtered);
     let stored = await testAgentIssue.sendStoreById(
       filtered[0].credential_exchange_id
     );

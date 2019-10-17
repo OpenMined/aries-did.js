@@ -150,7 +150,6 @@ export class Issue {
   async sendOfferById(credExId: string) {
     try {
       let res = await this._issueSvc.postById(credExId, 'send-offer');
-      // console.log('send offer by Id result', res);
       return res.body;
     } catch (err) {
       throw new Error(err.message);
@@ -223,7 +222,6 @@ export class Issue {
   async removeAllRecords() {
     let records = await this.records();
     for (let record of records) {
-      // console.log('the record', record);
       this.removeById(record.credential_exchange_id);
     }
   }

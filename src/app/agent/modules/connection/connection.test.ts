@@ -51,9 +51,7 @@ describe('connection model results', async function() {
   it('should have active connections', async function() {
     const testAgentConnections = await testConnection.getConnections();
     if (Array.isArray(testAgentConnections)) {
-      const trustPing = await testConnection.sendTrustPing(
-        testAgentConnections[0].connection_id
-      );
+      await testConnection.sendTrustPing(testAgentConnections[0].connection_id);
       let agentConnections = await agentConnection.getConnections({
         state: 'active'
       });
@@ -70,7 +68,6 @@ describe('connection model results', async function() {
   // TODO: fix this test - there's a time delay but I've set up auto accept on all the
   // actual calls so this is kind of moot at present.
 
-  /*
   it('should get a single connection', async () => {
     const connections = await agentConnection.getConnections();
     if (Array.isArray(connections)) {
@@ -84,48 +81,24 @@ describe('connection model results', async function() {
       }
     }
   });
-  it('should make a connection active', async () => {
-    const connections = await testConnection.getConnections({
-      state: 'request'
-    });
-    expect(connections).to.not.be.empty;
-    if (Array.isArray(connections)) {
-      let id = connections[0].connection_id;
-      // let accept = await testConnection.acceptInvitation(id);
-      let response = await testConnection.requestResponse(id);
-      let active = await agentConnection.getConnections({ state: 'active' });
-      expect(response.connection_id).to.not.be.undefined;
-      if (Array.isArray(active)) {
-        expect(active[0].state).to.equal('active');
-      }
-    }
-  });
-  it('agent should have an active connection', async () => {
-    let activeConnections = await agentConnection.getConnections({
-      state: 'request'
-    });
-    expect(activeConnections).to.exist;
+  it('should make a connection active');
+  // , async () => {
+  //   const connections = await testConnection.getConnections({
+  //     state: 'request'
+  //   });
+  //   expect(connections).to.not.be.empty;
+  //   if (Array.isArray(connections)) {
+  //     let id = connections[0].connection_id;
+  //     // let accept = await testConnection.acceptInvitation(id);
+  //     let response = await testConnection.requestResponse(id);
+  //     let active = await agentConnection.getConnections({ state: 'active' });
+  //     expect(response.connection_id).to.not.be.undefined;
+  //     if (Array.isArray(active)) {
+  //       expect(active[0].state).to.equal('active');
+  //     }
+  //   }
+  // });
 
-    if (Array.isArray(activeConnections)) {
-      let id = activeConnections[0].connection_id;
-      await agentConnection.requestResponse(id);
-    }
-  });
-  it('should remove a single connection', async () => {
-    // TODO: this works but there's a delay.. not sure how to fix at this time
-    // const connections = await agentConnection.getConnections();
-    // if (Array.isArray(connections)) {
-    //   console.log('connections length', connections.length);
-    //   const id = connections[0].connection_id;
-    //   console.log('the id ', id);
-    //   await agentConnection.removeConnection(id);
-    //   const connection = await agentConnection.getConnections({}, id);
-    //   if (!Array.isArray(connection)) {
-    //     expect(connection.accept).to.be.undefined;
-    //   }
-    // }
-  });
-  */
   it('should remove all connections', async () => {
     await testConnection.removeAllConnections();
     await agentConnection.removeAllConnections();
