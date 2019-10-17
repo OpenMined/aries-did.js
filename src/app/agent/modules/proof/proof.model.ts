@@ -134,5 +134,7 @@ export class Proof {
     return;
   }
 
-  sendPresentation(id: string) {}
+  sendPresentation(id: string) {
+    return 'method not implemented';
+  }
 }

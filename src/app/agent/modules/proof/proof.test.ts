@@ -39,22 +39,29 @@ let connectionId: string;
 
 describe('PROOF: controller tests', async function() {
   before('PROOF: create a  relationship', async function() {
-    // let testAgentInvite = await testAgentConnection.createInvitation();
-    // const receive = await agentConnection.invitationResponse(testAgentInvite);
-    // connectionId = receive.connection_id;
-    await testAgentProof.removeAllProofRequests();
-    await proof.removeAllProofRequests();
-
-    return;
+    this.timeout(5000);
+    await agentConnection.removeAllConnections();
+    await testAgentConnection.removeAllConnections();
+    let testAgentInvite = await testAgentConnection.createInvitation();
+    const receive = await agentConnection.invitationResponse(testAgentInvite);
+    // await agentConnection.acceptInvitation(receive.connection_id);
+    const testConnections = testAgentConnection.getConnections();
+    if (Array.isArray(testConnections)) {
+      await testAgentConnection.sendTrustPing(testConnections[0].connection_id);
+      // await agentConnection.sendTrustPing(receive.connection_id);
+      connectionId = receive.connection_id;
+      await testAgentProof.removeAllProofRequests();
+      await proof.removeAllProofRequests();
+    }
   });
   // it(`${PREFIX}should fetch credentials for a presentation request from the wallet by ID`, async function() {});
   // it(`${PREFIX}should fetch credentials for a presentation request from the wallet by ID and referent`, async function() {});
   it(`${PREFIX}should send a presentation proposal`, async function() {
-    const res = await proof.sendProposal();
+    const res = proof.sendProposal();
     expect(res).to.equal('method not implemented');
   });
   it(`${PREFIX}should send a free presentation request not bound to any proposal`, async function() {
-    const res = await proof.sendPresentation('zz');
+    const res = proof.sendPresentation('zz');
     expect(res).to.equal('method not implemented');
   });
   it(`${PREFIX}send a presentation request in reference to a proposal (by presex ID)`, async function() {
@@ -74,19 +81,19 @@ describe('PROOF: controller tests', async function() {
     expect(res.proof_request.name).to.equal('bob');
   });
   it(`${PREFIX}should send a free presentation request not bound to any proposal`, async function() {
-    // const connections = await agentConnection.getConnections({
-    // state: 'active'
-    // });
-    // if (Array.isArray(connections)) {
-    const proofRequest = await proof.buildProofRequest(
-      schemaDef,
-      connectionId,
-      'bob',
-      ['kind']
-    );
-    // console.log('the proof request', JSON.stringify(proofRequest));
-    const res = await proof.sendProofRequest(proofRequest);
-    expect(res).to.haveOwnProperty('presentation_exchange_id');
+    const connections = await agentConnection.getConnections({});
+    console.log('connection', connections);
+    if (Array.isArray(connections)) {
+      const proofRequest = await proof.buildProofRequest(
+        schemaDef,
+        connections[0].connection_id,
+        'bob',
+        ['kind']
+      );
+      // console.log('the proof request', JSON.stringify(proofRequest));
+      const res = await proof.sendProofRequest(proofRequest);
+      expect(res).to.haveOwnProperty('presentation_exchange_id');
+    }
   });
   it(`${PREFIX}should verify a received presentation (by presex id)`, async function() {
     let testProofs = await testAgentProof.records();
@@ -106,8 +113,8 @@ describe('PROOF: controller tests', async function() {
   it(`${PREFIX} should get all records`, async function() {});
   it(`${PREFIX}should fetch a single presentation exchange record by ID`, async function() {
     const res = await proof.records();
-    expect(res).to.not.be.undefined;
-    expect(res).to.have.own.property('connection_id');
+    expect(res[0]).to.not.be.undefined;
+    expect(res[0]).to.have.own.property('connection_id');
   });
   after('clear connections', async function() {
     // await agentConnection.removeAllConnections();

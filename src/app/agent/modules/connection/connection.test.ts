@@ -63,7 +63,6 @@ describe('connection model results', async function() {
       if (Array.isArray(agentConnections) && agentConnections.length > 1) {
         expect(agentConnections).to.not.be.empty;
         expect(agentConnections[0].state === 'active');
-        console.log('agent connections', agentConnections);
       }
     }
   });
