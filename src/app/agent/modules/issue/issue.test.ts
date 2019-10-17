@@ -59,7 +59,6 @@ describe(`${prefix}issue credential model tests`, async function() {
       const testConnections = await testAgentConnection.getConnections({
         state: 'request'
       });
-      console.log('test connections', testConnections);
       if (Array.isArray(testConnections)) {
         await testAgentConnection.sendTrustPing(
           testConnections[0].connection_id
