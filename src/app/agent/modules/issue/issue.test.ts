@@ -52,18 +52,17 @@ describe(`${prefix}issue credential model tests`, async function() {
   before(
     `${prefix}create an invitation object for issue cred test`,
     async function() {
-      let testAgentInvite = await testAgentConnection.createInvitation();
-      const receive = await agentConnection.invitationResponse(testAgentInvite);
-
-      connectionId = receive.connection_id;
-      const res = await schema.createSchema(schemaDef);
-      expect(res).to.not.be.undefined;
-      expect(res).to.haveOwnProperty('schema_id');
-      let schemaId = res.schema_id;
-      credId = await credDef.createCredentialDefinition(schemaId);
-      await testAgentIssue.removeAllRecords();
-      await agentIssue.removeAllRecords();
-      return;
+      //   let testAgentInvite = await testAgentConnection.createInvitation();
+      //   const receive = await agentConnection.invitationResponse(testAgentInvite);
+      //   connectionId = receive.connection_id;
+      //   const res = await schema.createSchema(schemaDef);
+      //   expect(res).to.not.be.undefined;
+      //   expect(res).to.haveOwnProperty('schema_id');
+      //   let schemaId = res.schema_id;
+      //   credId = await credDef.createCredentialDefinition(schemaId);
+      //   await testAgentIssue.removeAllRecords();
+      //   await agentIssue.removeAllRecords();
+      //   return;
     }
   );
   /*
@@ -184,8 +183,8 @@ describe(`${prefix}issue credential model tests`, async function() {
     expect(stored).to.not.be.undefined;
   });
   after('all credential issue test', async function() {
-    await agentConnection.removeAllConnections();
-    await testAgentConnection.removeAllConnections();
+    // await agentConnection.removeAllConnections();
+    // await testAgentConnection.removeAllConnections();
     // await agentIssue.removeAllRecords();
     // await testAgentIssue.removeAllRecords();
     return;

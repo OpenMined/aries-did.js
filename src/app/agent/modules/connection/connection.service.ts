@@ -4,7 +4,6 @@ import {
   IReceiveInvitationRequestResponse
 } from '../../../core/interfaces/invitation-request.interface';
 import * as request from 'superagent';
-import { MessageState } from '../../../core/interfaces/agent.interface';
 import {
   IConnectionParams,
   IConnectionsResult
@@ -157,6 +156,17 @@ export class ConnectionService {
           return err;
         }
       }
+    }
+  }
+
+  async postById(id: string, subsegment: 'send-ping') {
+    try {
+      const res = await request.post(
+        `${this.apiUrl}${segment}${id}/${subsegment}`
+      );
+      return res;
+    } catch (err) {
+      throw new Error(err.message);
     }
   }
 }

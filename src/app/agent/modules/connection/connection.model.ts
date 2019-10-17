@@ -128,4 +128,14 @@ export class Connection {
       return err;
     }
   }
+
+  async sendTrustPing(id: string) {
+    try {
+      let res = await this.connectionSvc.postById(id, 'send-ping');
+      if (res.status === 200) return res.body;
+      else throw new Error(`trust ping failed with status: ${res.status}`);
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
 }

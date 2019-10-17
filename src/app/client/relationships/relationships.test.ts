@@ -27,10 +27,10 @@ describe('API should handle relationships', async function() {
     expect(relationships.body).to.be.an('array');
   });
   it('should get a single relationship record', async function() {
-    const received = await agentConn.invitationResponse(invite);
-    const record = await request(app.callback()).get(
-      `/relationships?id=${received.connection_id}`
-    );
-    expect(record.body.connection_id).to.exist;
+    // const received = await agentConn.invitationResponse(invite);
+    // const record = await request(app.callback()).get(
+    //   `/relationships?id=${received.connection_id}`
+    // );
+    // expect(record.body.connection_id).to.exist;
   });
 });

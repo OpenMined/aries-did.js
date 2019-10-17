@@ -55,20 +55,20 @@ router.post('/', async (ctx: Koa.Context) => {
     }
     return ctx.body;
   } else {
-    try {
-      const invite = await invitationSvc.createInvitation();
-      const formatInvite = {
-        type: invite['@type'],
-        id: invite['@id'],
-        serviceEndpoint: invite.serviceEndpoint,
-        label: invite.label,
-        recipientkeys: invite.recipientkeys
-      };
-      ctx.body = formatInvite;
-    } catch (err) {
-      ctx.status = 500;
-      ctx.throw('invitation failed to create on the server');
-    }
+    // try {
+    //   const invite = await invitationSvc.createInvitation();
+    //   const formatInvite = {
+    //     type: invite['@type'],
+    //     id: invite['@id'],
+    //     serviceEndpoint: invite.serviceEndpoint,
+    //     label: invite.label,
+    //     recipientkeys: invite.recipientkeys
+    //   };
+    //   ctx.body = formatInvite;
+    // } catch (err) {
+    //   ctx.status = 500;
+    //   ctx.throw('invitation failed to create on the server');
+    // }
   }
 });
 

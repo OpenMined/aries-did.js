@@ -39,9 +39,9 @@ let connectionId: string;
 
 describe('PROOF: controller tests', async function() {
   before('PROOF: create a  relationship', async function() {
-    let testAgentInvite = await testAgentConnection.createInvitation();
-    const receive = await agentConnection.invitationResponse(testAgentInvite);
-    connectionId = receive.connection_id;
+    // let testAgentInvite = await testAgentConnection.createInvitation();
+    // const receive = await agentConnection.invitationResponse(testAgentInvite);
+    // connectionId = receive.connection_id;
     await testAgentProof.removeAllProofRequests();
     await proof.removeAllProofRequests();
 
@@ -112,7 +112,7 @@ describe('PROOF: controller tests', async function() {
   after('clear connections', async function() {
     // await agentConnection.removeAllConnections();
     // await testAgentConnection.removeAllConnections();
-    console.log('run');
+    // console.log('run');
     return;
   });
 });
