@@ -2,6 +2,7 @@ import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import { RelationshipService } from './relationships.service';
 import AgentConfig from '../../config';
+import client from '../client';
 
 const agentConfig = new AgentConfig();
 

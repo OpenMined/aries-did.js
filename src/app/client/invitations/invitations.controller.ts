@@ -3,6 +3,8 @@ import * as Router from 'koa-router';
 import { InvitationService } from './invitations.service';
 import AgentConfig from '../../../app/config';
 import { Connection } from '../../../app/agent/modules/connection/connection.model';
+import * as cluster from 'cluster';
+import client from '../../client/client';
 
 const agentConfig = new AgentConfig();
 const connection = new Connection(agentConfig.agentUrl);
@@ -21,12 +23,19 @@ const invitationResponseKeys = [
 ];
 const invitationKeys = ['@type', 'recipientkeys', 'label', 'serviceEndpoint'];
 
+let clientApp = client;
+
+if (cluster.isWorker) {
+  console.log('worker cluster', cluster.worker.id);
+}
 /* 
   get all of my external invitations
   parameters: state, initiator
 */
 
 router.get('/', async (ctx: Koa.Context) => {
+  // if (!cluster.isMaster) {
+  // }
   const params = ctx.query;
   try {
     const res = await invitationSvc.getInvitations(params);
@@ -45,6 +54,9 @@ router.get('/', async (ctx: Koa.Context) => {
 router.post('/', async (ctx: Koa.Context) => {
   const params = ctx.query;
   const keys = Object.keys(params);
+  console.log('cluster id', cluster.worker.id);
+  console.log(clientApp);
+
   if (keys.some(itm => itm === 'accept')) {
     const invite = ctx.request.body;
     try {
