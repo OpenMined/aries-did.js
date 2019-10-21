@@ -28,8 +28,8 @@ export class CredentialService {
 
   async getCredentials() {
     try {
-      const res = await request.get(`${this._url}${segment}`);
-      return res.body;
+      const res = await request.get(`${this._url}credentials`);
+      return res;
     } catch (err) {
       throw err.message;
     }
