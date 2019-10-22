@@ -49,21 +49,32 @@ const schemaDef = {
 };
 
 describe(`${prefix}issue credential model tests`, async function() {
+  // this.timeout(5000);
   before(
-    `${prefix}create an invitation object for issue cred test`,
+    `${prefix}create a relationship for issue cred test`,
     async function() {
       let testAgentInvite = await testAgentConnection.createInvitation();
       const receive = await agentConnection.invitationResponse(testAgentInvite);
 
       connectionId = receive.connection_id;
-      const testConnections = await testAgentConnection.getConnections({
+      let testConnections = await testAgentConnection.getConnections({
         state: 'request'
       });
-      if (Array.isArray(testConnections)) {
-        await testAgentConnection.sendTrustPing(
-          testConnections[0].connection_id
-        );
-        await agentConnection.sendTrustPing(receive.connection_id);
+
+      while (Array.isArray(testConnections) && testConnections.length < 1) {
+        testConnections = await testAgentConnection.getConnections({
+          state: 'request'
+        });
+
+        if (Array.isArray(testConnections) && testConnections.length > 0) {
+          console.log(testConnections);
+          await testAgentConnection.sendTrustPing(
+            testConnections[0].connection_id
+          );
+          await agentConnection.sendTrustPing(receive.connection_id);
+          const agentConnections = await agentConnection.getConnections();
+          console.log('agent connection', agentConnections);
+        }
       }
     }
   );
@@ -80,9 +91,7 @@ describe(`${prefix}issue credential model tests`, async function() {
   );
 
   it(`${prefix} should send a credential offer`, async function() {
-    const connections = await agentConnection.getConnections({
-      state: 'active'
-    });
+    const connections = await agentConnection.getConnections({});
     console.log('agent connections', connections);
     if (Array.isArray(connections)) {
       let res = await agentIssue.issueOfferSend(
@@ -182,10 +191,10 @@ describe(`${prefix}issue credential model tests`, async function() {
     expect(stored).to.not.be.undefined;
   });
   after('all credential issue test', async function() {
-    // await agentConnection.removeAllConnections();
-    // await testAgentConnection.removeAllConnections();
-    // await agentIssue.removeAllRecords();
-    // await testAgentIssue.removeAllRecords();
+    await agentConnection.removeAllConnections();
+    await testAgentConnection.removeAllConnections();
+    await agentIssue.removeAllRecords();
+    await testAgentIssue.removeAllRecords();
     return;
   });
 });
