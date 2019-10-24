@@ -14,7 +14,16 @@ const router = new Router(routerOpts);
 router.get('/', async (ctx: Koa.Context) => {
   try {
     let proofs = await ctrl.proof.records();
-    return (ctx.body = proofs);
+
+    return (ctx.body = proofs.map(proof => {
+      return {
+        _id: proof.presentation_exchange_id,
+        updated: proof.updated_at,
+        created: proof.created_at,
+        state: proof.state,
+        connectionId: proof.connection_id
+      };
+    }));
   } catch (err) {
     return ctx.throw(500, 'internal server error');
   }
@@ -23,28 +32,16 @@ router.get('/', async (ctx: Koa.Context) => {
 router.post('/', async (ctx: Koa.Context) => {
   let proof = ctx.request.body;
   try {
-    const res = await ctrl.proof.buildProofRequest(
+    const proofRequest = await ctrl.proof.buildProofRequest(
       proof.schemaDef,
       proof.connectionId,
       proof.comment,
       proof.names
     );
-    console.log('result', res);
-    const {
-      presentation_exchange_id: _id,
-      created_at: created,
-      updated_at: updated,
-      state,
-      connectionId: connectionId
-    } = res;
+    const res = await ctrl.proof.sendProofRequest(proofRequest);
+
     ctx.status = 201;
-    return (ctx.body = {
-      _id,
-      created,
-      updated,
-      state,
-      connectionId
-    });
+    return (ctx.body = res);
   } catch (err) {
     ctx.throw(500, err.message);
   }

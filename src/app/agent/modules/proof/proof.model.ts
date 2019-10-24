@@ -136,7 +136,7 @@ export class Proof {
 
   async removeProof(id: string) {
     let res = await this._proofSvc.remove(id);
-    return res;
+    return res.body;
   }
 
   sendPresentation(id: string) {
