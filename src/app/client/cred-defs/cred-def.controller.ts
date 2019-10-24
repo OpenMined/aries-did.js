@@ -1,12 +1,12 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
+
+import client from '../client';
 import { CredDefService } from './cred-def.service';
 
-import AgentConfig from '../../config';
+const ctrl = client;
 
-const agentConfig = new AgentConfig();
-
-const credDefSvc = new CredDefService(agentConfig.agentUrl);
+const credDefSvc = new CredDefService(ctrl.schema, ctrl.credDef);
 
 const routerOpts: Router.IRouterOptions = {
   prefix: '/credential-definitions'

@@ -15,10 +15,21 @@ router.get('/', async (ctx: Koa.Context) => {
     const params = ctx.query;
     if (params.id) {
       const res = await ctrl.connection.getConnections(params, params.id);
-      ctx.body = res;
+      return (ctx.body = res);
     } else {
       const res = await ctrl.connection.getConnections(params);
-      ctx.body = res;
+      if (Array.isArray(res) && res.length > 0) {
+        return (ctx.body = res.map(conn => {
+          return {
+            _id: conn.connection_id,
+            state: conn.state,
+            created: conn.created_at,
+            did: conn.their_did,
+            initiator: conn.initiator,
+            name: conn.their_label
+          };
+        }));
+      }
     }
   } catch (err) {
     ctx.throw(400, 'failed to get relationships');

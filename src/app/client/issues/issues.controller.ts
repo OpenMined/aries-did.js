@@ -27,8 +27,9 @@ router.post('/', async (ctx: Koa.Context) => {
   let issue = ctx.body;
 
   for (let key in issue) {
-    if (!params.some(param => param === key))
+    if (!params.some(param => param === key)) {
       return ctx.throw(400, `missing ${key} field`);
+    }
   }
   try {
     const newIssue = await client.issue.issueOfferSend(

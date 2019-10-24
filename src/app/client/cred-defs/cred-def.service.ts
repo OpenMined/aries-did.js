@@ -1,5 +1,3 @@
-import AgentConfig from '../../config';
-import { SchemaService } from '../../agent/modules/schema/schema.service';
 import { Schema } from '../../agent/modules/schema/schema.model';
 import { CredentialDefinition } from '../../agent/modules/credential-definition/credential-definition.model';
 import { ISchema } from '../../core/interfaces/schema.interface';
@@ -8,9 +6,9 @@ export class CredDefService {
   private _schema: Schema;
   private _credDef: CredentialDefinition;
 
-  constructor(url: string) {
-    this._schema = new Schema(url);
-    this._credDef = new CredentialDefinition(url);
+  constructor(schema: Schema, credDef: CredentialDefinition) {
+    this._schema = schema;
+    this._credDef = credDef;
   }
 
   async createCredDef(schema: ISchema): Promise<any> {
