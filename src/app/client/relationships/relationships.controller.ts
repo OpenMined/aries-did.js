@@ -31,6 +31,8 @@ router.get('/', async (ctx: Koa.Context) => {
         }));
       }
     }
+
+    return (ctx.status = 200);
   } catch (err) {
     ctx.throw(400, 'failed to get relationships');
   }
@@ -51,9 +53,20 @@ router.get('/:id', async (ctx: Koa.Context) => {
   const id = ctx.params.id;
   try {
     const relationship = await ctrl.connection.getConnections({}, id);
-    console.log('single relationship', relationship);
     if (!relationship) return ctx.throw(404, 'not found');
-    return (ctx.body = relationship);
+    if (!Array.isArray(relationship)) {
+      return (ctx.body = {
+        _id: relationship.connection_id,
+        name: relationship.their_label,
+        state: relationship.state,
+        did: relationship.their_did,
+        created: relationship.created_at,
+        updated: relationship.updated_at,
+        initiator: relationship.initiator
+      });
+    } else {
+      return ctx.throw(404);
+    }
   } catch (err) {
     return ctx.throw(500, err.message);
   }
@@ -61,7 +74,6 @@ router.get('/:id', async (ctx: Koa.Context) => {
 
 router.post('/:id', async (ctx: Koa.Context) => {
   const id = ctx.params.id;
-  console.log('the id', id);
   try {
     let relationship = await ctrl.connection.getConnections({}, id);
     if (!Array.isArray(relationship)) {
@@ -71,6 +83,7 @@ router.post('/:id', async (ctx: Koa.Context) => {
         relationship = await ctrl.connection.getConnections({}, id);
         return (ctx.body = relationship);
       }
+      ctx.status = 201;
       return (ctx.body = relationship);
     } else {
       ctx.throw(404, 'not found');
@@ -78,6 +91,18 @@ router.post('/:id', async (ctx: Koa.Context) => {
   } catch (err) {
     ctx.status = 500;
     ctx.throw('invitation failed to create on the server');
+  }
+});
+
+router.delete('/:id', async (ctx: Koa.Context) => {
+  const id = ctx.params.id;
+  try {
+    let removed = await ctrl.connection.removeConnection(id);
+    console.log('removed', removed);
+    let find = await ctrl.connection.getConnections({}, id);
+    console.log('the request', find);
+  } catch (err) {
+    return ctx.throw(400, err.message);
   }
 });
 

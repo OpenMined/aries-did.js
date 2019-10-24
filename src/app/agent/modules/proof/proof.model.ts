@@ -122,6 +122,7 @@ export class Proof {
       throw new Error(err.message);
     }
   }
+
   async removeAllProofRequests() {
     const results = await this._proofSvc.getProofRecords();
     const requests = results.body.results;
@@ -131,6 +132,11 @@ export class Proof {
       }
     }
     return;
+  }
+
+  async removeProof(id: string) {
+    let res = await this._proofSvc.remove(id);
+    return res;
   }
 
   sendPresentation(id: string) {

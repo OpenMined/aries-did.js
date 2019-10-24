@@ -22,6 +22,32 @@ router.get('/', async (ctx: Koa.Context) => {
 
 router.post('/', async (ctx: Koa.Context) => {
   let proof = ctx.request.body;
+  try {
+    const res = await ctrl.proof.buildProofRequest(
+      proof.schemaDef,
+      proof.connectionId,
+      proof.comment,
+      proof.names
+    );
+    console.log('result', res);
+    const {
+      presentation_exchange_id: _id,
+      created_at: created,
+      updated_at: updated,
+      state,
+      connectionId: connectionId
+    } = res;
+    ctx.status = 201;
+    return (ctx.body = {
+      _id,
+      created,
+      updated,
+      state,
+      connectionId
+    });
+  } catch (err) {
+    ctx.throw(500, err.message);
+  }
 });
 
 router.get('/:id', async (ctx: Koa.Context) => {
@@ -41,6 +67,17 @@ router.post('/:id', async (ctx: Koa.Context) => {
 
   try {
   } catch (err) {}
+});
+
+router.delete('/:id', async (ctx: Koa.Context) => {
+  let id = ctx.params.id;
+
+  try {
+    let res = await ctrl.proof.removeProof(id);
+    return (ctx.body = res);
+  } catch {
+    return ctx.throw(500);
+  }
 });
 
 export default router;
