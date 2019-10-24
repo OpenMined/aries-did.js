@@ -4,6 +4,7 @@ import { Issue } from './modules/issue/issue.model';
 import { CredentialDefinition } from './modules/credential-definition/credential-definition.model';
 import { ISchema } from '../core/interfaces/schema.interface';
 import { Proof } from './modules/proof/proof.model';
+import { Credential } from './modules/credential/credential.model';
 
 const moduleKeys = ['connection', 'schema', 'issue', 'credDef'];
 
@@ -29,7 +30,7 @@ export class AgentController implements IAgentModel {
   issue: Issue;
   credDef: CredentialDefinition;
   proof: Proof;
-  // cred: Credential;
+  cred: Credential;
 
   private _schemas: ISchema[];
   private _schemaList: any[] = [];
@@ -54,6 +55,7 @@ export class AgentController implements IAgentModel {
     this.issue = new Issue(url);
     this.credDef = new CredentialDefinition(url);
     this.proof = new Proof(url, this.schema, this.credDef);
+    this.cred = new Credential(url);
     if (schema) this.loadSchemas(schema);
   }
 

@@ -37,7 +37,6 @@ export class Runner<T> implements IRunner {
 
   async runTest(name: string, test: () => Promise<boolean>) {
     const pass = await test();
-    console.log('test results', pass);
     this.addResult({ name, pass });
   }
 }

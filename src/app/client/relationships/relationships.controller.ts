@@ -1,12 +1,9 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import { RelationshipService } from './relationships.service';
-import AgentConfig from '../../config';
 import client from '../client';
 
-const agentConfig = new AgentConfig();
-
-const relationship = new RelationshipService(agentConfig.agentUrl);
+const ctrl = client;
 
 const routerOpts: Router.IRouterOptions = {
   prefix: '/relationships'
@@ -18,10 +15,10 @@ router.get('/', async (ctx: Koa.Context) => {
   try {
     const params = ctx.query;
     if (params.id) {
-      const res = await relationship.getRelationships(params, params.id);
+      const res = await ctrl.connection.getConnections(params, params.id);
       ctx.body = res;
     } else {
-      const res = await relationship.getRelationships(params);
+      const res = await ctrl.connection.getConnections(params);
       ctx.body = res;
     }
   } catch (err) {

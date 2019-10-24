@@ -1,5 +1,8 @@
 import { ProofService } from './proof.service';
-import { IProofRequest } from 'src/app/core/interfaces/proof.interface';
+import {
+  IProofRequest,
+  IProofRecord
+} from 'src/app/core/interfaces/proof.interface';
 import { Schema } from '../schema/schema.model';
 import { CredentialDefinition } from '../credential-definition/credential-definition.model';
 import { ISchema } from 'src/app/core/interfaces/schema.interface';
@@ -39,7 +42,7 @@ export class Proof {
     this._proofSvc = new ProofService(apiUrl);
   }
 
-  async records(id?: string) {
+  async records(): Promise<IProofRecord[]> {
     try {
       let res = await this._proofSvc.getProofRecords();
       if (res.body.results) return res.body.results;
@@ -86,7 +89,6 @@ export class Proof {
       };
     }
     proofRequest.proof_request.requested_attributes = requested_attributes;
-    // console.log('proof request', JSON.stringify(proofRequest));
     return proofRequest;
   }
 
@@ -96,17 +98,14 @@ export class Proof {
   */
 
   async sendProofRequest(proofRequest: IProofRequest<any>, presExId?: string) {
-    // const res = presExId ? await this._proofSvc.postProof(proofRequest, 'send-presentation', presExId) :
     try {
       const res = await this._proofSvc.postProof(proofRequest);
-      // if (!res) throw new Error('no proof request made');
       if (res.status === 200) return res.body;
       else
         throw new Error(
           `Proof request presentation failed with status ${res.status}`
         );
     } catch (err) {
-      console.log('error message', err);
       throw new Error(err.message);
     }
   }

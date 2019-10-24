@@ -1,11 +1,8 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
-import { InvitationService } from './invitations.service';
-import * as cluster from 'cluster';
 import client from '../../client/client';
 
 const agent = client;
-const invitationSvc = new InvitationService(agent.connection);
 
 const routerOpts: Router.IRouterOptions = {
   prefix: '/invitations'
@@ -20,7 +17,7 @@ const invitationResponseKeys = [
 ];
 const invitationKeys = ['@type', 'recipientkeys', 'label', 'serviceEndpoint'];
 
-let clientApp = client;
+const ctrl = client;
 
 /* 
   get all of my external invitations
@@ -29,7 +26,7 @@ let clientApp = client;
 
 router.get('/', async (ctx: Koa.Context) => {
   try {
-    const res = await agent.connection.createInvitation();
+    const res = await ctrl.connection.createInvitation();
     return (ctx.body = res);
   } catch (err) {
     ctx.throw(400, err.message);
@@ -44,11 +41,14 @@ router.get('/', async (ctx: Koa.Context) => {
 */
 router.post('/', async (ctx: Koa.Context) => {
   const invite = ctx.request.body;
-  if (!ctx.body) ctx.throw(400, 'invalid request');
+  // console.log('the invite', invite);
+  if (!invite) ctx.throw(400, 'invalid request');
   try {
-    const req = await invitationSvc.acceptInvitation(invite);
-    ctx.body = req;
+    const req = await ctrl.connection.invitationResponse(invite);
+    console.log('the result', req);
+    return (ctx.body = req);
   } catch (err) {
+    // console.log(err);
     ctx.throw(400, 'invalid request');
   }
   return ctx.body;

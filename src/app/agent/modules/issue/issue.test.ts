@@ -67,13 +67,11 @@ describe(`${prefix}issue credential model tests`, async function() {
         });
 
         if (Array.isArray(testConnections) && testConnections.length > 0) {
-          console.log(testConnections);
           await testAgentConnection.sendTrustPing(
             testConnections[0].connection_id
           );
           await agentConnection.sendTrustPing(receive.connection_id);
           const agentConnections = await agentConnection.getConnections();
-          console.log('agent connection', agentConnections);
         }
       }
     }
@@ -92,7 +90,6 @@ describe(`${prefix}issue credential model tests`, async function() {
 
   it(`${prefix} should send a credential offer`, async function() {
     const connections = await agentConnection.getConnections({});
-    console.log('agent connections', connections);
     if (Array.isArray(connections)) {
       let res = await agentIssue.issueOfferSend(
         connections[0].connection_id,

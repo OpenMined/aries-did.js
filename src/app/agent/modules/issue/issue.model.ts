@@ -1,7 +1,8 @@
 import {
   ICredentialAttributes,
   IIssueSend,
-  IIssueOffer
+  IIssueOffer,
+  IRecordsResult
 } from 'src/app/core/interfaces/issue-credential.interface';
 import { IssueService } from './issue.service';
 
@@ -89,7 +90,7 @@ export class Issue {
     this._issueSvc = new IssueService(url);
   }
 
-  async records() {
+  async records(): Promise<IRecordsResult[]> {
     try {
       let res = await this._issueSvc.getIssueCredentialRecords();
       return res.body.results;
