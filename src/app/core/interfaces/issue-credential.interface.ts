@@ -28,7 +28,15 @@ export interface IRecordsResult {
   error_msg: string;
   state: string;
   initiator: string;
-  credential_proposal_dict: {};
+  credential_proposal_dict: {
+    credential_proposal: {
+      attributes: any[];
+      comment: string;
+      cred_def_id: string;
+      '@id': string;
+      '@type': string;
+    };
+  };
   credential_id: string;
   raw_credential: {};
   auto_offer: true;

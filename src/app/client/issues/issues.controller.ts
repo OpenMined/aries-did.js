@@ -2,9 +2,9 @@ import * as Koa from 'koa';
 import * as Router from 'koa-router';
 
 import client from '../client';
-import { AgentController } from 'src/app/agent/agent.model';
+import { IRecordsResult } from '../../../app/core/interfaces/issue-credential.interface';
 
-const agentController = client;
+const ctrl = client;
 
 const routerOpts: Router.IRouterOptions = {
   prefix: '/issues'
@@ -12,10 +12,21 @@ const routerOpts: Router.IRouterOptions = {
 
 const router = new Router(routerOpts);
 
+const mapIssue = (itm: IRecordsResult) => {
+  return {
+    _id: itm.credential_exchange_id,
+    connectionId: itm.connection_id,
+    proposal: itm.credential_proposal_dict,
+    created: itm.created_at,
+    updated: itm.updated_at,
+    state: itm.state
+  };
+};
+
 router.get('/', async (ctx: Koa.Context) => {
   try {
-    let res = await agentController.issue.records();
-    return (ctx.body = res);
+    let res = await ctrl.issue.records();
+    return (ctx.body = res.map(itm => mapIssue(itm)));
   } catch (err) {
     ctx.throw(500, err.message);
   }
@@ -24,7 +35,7 @@ router.get('/', async (ctx: Koa.Context) => {
 router.post('/', async (ctx: Koa.Context) => {
   let params = ['connectionId', 'credDefId', 'comment', 'attrs'];
 
-  let issue = ctx.body;
+  let issue = ctx.request.body;
 
   for (let key in issue) {
     if (!params.some(param => param === key)) {
@@ -44,27 +55,47 @@ router.post('/', async (ctx: Koa.Context) => {
   }
 });
 
+router.get('/:id', async (ctx: Koa.Context) => {
+  const id = ctx.params.id;
+  try {
+    let res = await ctrl.issue.records();
+    let record = res
+      .filter(issue => issue.credential_exchange_id === id)
+      .map(itm => mapIssue(itm))[0];
+    return record ? (ctx.body = record) : ctx.throw(404);
+  } catch (err) {}
+});
+
+/*
+  post by id.
+  looks up record to ensure it exists.
+*/
 router.post('/:id', async (ctx: Koa.Context) => {
   const id = ctx.params.id;
-  const state = ctx.params.state;
-
+  // const state = ctx.params.state;
+  const issues = await ctrl.issue.records();
+  const issue = issues.filter(itm => itm.credential_exchange_id === id)[0];
+  console.log('the issue', issue);
+  if (!issue) return ctx.throw(404);
   try {
-    if (state === 'request') {
-      let res = await agentController.issue.sendRequestById(id);
+    if (issue.state === 'offer_received') {
+      let res = await ctrl.issue.sendRequestById(id);
       return (ctx.body = res);
     }
-    if (state === 'issue') {
-      let res = await agentController.issue.sendIssueById(
+    if (issue.state === 'request_received') {
+      console.log('attributes', issue.credential_proposal_dict);
+      let res = await ctrl.issue.sendIssueById(
         id,
-        ctx.body.attrs,
-        ctx.body.comment
+        issue.credential_proposal_dict.credential_proposal.attributes,
+        issue.credential_proposal_dict.credential_proposal.comment
       );
       return (ctx.body = res);
     }
-    if (state === 'store') {
-      let res = await agentController.issue.sendStoreById(id);
+    if (issue.state === 'credential_received') {
+      let res = await ctrl.issue.sendStoreById(id);
       return (ctx.body = res);
     }
+    return ctx.throw(400);
   } catch (err) {
     return ctx.throw(500, err.message);
   }
