@@ -52,10 +52,14 @@ router.post('/:id', async (ctx: Koa.Context) => {
   const id = ctx.params.id;
   console.log('the id', id);
   try {
-    const relationship = await ctrl.connection.getConnections({}, id);
+    let relationship = await ctrl.connection.getConnections({}, id);
     if (!Array.isArray(relationship)) {
       const state = relationship.state;
-      if (state === 'response') await ctrl.connection.sendTrustPing(id);
+      if (state === 'response' || state === 'request') {
+        await ctrl.connection.sendTrustPing(id);
+        relationship = await ctrl.connection.getConnections({}, id);
+        return (ctx.body = relationship);
+      }
       return (ctx.body = relationship);
     } else {
       ctx.throw(404, 'not found');
