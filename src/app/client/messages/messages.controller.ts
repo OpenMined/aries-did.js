@@ -5,11 +5,15 @@ import client from '../client';
 
 const ctrl = client;
 
+export type MessagesType = 'proof' | 'issue' | 'connection';
+
 export interface IMessage {
   _id: string;
   state: string;
   initiator: string;
   connectionId?: string;
+  type: string;
+  updated: Date;
 }
 
 export interface IMessages {
@@ -25,8 +29,8 @@ const routerOpts: Router.IRouterOptions = {
 const router = new Router(routerOpts);
 
 router.get('/', async (ctx: Koa.Context) => {
-  let results: IMessages = { connections: [], proofs: [], issues: [] };
-
+  // let results: IMessages = { connections: [], proofs: [], issues: [] };
+  let results: IMessage[] = [];
   let connections = await ctrl.connection.getConnections();
   if (Array.isArray(connections)) {
     const connectionMssgs = connections
@@ -35,10 +39,14 @@ router.get('/', async (ctx: Koa.Context) => {
         return {
           _id: itm.connection_id,
           state: itm.state,
-          initiator: itm.initiator
+          initiator: itm.initiator,
+          label: itm.their_label,
+          updated: new Date(itm.updated_at),
+
+          type: 'connection'
         };
       });
-    results.connections = connectionMssgs;
+    results = [...connectionMssgs];
   }
   let issues = await ctrl.issue.records();
   let issueMssgs = issues
@@ -48,11 +56,14 @@ router.get('/', async (ctx: Koa.Context) => {
         _id: itm.credential_exchange_id,
         state: itm.state,
         connectionId: itm.connection_id,
-        initiator: itm.initiator
+        initiator: itm.initiator,
+        updated: new Date(itm.updated_at),
+        type: 'issue'
       };
     });
 
-  results.issues = issueMssgs;
+  results = [...results, ...issueMssgs];
+
   let proofs = await ctrl.proof.records();
   let proofMssgs = proofs
     .filter(itm => itm.state !== 'active')
@@ -61,11 +72,17 @@ router.get('/', async (ctx: Koa.Context) => {
         _id: itm.presentation_exchange_id,
         connectionId: itm.connection_id,
         state: itm.state,
-        initiator: itm.initiator
+        initiator: itm.initiator,
+        updated: new Date(itm.updated_at),
+
+        type: 'proof'
       };
     });
-  results.proofs = proofMssgs;
-  return (ctx.body = results);
+  results = [...results, ...proofMssgs];
+  let sorted = results.sort(
+    (a, b) => a.updated.valueOf() - b.updated.valueOf()
+  );
+  return (ctx.body = sorted);
 });
 
 export default router;

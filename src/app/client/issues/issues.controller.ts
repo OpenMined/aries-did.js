@@ -79,6 +79,7 @@ router.post('/:id', async (ctx: Koa.Context) => {
   if (!issue) return ctx.throw(404);
   try {
     if (issue.state === 'offer_received') {
+      console.log('offer received');
       let res = await ctrl.issue.sendRequestById(id);
       return (ctx.body = res);
     }
@@ -95,7 +96,7 @@ router.post('/:id', async (ctx: Koa.Context) => {
       let res = await ctrl.issue.sendStoreById(id);
       return (ctx.body = res);
     }
-    return ctx.throw(400);
+    // return ctx.throw(400);
   } catch (err) {
     return ctx.throw(500, err.message);
   }
