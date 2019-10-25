@@ -54,7 +54,7 @@ router.get('/', async (ctx: Koa.Context) => {
   }
   let issues = await ctrl.issue.records();
   let issueMssgs = issues
-    .filter(itm => itm.state !== 'active')
+    .filter(itm => itm.state !== 'active' && itm.state !== 'stored')
     .map(itm => {
       return {
         _id: itm.credential_exchange_id,

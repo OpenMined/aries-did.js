@@ -5,6 +5,7 @@ import { CredentialDefinition } from './modules/credential-definition/credential
 import { ISchema } from '../core/interfaces/schema.interface';
 import { Proof } from './modules/proof/proof.model';
 import { Credential } from './modules/credential/credential.model';
+import { Wallet } from './modules/wallet/wallet.model';
 
 const moduleKeys = ['connection', 'schema', 'issue', 'credDef'];
 
@@ -31,6 +32,7 @@ export class AgentController implements IAgentModel {
   credDef: CredentialDefinition;
   proof: Proof;
   cred: Credential;
+  wallet: Wallet;
 
   private _schemas: ISchema[];
   private _schemaList: any[] = [];
@@ -56,6 +58,7 @@ export class AgentController implements IAgentModel {
     this.credDef = new CredentialDefinition(url);
     this.proof = new Proof(url, this.schema, this.credDef);
     this.cred = new Credential(url);
+    this.wallet = new Wallet(url);
     if (schema) this.loadSchemas(schema);
   }
 

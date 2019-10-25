@@ -15,7 +15,7 @@ router.get('/', async (ctx: Koa.Context) => {
 
   try {
     let invite = await ctrl.connection.createInvitation();
-    let connection = await ctrl.connection.getConnections({}, invite['@id']);
+    // let connection = await ctrl.connection.getConnections({}, invite['@id']);
 
     let connections = await ctrl.connection.getConnections();
 
@@ -36,15 +36,17 @@ router.get('/', async (ctx: Koa.Context) => {
 
     count += issueMssgs.length;
     count += proofMssgs.length;
+    const wallet = await ctrl.wallet.publicDid();
+    console.log('the wallet', wallet);
     const creds = await ctrl.cred.records();
-    if (!Array.isArray(connection)) {
-      return (ctx.body = {
-        label: invite.label,
-        did: connection.my_did,
-        messageCount: count,
-        credsCount: creds.length
-      });
-    }
+    // if (!Array.isArray(connection)) {
+    return (ctx.body = {
+      label: invite.label,
+      did: wallet.result.did,
+      messageCount: count,
+      credsCount: creds.length
+    });
+    // }
   } catch (err) {
     ctx.throw(err.message, 500);
   }

@@ -3,11 +3,14 @@ import * as request from 'superagent';
 const apiUrl = 'http://localhost:8051/';
 
 export class WalletService {
-  constructor() {}
+  _url: string;
+  constructor(url: string) {
+    this._url = url;
+  }
 
   async getDids() {
     try {
-      const res = await request.get(`${apiUrl}wallet/did`);
+      const res = await request.get(`${this._url}wallet/did`);
       return res.body;
     } catch (err) {
       throw err;
@@ -16,7 +19,7 @@ export class WalletService {
 
   async createDid() {
     try {
-      const res = await request.post(`${apiUrl}wallet/did/create`);
+      const res = await request.post(`${this._url}wallet/did/create`);
       return res.body;
     } catch (err) {
       throw err;
@@ -25,7 +28,7 @@ export class WalletService {
 
   async getPublicDid() {
     try {
-      const res = await request.get(`${apiUrl}wallet/did/public`);
+      const res = await request.get(`${this._url}wallet/did/public`);
       return res.body;
     } catch (err) {
       throw err;
@@ -35,7 +38,7 @@ export class WalletService {
   async assignPublicWalletDid(did: string) {
     try {
       const res = await request
-        .post(`${apiUrl}wallet/did/public`)
+        .post(`${this._url}wallet/did/public`)
         .query({ did });
       return res.body;
     } catch (err) {
