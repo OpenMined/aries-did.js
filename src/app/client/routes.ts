@@ -5,6 +5,7 @@ import credsController from './credentials/credentials.controller';
 import issuesController from './issues/issues.controller';
 import messagesController from './messages/messages.controller';
 import proofsController from './proofs/proofs.controller';
+import profileController from './profile/profile.controller';
 
 export const clientRoutes = [
   relationshipsController.routes(),
@@ -13,7 +14,8 @@ export const clientRoutes = [
   credsController.routes(),
   issuesController.routes(),
   messagesController.routes(),
-  proofsController.routes()
+  proofsController.routes(),
+  profileController.routes()
 ];
 
 export const clientMethods = [
@@ -23,5 +25,6 @@ export const clientMethods = [
   credsController.allowedMethods(),
   issuesController.allowedMethods(),
   messagesController.allowedMethods(),
-  proofsController.allowedMethods()
+  proofsController.allowedMethods(),
+  profileController.routes()
 ];

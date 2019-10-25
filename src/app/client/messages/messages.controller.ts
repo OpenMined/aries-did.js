@@ -34,7 +34,11 @@ router.get('/', async (ctx: Koa.Context) => {
   let connections = await ctrl.connection.getConnections();
   if (Array.isArray(connections)) {
     const connectionMssgs = connections
-      .filter(itm => itm.state !== 'active')
+      .filter(
+        itm =>
+          itm.state !== 'active' &&
+          (itm.state !== 'invitation' && itm.initiator === 'self')
+      )
       .map(itm => {
         return {
           _id: itm.connection_id,
@@ -66,7 +70,7 @@ router.get('/', async (ctx: Koa.Context) => {
 
   let proofs = await ctrl.proof.records();
   let proofMssgs = proofs
-    .filter(itm => itm.state !== 'active')
+    .filter(itm => itm.state !== 'active' && itm.state !== 'stored')
     .map(itm => {
       return {
         _id: itm.presentation_exchange_id,
@@ -74,7 +78,6 @@ router.get('/', async (ctx: Koa.Context) => {
         state: itm.state,
         initiator: itm.initiator,
         updated: new Date(itm.updated_at),
-
         type: 'proof'
       };
     });
