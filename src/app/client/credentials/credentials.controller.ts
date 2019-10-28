@@ -2,8 +2,10 @@ import * as Koa from 'koa';
 import * as Router from 'koa-router';
 
 import client from '../client';
+import DB from '../db';
 
 const agentController = client;
+const db = DB;
 
 const routerOpts: Router.IRouterOptions = {
   prefix: '/credentials'
