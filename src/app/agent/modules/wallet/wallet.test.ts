@@ -1,13 +1,13 @@
-import { WalletService } from './wallet.service';
+// import { WalletService } from './wallet.service';
 
-/*
+// /*
 
-  enable at your own risk - these initiate new wallets which must be registered with 
-  VON in order to properly work.
-*/
+//   enable at your own risk - these initiate new wallets which must be registered with
+//   VON in order to properly work.
+// */
 
-const main = async () => {
-  const walletSvc = new WalletService();
-};
+// const main = async () => {
+//   const walletSvc = new WalletService();
+// };
 
-main();
+// main();

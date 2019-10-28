@@ -37,7 +37,7 @@ const PREFIX = 'PROOF: ';
 
 let connectionId: string;
 
-describe('PROOF: controller tests', async function() {
+describe.only('PROOF: controller tests', async function() {
   before('PROOF: create a  relationship', async function() {
     this.timeout(5000);
     let testAgentInvite = await testAgentConnection.createInvitation();
@@ -86,6 +86,7 @@ describe('PROOF: controller tests', async function() {
         'bob',
         ['kind']
       );
+      console.log('built proof request', JSON.stringify(proofRequest, null, 2));
       const res = await proof.sendProofRequest(proofRequest);
       expect(res).to.haveOwnProperty('presentation_exchange_id');
     }
