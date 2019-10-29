@@ -10,3 +10,9 @@ start-test-agent.sh
 ./nyc_output
 nyc_output
 results.xml
+alice
+_users
+_replicator
+pouch__all_dbs__
+config.json
+log.txt

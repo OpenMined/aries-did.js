@@ -36,6 +36,7 @@ export class AgentController implements IAgentModel {
 
   private _schemas: ISchema[];
   private _schemaList: any[] = [];
+  db: PouchDB.Database<{}>;
 
   get schemaList() {
     return this._schemaList;
