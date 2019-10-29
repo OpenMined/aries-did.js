@@ -21,6 +21,16 @@ export interface ICredentialRecord {
   auto_issue: boolean;
 }
 
+export interface cred_proposal {
+  credential_proposal: {
+    attributes: any[];
+    comment: string;
+    cred_def_id: string;
+    '@id': string;
+    '@type': string;
+  };
+}
+
 export interface IRecordsResult {
   thread_id: string;
   created_at: string;
@@ -28,15 +38,8 @@ export interface IRecordsResult {
   error_msg: string;
   state: string;
   initiator: string;
-  credential_proposal_dict: {
-    credential_proposal: {
-      attributes: any[];
-      comment: string;
-      cred_def_id: string;
-      '@id': string;
-      '@type': string;
-    };
-  };
+  proposal: cred_proposal;
+  credential_proposal_dict: cred_proposal;
   credential_id: string;
   raw_credential: {};
   auto_offer: true;

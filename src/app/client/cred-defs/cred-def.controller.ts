@@ -22,30 +22,22 @@ router.post('/', async (ctx: Koa.Context) => {
   let schema = ctx.request.body;
   try {
     const res = await credDefSvc.createCredDef(schema);
-    console.log('db val', res);
     let _id = res.id;
     ctx.body = res;
-    // let doc = await db.get(_id);
-    // console.log('doc', doc);
     let dbRecord = await db.put({
       _id,
       name: schema.schema_name,
       version: schema.schema_version,
       attributes: schema.attributes
     });
-    // console.log(dbRecord);
-    if (dbRecord.ok) {
-      return (ctx.body = {
-        id: dbRecord.id
-      });
-    }
-    return ctx.throw(500);
+    return (ctx.body = {
+      id: dbRecord.id
+    });
   } catch (err) {
     if (err.name === 'conflict') {
       return ctx.body;
     }
     ctx.throw(400, err);
-  } finally {
   }
 });
 
