@@ -99,4 +99,15 @@ router.post('/:id', async (ctx: Koa.Context) => {
   }
 });
 
+router.delete('/:id', async (ctx: Koa.Context) => {
+  const id = ctx.params.id;
+  try {
+    const res = await ctrl.issue.removeById(id);
+    console.log('result', res);
+    return (ctx.body = res);
+  } catch (err) {
+    throw new Error(err);
+  }
+});
+
 export default router;

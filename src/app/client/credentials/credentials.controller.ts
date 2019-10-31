@@ -3,6 +3,7 @@ import * as Router from 'koa-router';
 
 import client from '../client';
 import DB from '../db';
+import { IConnectionsResult } from 'src/app/core/interfaces/connection.interface';
 
 const ctrl = client;
 const db = DB;
@@ -15,7 +16,12 @@ const router = new Router(routerOpts);
 
 router.get('/', async (ctx: Koa.Context) => {
   try {
+    const connections = (await ctrl.connection.getConnections({
+      state: 'active'
+    })) as IConnectionsResult;
+
     const issues = await ctrl.issue.records();
+
     const credlist = issues
       .filter(itm => itm.state === 'stored')
       .map(itm => {
