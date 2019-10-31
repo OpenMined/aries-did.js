@@ -50,4 +50,13 @@ router.get('/', async (ctx: Koa.Context) => {
   }
 });
 
+router.delete('/:id', async (ctx: Koa.Context) => {
+  try {
+    let doc = await db.get(ctx.params.id);
+    return (ctx.body = await db.remove(doc));
+  } catch (err) {
+    ctx.throw(err);
+  }
+});
+
 export default router;

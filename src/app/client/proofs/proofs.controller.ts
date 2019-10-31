@@ -2,6 +2,8 @@ import * as Koa from 'koa';
 import * as Router from 'koa-router';
 
 import client from '../client';
+import { IConnectionsResult } from 'src/app/core/interfaces/connection.interface';
+import { connect } from 'net';
 
 const ctrl = client;
 
@@ -13,17 +15,30 @@ const router = new Router(routerOpts);
 
 router.get('/', async (ctx: Koa.Context) => {
   try {
+    const connections = await ctrl.connection.getConnections();
+    console.log('connections', connections);
     let proofs = await ctrl.proof.records();
-
-    return (ctx.body = proofs.map(proof => {
-      return {
-        _id: proof.presentation_exchange_id,
-        updated: proof.updated_at,
-        created: proof.created_at,
-        state: proof.state,
-        connectionId: proof.connection_id
-      };
-    }));
+    if (Array.isArray(connections)) {
+      let mappedProofs = connections.map(itm => {
+        let mappedProof = {
+          label: itm.their_label,
+          did: itm.their_did,
+          proofs: proofs
+            .filter(proof => itm.connection_id === proof.connection_id)
+            .map(proof => {
+              return {
+                _id: proof.presentation_exchange_id,
+                updated: proof.updated_at,
+                created: proof.created_at,
+                state: proof.state,
+                connectionId: proof.connection_id
+              };
+            })
+        };
+        return mappedProof;
+      });
+      console.log(mappedProofs);
+    }
   } catch (err) {
     return ctx.throw(500, 'internal server error');
   }
@@ -65,7 +80,6 @@ router.post('/:id', async (ctx: Koa.Context) => {
   try {
     console.log('the id', id);
     let proof = await ctrl.proof.getRecordById(id);
-    console.log('proof', proof);
     if (!proof) return ctx.throw(404);
   } catch (err) {
     return ctx.throw(err);
@@ -77,6 +91,7 @@ router.delete('/:id', async (ctx: Koa.Context) => {
 
   try {
     let res = await ctrl.proof.removeProof(id);
+
     return (ctx.body = res);
   } catch {
     return ctx.throw(500);

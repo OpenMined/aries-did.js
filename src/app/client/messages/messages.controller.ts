@@ -30,7 +30,6 @@ const routerOpts: Router.IRouterOptions = {
 const router = new Router(routerOpts);
 
 router.get('/', async (ctx: Koa.Context) => {
-  // let results: IMessages = { connections: [], proofs: [], issues: [] };
   let results: IMessage[] = [];
   let connections = (await ctrl.connection.getConnections()) as IConnectionsResult[];
   if (Array.isArray(connections)) {
