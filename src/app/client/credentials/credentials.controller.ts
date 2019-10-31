@@ -22,8 +22,7 @@ router.get('/', async (ctx: Koa.Context) => {
         return { _id: itm.connection_id };
       });
 
-    const [...credSet] = new Set(credlist).values();
-
+    const credSet = Array.from(new Set(credlist));
     let results = credSet.map(async connectionId => {
       const id = connectionId._id;
       return ctrl.connection

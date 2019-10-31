@@ -3,6 +3,7 @@
 node_modules
 dist
 aries-cloudagent-python
+start-agent.sh
 start-acme.sh
 start.sh
 start-test-agent.sh

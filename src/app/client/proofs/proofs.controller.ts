@@ -63,7 +63,13 @@ router.post('/:id', async (ctx: Koa.Context) => {
   let id = ctx.params.id;
 
   try {
-  } catch (err) {}
+    console.log('the id', id);
+    let proof = await ctrl.proof.getRecordById(id);
+    console.log('proof', proof);
+    if (!proof) return ctx.throw(404);
+  } catch (err) {
+    return ctx.throw(err);
+  }
 });
 
 router.delete('/:id', async (ctx: Koa.Context) => {

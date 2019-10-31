@@ -47,7 +47,7 @@ router.get('/', async (ctx: Koa.Context) => {
           label: itm.their_label,
           updated: new Date(itm.updated_at),
 
-          type: 'connection'
+          type: 'connections'
         };
       });
     results = [...connectionMssgs];
@@ -62,7 +62,7 @@ router.get('/', async (ctx: Koa.Context) => {
         connectionId: itm.connection_id,
         initiator: itm.initiator,
         updated: new Date(itm.updated_at),
-        type: 'issue'
+        type: 'issues'
       };
     });
 
@@ -78,7 +78,7 @@ router.get('/', async (ctx: Koa.Context) => {
         state: itm.state,
         initiator: itm.initiator,
         updated: new Date(itm.updated_at),
-        type: 'proof'
+        type: 'proofs'
       };
     });
   results = [...results, ...proofMssgs];

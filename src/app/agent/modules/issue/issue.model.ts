@@ -3,7 +3,7 @@ import {
   IIssueSend,
   IIssueOffer,
   IRecordsResult
-} from 'src/app/core/interfaces/issue-credential.interface';
+} from '../../../../app/core/interfaces/issue-credential.interface';
 import { IssueService } from './issue.service';
 
 export type IssueCredentialRecordStateType =

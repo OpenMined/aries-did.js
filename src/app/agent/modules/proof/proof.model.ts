@@ -2,10 +2,10 @@ import { ProofService } from './proof.service';
 import {
   IProofRequest,
   IProofRecord
-} from 'src/app/core/interfaces/proof.interface';
+} from '../../../core/interfaces/proof.interface';
 import { Schema } from '../schema/schema.model';
 import { CredentialDefinition } from '../credential-definition/credential-definition.model';
-import { ISchema } from 'src/app/core/interfaces/schema.interface';
+import { ISchema } from '../../../core/interfaces/schema.interface';
 import * as uuid from 'uuid/v1';
 
 /*
@@ -52,11 +52,16 @@ export class Proof {
     }
   }
 
+  async getRecordById(id: string) {
+    let res = await this._proofSvc.getProofRecords(id);
+    return res.body;
+  }
+
   /*
     build a proof request values for a new proof request
   */
 
-  async buildProofRequest<T>(
+  async buildProofRequest(
     schema: ISchema,
     connection_id: string,
     name: string,

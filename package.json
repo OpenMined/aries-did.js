@@ -17,7 +17,8 @@
     "data:relationships": "nodemon --exec ts-node src/data-gen.ts",
     "debug": "node --inspect-brk --require ts-node/register src/server.ts",
     "start:test-suite": "mocha --reporter=xunit --reporter-options output=results.xml -r ts-node/register **/**/*.test.ts || true",
-    "build:database": "npm install "
+    "build:database": "npm install pouchdb-server --global",
+    "start:db": "pouchdb-server --port 5984"
   },
   "keywords": [],
   "author": "",

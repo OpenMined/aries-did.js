@@ -1,8 +1,6 @@
 import * as request from 'superagent';
 import {
   IProofRecordsResponse,
-  IProofProposalRequestResponseSend,
-  IProposalSend,
   IProofRequest
 } from '../../../core/interfaces/proof.interface';
 
@@ -27,9 +25,8 @@ export class ProofService {
     try {
       const baseUrl = this._url + segment + 'records';
       const res = presExId
-        ? await request.get(`${baseUrl}presExId`)
+        ? await request.get(`${baseUrl}/${presExId}`)
         : await request.get(baseUrl);
-      // if (!res.body) throw new Error('no records found');
       return res;
     } catch (err) {
       return err;

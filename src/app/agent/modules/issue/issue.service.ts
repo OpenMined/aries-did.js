@@ -2,7 +2,7 @@ import {
   IIssueSend,
   IIssueOffer,
   ICredentialPreview
-} from 'src/app/core/interfaces/issue-credential.interface';
+} from '../../../core/interfaces/issue-credential.interface';
 import * as request from 'superagent';
 
 export type IssueCredByIdRouteType =
