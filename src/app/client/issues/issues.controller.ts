@@ -79,12 +79,10 @@ router.post('/:id', async (ctx: Koa.Context) => {
   if (!issue) return ctx.throw(404);
   try {
     if (issue.state === 'offer_received') {
-      console.log('offer received');
       let res = await ctrl.issue.sendRequestById(id);
       return (ctx.body = res);
     }
     if (issue.state === 'request_received') {
-      console.log('attributes', issue.credential_proposal_dict);
       let res = await ctrl.issue.sendIssueById(
         id,
         issue.credential_proposal_dict.credential_proposal.attributes,

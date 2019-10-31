@@ -2,6 +2,7 @@ import * as Koa from 'koa';
 import * as Router from 'koa-router';
 
 import client from '../client';
+import { IConnectionsResult } from 'src/app/core/interfaces/connection.interface';
 
 const ctrl = client;
 
@@ -31,7 +32,7 @@ const router = new Router(routerOpts);
 router.get('/', async (ctx: Koa.Context) => {
   // let results: IMessages = { connections: [], proofs: [], issues: [] };
   let results: IMessage[] = [];
-  let connections = await ctrl.connection.getConnections();
+  let connections = (await ctrl.connection.getConnections()) as IConnectionsResult[];
   if (Array.isArray(connections)) {
     const connectionMssgs = connections
       .filter(
@@ -62,7 +63,10 @@ router.get('/', async (ctx: Koa.Context) => {
         connectionId: itm.connection_id,
         initiator: itm.initiator,
         updated: new Date(itm.updated_at),
-        type: 'issues'
+        type: 'issues',
+        label: connections.filter(
+          itm => itm.connection_id === itm.connection_id
+        )[0].their_label
       };
     });
 
@@ -74,6 +78,9 @@ router.get('/', async (ctx: Koa.Context) => {
     .map(itm => {
       return {
         _id: itm.presentation_exchange_id,
+        label: connections.filter(
+          itm => itm.connection_id === itm.connection_id
+        )[0].their_label,
         connectionId: itm.connection_id,
         state: itm.state,
         initiator: itm.initiator,
