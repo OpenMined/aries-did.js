@@ -145,20 +145,8 @@ services:
     volumes:
       - node4-data:/home/indy/ledger
 
-  web-server:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    container_name: example-web-server
-    volumes:
-      - ./src:/home/node/app/src
-      - ./nodemon.json:/home/node/app/nodemon.json
-    expose:
-      - "3000"
-    ports:
-      - "3000:3000"
-      - "9229:9229"
-    command: npm start
+  alice-agent:
+    image:
 
 networks:
   von:
