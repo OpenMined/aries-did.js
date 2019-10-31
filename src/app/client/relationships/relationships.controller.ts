@@ -96,9 +96,7 @@ router.delete('/:id', async (ctx: Koa.Context) => {
   const id = ctx.params.id;
   try {
     let removed = await ctrl.connection.removeConnection(id);
-    console.log('removed', removed);
-    let find = await ctrl.connection.getConnections({}, id);
-    console.log('the request', find);
+    return (ctx.body = removed);
   } catch (err) {
     return ctx.throw(400, err.message);
   }
