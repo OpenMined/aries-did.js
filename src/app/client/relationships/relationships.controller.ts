@@ -29,10 +29,8 @@ router.get('/', async (ctx: Koa.Context) => {
             name: conn.their_label
           };
         }));
-      }
+      } else return (ctx.body = []);
     }
-
-    return (ctx.status = 200);
   } catch (err) {
     ctx.throw(400, 'failed to get relationships');
   }

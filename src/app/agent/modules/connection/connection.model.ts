@@ -39,6 +39,7 @@ export class Connection {
       const res = id
         ? await this.connectionSvc.connections(id, params)
         : await this.connectionSvc.connections(null, params);
+      console.log('results', res);
       return res;
     } catch (err) {
       return err;
