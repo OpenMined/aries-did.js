@@ -2,8 +2,6 @@ import * as Koa from 'koa';
 import * as Router from 'koa-router';
 
 import client from '../client';
-import { IConnectionsResult } from 'src/app/core/interfaces/connection.interface';
-import { connect } from 'net';
 
 const ctrl = client;
 
@@ -15,9 +13,11 @@ const router = new Router(routerOpts);
 
 router.get('/', async (ctx: Koa.Context) => {
   try {
-    const connections = await ctrl.connection.getConnections();
-    console.log('connections', connections);
+    const connections = await ctrl.connection.getConnections({
+      state: 'active'
+    });
     let proofs = await ctrl.proof.records();
+    console.log('connections', connections);
     if (Array.isArray(connections)) {
       let mappedProofs = connections.map(itm => {
         let mappedProof = {
@@ -37,8 +37,9 @@ router.get('/', async (ctx: Koa.Context) => {
         };
         return mappedProof;
       });
-      console.log(mappedProofs);
+      return (ctx.body = mappedProofs);
     }
+    return (ctx.body = []);
   } catch (err) {
     return ctx.throw(500, 'internal server error');
   }
