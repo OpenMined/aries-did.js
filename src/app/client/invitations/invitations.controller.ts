@@ -45,7 +45,7 @@ router.post('/', async (ctx: Koa.Context) => {
   if (!invite) ctx.throw(400, 'invalid request');
   try {
     const req = await ctrl.connection.invitationResponse(invite);
-    console.log('the result', req);
+
     return (ctx.body = req);
   } catch (err) {
     // console.log(err);

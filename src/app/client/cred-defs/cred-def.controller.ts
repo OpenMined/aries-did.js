@@ -28,7 +28,8 @@ router.post('/', async (ctx: Koa.Context) => {
       _id,
       name: schema.schema_name,
       version: schema.schema_version,
-      attributes: schema.attributes
+      attributes: schema.attributes,
+      schema_id: res.schemaId
     });
     return (ctx.body = {
       id: dbRecord.id
@@ -47,6 +48,16 @@ router.get('/', async (ctx: Koa.Context) => {
     return (ctx.body = records.rows.map(itm => itm.doc));
   } catch (err) {
     return ctx.throw(500);
+  }
+});
+
+router.get('/:id', async (ctx: Koa.Context) => {
+  try {
+    let record = await db.get(ctx.params.id);
+    console.log('the record', record);
+    if (record) return (ctx.body = record);
+  } catch (err) {
+    ctx.throw(err);
   }
 });
 

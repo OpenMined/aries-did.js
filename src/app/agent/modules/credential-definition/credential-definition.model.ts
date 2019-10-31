@@ -16,4 +16,13 @@ export class CredentialDefinition {
       return err.message;
     }
   }
+
+  async getCredentialDefinition(id: string) {
+    try {
+      const res = await this._credentialSvc.getCredentialDefinition(id);
+      return res.body;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
 }

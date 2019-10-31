@@ -24,7 +24,10 @@ export class CredDefService {
       const res = await this._credDef.createCredentialDefinition(
         newSchema.schema_id
       );
-      return { id: res.credential_definition_id };
+      return {
+        id: res.credential_definition_id,
+        schemaId: newSchema.schema_id
+      };
     } catch (err) {
       return err;
     }

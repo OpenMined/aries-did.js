@@ -75,7 +75,6 @@ router.post('/:id', async (ctx: Koa.Context) => {
   // const state = ctx.params.state;
   const issues = await ctrl.issue.records();
   const issue = issues.filter(itm => itm.credential_exchange_id === id)[0];
-  console.log('the issue', issue);
   if (!issue) return ctx.throw(404);
   try {
     if (issue.state === 'offer_received') {
