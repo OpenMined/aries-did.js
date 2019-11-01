@@ -48,7 +48,7 @@ export interface IRecordsResult {
   credential_offer: {};
   auto_issue: true;
   credential_request: {};
-  credential: {};
+  credential: any;
   schema_id: string;
   parent_thread_id: string;
   credential_exchange_id: string;
