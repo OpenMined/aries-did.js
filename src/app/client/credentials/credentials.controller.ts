@@ -37,9 +37,27 @@ router.get('/', async (ctx: Koa.Context) => {
           if (!Array.isArray(res)) {
             return {
               _id: id,
-              label: res.their_label,
+              name: res.their_label,
               did: res.their_did,
-              credentials: issues.filter(issue => issue.connection_id === id)
+              credentials: issues
+                .filter(
+                  issue =>
+                    issue.connection_id === id && issue.initiator === 'external'
+                )
+                .map(itm => {
+                  return {
+                    _id: itm.credential_exchange_id,
+                    label: res.their_label,
+                    state: itm.state,
+                    proposal: itm.proposal,
+                    created: itm.created_at,
+                    updated: itm.updated_at,
+                    did: res.their_did,
+                    credId: itm.credential_id,
+                    credDefId: itm.credential_definition_id,
+                    initiator: itm.initiator
+                  };
+                })
             };
           }
         })
@@ -48,6 +66,32 @@ router.get('/', async (ctx: Koa.Context) => {
     return (ctx.body = await Promise.all(results));
   } catch (err) {
     ctx.throw(500, err.message);
+  }
+});
+
+router.get('/:id', async (ctx: Koa.Context) => {
+  const id = ctx.params.id;
+  try {
+    const cred = await ctrl.issue.records();
+    const filtered = cred.filter(cred => cred.credential_exchange_id === id)[0];
+    const connection = (await ctrl.connection.getConnections(
+      {},
+      filtered.connection_id
+    )) as IConnectionsResult;
+    return (ctx.body = {
+      _id: filtered.credential_exchange_id,
+      credId: filtered.credential_id,
+      credDefId: filtered.credential_definition_id,
+      state: filtered.state,
+      credential: filtered.credential,
+      proposal: filtered.proposal,
+      created: filtered.created_at,
+      updated: filtered.updated_at,
+      label: connection.their_label,
+      did: connection.their_did
+    });
+  } catch (err) {
+    return ctx.throw(err);
   }
 });
 
