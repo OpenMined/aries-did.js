@@ -3,6 +3,7 @@ import * as Router from 'koa-router';
 
 import client from '../client';
 import { IRecordsResult } from '../../../app/core/interfaces/issue-credential.interface';
+import { IConnectionsResult } from 'src/app/core/interfaces/connection.interface';
 
 const ctrl = client;
 
@@ -25,8 +26,21 @@ const mapIssue = (itm: IRecordsResult) => {
 
 router.get('/', async (ctx: Koa.Context) => {
   try {
+    let connections = (await ctrl.connection.getConnections()) as IConnectionsResult[];
     let res = await ctrl.issue.records();
-    return (ctx.body = res.map(itm => mapIssue(itm)));
+    return (ctx.body = res.map(itm => {
+      return {
+        _id: itm.credential_exchange_id,
+        connectionId: itm.connection_id,
+        proposal: itm.credential_proposal_dict,
+        created: itm.created_at,
+        updated: itm.updated_at,
+        state: itm.state,
+        name: connections.filter(
+          conn => conn.connection_id === itm.connection_id
+        )[0].their_label
+      };
+    }));
   } catch (err) {
     ctx.throw(500, err.message);
   }
