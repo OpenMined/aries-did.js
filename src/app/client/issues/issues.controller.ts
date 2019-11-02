@@ -26,21 +26,27 @@ const mapIssue = (itm: IRecordsResult) => {
 
 router.get('/', async (ctx: Koa.Context) => {
   try {
-    let connections = (await ctrl.connection.getConnections()) as IConnectionsResult[];
     let res = await ctrl.issue.records();
-    return (ctx.body = res.map(itm => {
-      return {
-        _id: itm.credential_exchange_id,
-        connectionId: itm.connection_id,
-        proposal: itm.credential_proposal_dict,
-        created: itm.created_at,
-        updated: itm.updated_at,
-        state: itm.state,
-        name: connections.filter(
-          conn => conn.connection_id === itm.connection_id
-        )[0].their_label
-      };
-    }));
+
+    return (ctx.body = await Promise.all(
+      Array.from(new Set(res.map(issue => issue.connection_id))).map(id => {
+        return ctrl.connection.getConnections({}, id).then(conn => {
+          if (!Array.isArray(conn)) {
+            let [...issues] = res.filter(issue => issue.connection_id === id);
+
+            return {
+              connectionId: id,
+              name: conn.their_label,
+              count: issues.length,
+              did: conn.their_did,
+              role: conn.their_role,
+              alias: conn.alias,
+              records: issues
+            };
+          }
+        });
+      })
+    ));
   } catch (err) {
     ctx.throw(500, err.message);
   }
