@@ -26,5 +26,5 @@ export const clientMethods = [
   issuesController.allowedMethods(),
   messagesController.allowedMethods(),
   proofsController.allowedMethods(),
-  profileController.routes()
+  profileController.allowedMethods()
 ];

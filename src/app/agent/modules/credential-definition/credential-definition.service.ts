@@ -35,10 +35,9 @@ export class CredentialDefinitionService {
   */
   async getCredentialDefinition(id: string) {
     const path = `${this._apiUrl}${segment}/${id}`;
-    console.log('path', path);
     try {
       const res = await request.get(path);
-      return res.body;
+      return res;
     } catch (err) {
       return err.message;
     }

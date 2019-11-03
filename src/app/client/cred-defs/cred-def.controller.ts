@@ -12,6 +12,14 @@ const ctrl = client;
 
 const credDefSvc = new CredDefService(ctrl.schema, ctrl.credDef);
 
+export interface ICredDef {
+  _id: string;
+  name: string;
+  version: string;
+  attributes: string;
+  schema_id: string;
+}
+
 const routerOpts: Router.IRouterOptions = {
   prefix: '/credential-definitions'
 };
@@ -22,18 +30,9 @@ router.post('/', async (ctx: Koa.Context) => {
   let schema = ctx.request.body;
   try {
     const res = await credDefSvc.createCredDef(schema);
-    let _id = res.id;
-    ctx.body = res;
-    let dbRecord = await db.put({
-      _id,
-      name: schema.schema_name,
-      version: schema.schema_version,
-      attributes: schema.attributes,
-      schema_id: res.schemaId
-    });
-    return (ctx.body = {
-      id: dbRecord.id
-    });
+    let credDef = { ...schema, _id: res.id };
+    await db.insertRecord({ prefix: 'cdef', record: credDef });
+    return (ctx.body = { _id: res.id });
   } catch (err) {
     if (err.name === 'conflict') {
       return ctx.body;
@@ -44,8 +43,7 @@ router.post('/', async (ctx: Koa.Context) => {
 
 router.get('/', async (ctx: Koa.Context) => {
   try {
-    let records = await db.allDocs({ include_docs: true });
-    return (ctx.body = records.rows.map(itm => itm.doc));
+    return (ctx.body = await db.getRecords({ prefix: 'cdef' }));
   } catch (err) {
     return ctx.throw(500);
   }
@@ -53,18 +51,16 @@ router.get('/', async (ctx: Koa.Context) => {
 
 router.get('/:id', async (ctx: Koa.Context) => {
   try {
-    let record = await db.get(ctx.params.id);
-    console.log('the record', record);
-    if (record) return (ctx.body = record);
+    return (ctx.body = await db.getRecords({ prefix: 'cdef' }));
   } catch (err) {
     ctx.throw(err);
   }
 });
 
 router.delete('/:id', async (ctx: Koa.Context) => {
+  console.log(ctx.params.id);
   try {
-    let doc = await db.get(ctx.params.id);
-    return (ctx.body = await db.remove(doc));
+    return (ctx.body = await db.removeRecord({ _id: ctx.params.id }));
   } catch (err) {
     ctx.throw(err);
   }
