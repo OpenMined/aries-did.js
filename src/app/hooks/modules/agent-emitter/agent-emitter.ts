@@ -53,16 +53,10 @@ const agentEmitter = new AgentEmitter({
   events: ['connection', 'issue', 'proof']
 });
 
-agentEmitter.addListener('connection', (args: ListenerDataType) => {
-  console.log(args);
-});
+agentEmitter.addListener('connection', (args: ListenerDataType) => {});
 
-agentEmitter.addListener('issue', args => {
-  console.log(args);
-});
-agentEmitter.addListener('proof', args => {
-  console.log(args);
-});
+agentEmitter.addListener('issue', args => {});
+agentEmitter.addListener('proof', args => {});
 
 console.log('listeners', agentEmitter.eventNames());
 export default agentEmitter;

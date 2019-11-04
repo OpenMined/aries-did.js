@@ -1,14 +1,15 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
+import emitter from '../agent-emitter/agent-emitter';
 
 const routerOpts: Router.IRouterOptions = {
-  prefix: '/topic/issue-credential'
+  prefix: '/topic/issue_credential'
 };
 
 const router: Router = new Router(routerOpts);
 
 router.post('/', async (ctx: Koa.Context) => {
-  console.log('doing hook things', ctx.request.body);
+  emitter.emit('proof', { ...ctx.request.body, ip: ctx.request.origin });
   return (ctx.body = 'doing hook things');
 });
 

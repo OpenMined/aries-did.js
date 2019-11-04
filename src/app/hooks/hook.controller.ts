@@ -6,7 +6,6 @@ import * as cors from '@koa/cors';
 import { routes, allowedMethods } from './routes';
 
 const app: Koa = new Koa();
-const client = true;
 // Generic error handling middleware.
 
 const options = {

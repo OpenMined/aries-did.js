@@ -1,15 +1,21 @@
+import * as cluster from 'cluster';
+
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
 import app from './app/app';
 import hooks from './app/hooks/hook.controller';
-import { config } from 'dotenv';
 
-import { resolve } from 'path';
 config({ path: resolve(__dirname, './config.env') });
-
-import * as cluster from 'cluster';
 
 let ports = [3000, 3001, 3002];
 
 const agents = process.env.AGENT_COUNT || 1;
+
+// const server = new http.Server(app.callback());
+// const whServer = new http.Server(hooks.callback());
+
+// const socket = io(server);
 
 if (process.env.single === 'true') {
   app.listen(3000);

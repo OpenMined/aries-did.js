@@ -9,9 +9,7 @@ const routerOpts: Router.IRouterOptions = {
 const router: Router = new Router(routerOpts);
 
 router.post('/', async (ctx: Koa.Context) => {
-  emitter.emit('event');
-
-  emitter.emit('connection', ctx.request.body);
+  emitter.emit('connection', { ...ctx.request.body, ip: ctx.request.origin });
   return (ctx.body = 'doing hook things');
 });
 

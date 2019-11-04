@@ -56,7 +56,6 @@ router.post('/', async (ctx: Koa.Context) => {
   let params = ['connectionId', 'credDefId', 'comment', 'attrs'];
 
   let issue = ctx.request.body;
-  console.log(issue);
 
   for (let key in issue) {
     if (!params.some(param => param === key)) {
@@ -70,7 +69,7 @@ router.post('/', async (ctx: Koa.Context) => {
       issue.attrs,
       issue.credDefId
     );
-    return (ctx.body = { _id: newIssue.credential_definition_id });
+    return (ctx.body = { _id: newIssue.credential_exchange_id });
   } catch (err) {
     return ctx.throw(500, err.message);
   }
