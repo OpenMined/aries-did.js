@@ -8,6 +8,8 @@ services:
     ports:
       - ${ALICE_HTTP_PORT}:${ALICE_HTTP_PORT}
       - ${ALICE_ADMIN_PORT}:${ALICE_ADMIN_PORT}
+    depends_on:
+      - ledger-nodes
     entrypoint: /bin/bash
     command: [
         "-c",
@@ -40,6 +42,8 @@ services:
     ports:
       - ${FABER_HTTP_PORT}:${FABER_HTTP_PORT}
       - ${FABER_ADMIN_PORT}:${FABER_ADMIN_PORT}
+    depends_on:
+      - ledger-nodes
     entrypoint: /bin/bash
     command: [
         "-c",
@@ -72,6 +76,8 @@ services:
     ports:
       - ${ACME_HTTP_PORT}:${ACME_HTTP_PORT}
       - ${ACME_ADMIN_PORT}:${ACME_ADMIN_PORT}
+    depends_on:
+      - ledger-nodes
     entrypoint: /bin/bash
     command: [
         "-c",
@@ -104,10 +110,58 @@ services:
     environment:
       WEB_HOST_NAME: ${WEB_HOST_NAME}
       WEB_HOST_PORT: ${WEB_HOST_PORT}
+    depends_on:
+      - ledger-nodes
     networks:
       - indy_demo
     ports:
       - ${CONTROLLER_EXPOSED_PORT}:${WEB_HOST_PORT}
 
+  ledger-browser:
+    build:
+      context: https://github.com/bcgov/von-network.git
+      dockerfile: Dockerfile
+    command: 'bash -c ''sleep 10; ./scripts/start_webserver.sh;'''
+    environment:
+      - DOCKERHOST=${DOCKERHOST}
+      - ANONYMOUS=${ANONYMOUS:-1}
+      - MAX_FETCH=${MAX_FETCH:-50000}
+      - RESYNC_TIME=${RESYNC_TIME:-120}
+      - REGISTER_NEW_DIDS=${REGISTER_NEW_DIDS:-True}
+      - LEDGER_INSTANCE_NAME=${LEDGER_INSTANCE_NAME:-localhost}
+    networks:
+      - indy_demo
+    ports:
+      - ${WEB_SERVER_HOST_PORT:-9000}:8000
+    volumes:
+      - webserver-cli:/home/indy/.indy-cli
+      - webserver-ledger:/home/indy/ledger
+  
+  ledger-nodes:
+    build:
+      context: https://github.com/bcgov/von-network.git
+      dockerfile: Dockerfile
+    command: 'bash -c ''./scripts/start_nodes.sh'''
+    networks:
+      - indy_demo
+    ports:
+      - 9701:9701
+      - 9702:9702
+      - 9703:9703
+      - 9704:9704
+      - 9705:9705
+      - 9706:9706
+      - 9707:9707
+      - 9708:9708
+    environment:
+      - DOCKERHOST=${DOCKERHOST}
+    volumes:
+      - nodes-data:/home/indy/ledger
+
 networks:
   indy_demo:
+
+volumes:
+  webserver-cli:
+  webserver-ledger:
+  nodes-data:
