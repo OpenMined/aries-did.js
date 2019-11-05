@@ -36,7 +36,7 @@ export type ProofAttributeType<T> = {
 };
 
 interface IProofRequestSpecific<T> {
-  requested_attributes: ProofAttributeType<T>;
+  requested_attributes: any;
 }
 
 export interface IProofRequest<T> {

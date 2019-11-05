@@ -17,21 +17,30 @@ router.get('/', async (ctx: Koa.Context) => {
       state: 'active'
     });
     let proofs = await ctrl.proof.records();
-    console.log('connections', connections);
+    // console.log('connections', connections);
     if (Array.isArray(connections)) {
       let mappedProofs = connections.map(itm => {
         let mappedProof = {
           label: itm.their_label,
           did: itm.their_did,
+          connectionId: itm.connection_id,
           proofs: proofs
             .filter(proof => itm.connection_id === proof.connection_id)
-            .map(proof => {
+            .map((proof: any) => {
+              let requested = [];
+              for (let key in proof.presentation_request.requested_attributes) {
+                requested.push(
+                  proof.presentation_request.requested_attributes[key]
+                );
+              }
               return {
                 _id: proof.presentation_exchange_id,
                 updated: proof.updated_at,
                 created: proof.created_at,
                 state: proof.state,
-                connectionId: proof.connection_id
+                connectionId: proof.connection_id,
+                requested,
+                ...proof
               };
             })
         };

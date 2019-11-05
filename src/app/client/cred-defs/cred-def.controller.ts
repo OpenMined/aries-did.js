@@ -30,6 +30,7 @@ router.post('/', async (ctx: Koa.Context) => {
   let schema = ctx.request.body;
   try {
     const res = await credDefSvc.createCredDef(schema);
+    console.log('schema response', res);
     let credDef = { ...schema, _id: res.id };
     await db.insertRecord({ prefix: 'cdef', record: credDef });
     return (ctx.body = { _id: res.id });
@@ -43,7 +44,11 @@ router.post('/', async (ctx: Koa.Context) => {
 
 router.get('/', async (ctx: Koa.Context) => {
   try {
-    return (ctx.body = await db.getRecords({ prefix: 'cdef' }));
+    let credDefs = (await db.getRecords({ prefix: 'cdef' })) as any[];
+    return (ctx.body = credDefs.map(itm => {
+      let { _id, attributes, schema_name: name, schema_version: version } = itm;
+      return { _id, attributes, name, version };
+    }));
   } catch (err) {
     return ctx.throw(500);
   }
@@ -51,7 +56,18 @@ router.get('/', async (ctx: Koa.Context) => {
 
 router.get('/:id', async (ctx: Koa.Context) => {
   try {
-    return (ctx.body = await db.getRecords({ prefix: 'cdef' }));
+    const records = (await db.getRecords({ prefix: 'cdef' })) as any[];
+    return (ctx.body = records
+      .map(itm => {
+        let {
+          _id,
+          attributes,
+          schema_name: name,
+          schema_version: version
+        } = itm;
+        return { _id, attributes, name, version };
+      })
+      .filter(itm => itm._id === ctx.params.id)[0]);
   } catch (err) {
     ctx.throw(err);
   }

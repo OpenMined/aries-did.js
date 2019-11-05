@@ -4,8 +4,10 @@ import * as Router from 'koa-router';
 import client from '../client';
 import { IRecordsResult } from '../../../app/core/interfaces/issue-credential.interface';
 import { IConnectionsResult } from 'src/app/core/interfaces/connection.interface';
+import dataStore from '../db';
 
 const ctrl = client;
+const db = dataStore;
 
 const routerOpts: Router.IRouterOptions = {
   prefix: '/issues'
@@ -27,12 +29,24 @@ const mapIssue = (itm: IRecordsResult) => {
 router.get('/', async (ctx: Koa.Context) => {
   try {
     let res = await ctrl.issue.records();
-
+    const credDefs = (await db.getRecords({ prefix: 'cdef' })) as any[];
     return (ctx.body = await Promise.all(
       Array.from(new Set(res.map(issue => issue.connection_id))).map(id => {
         return ctrl.connection.getConnections({}, id).then(conn => {
           if (!Array.isArray(conn)) {
-            let [...issues] = res.filter(issue => issue.connection_id === id);
+            let [...issues] = res
+              .filter(issue => issue.connection_id === id)
+              .map(itm => {
+                let obj = {
+                  ...itm,
+                  _id: itm.credential_exchange_id,
+                  created: itm.created_at,
+                  name: credDefs.filter(
+                    def => def._id === 'cdef_' + itm.credential_definition_id
+                  )[0].schema_name
+                };
+                return obj;
+              });
 
             return {
               connectionId: id,
@@ -56,7 +70,7 @@ router.post('/', async (ctx: Koa.Context) => {
   let params = ['connectionId', 'credDefId', 'comment', 'attrs'];
 
   let issue = ctx.request.body;
-  console.log(issue);
+  // console.log(issue);
 
   for (let key in issue) {
     if (!params.some(param => param === key)) {
@@ -64,11 +78,13 @@ router.post('/', async (ctx: Koa.Context) => {
     }
   }
   try {
+    // let sliced = id.slice(id.indexOf('_') + 1, id.length + 1);
+
     const newIssue = await client.issue.issueOfferSend(
       issue.connectionId,
       issue.comment,
       issue.attrs,
-      issue.credDefId
+      issue.credDefId.slice(issue.credDefId.indexOf('_'))
     );
     return (ctx.body = { _id: newIssue.credential_definition_id });
   } catch (err) {

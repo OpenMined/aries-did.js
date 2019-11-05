@@ -20,7 +20,7 @@ export class CredDefService {
       };
 
       const newSchema = await this._schema.createSchema(sendSchema);
-
+      console.log(newSchema);
       const res = await this._credDef.createCredentialDefinition(
         newSchema.schema_id
       );

@@ -1,6 +1,7 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import client from '../client';
+import { IConnectionsResult } from 'src/app/core/interfaces/connection.interface';
 
 const routerOpts = {
   prefix: '/profile'
@@ -11,37 +12,24 @@ const router = new Router(routerOpts);
 const ctrl = client;
 
 router.get('/', async (ctx: Koa.Context) => {
-  let count = 0;
-
   try {
-    let invite = await ctrl.connection.createInvitation();
+    let connections = (await ctrl.connection.getConnections({
+      state: 'active'
+    })) as IConnectionsResult[];
 
-    let connections = await ctrl.connection.getConnections();
-
-    if (Array.isArray(connections)) {
-      const connectionMssgs = connections.filter(
-        itm =>
-          itm.state !== 'active' &&
-          (itm.state !== 'invitation' && itm.initiator === 'self')
-      );
-
-      count += connectionMssgs.length;
-    }
     let issues = await ctrl.issue.records();
-    let issueMssgs = issues.filter(itm => itm.state !== 'stored');
 
     let proofs = await ctrl.proof.records();
-    let proofMssgs = proofs.filter(itm => itm.state !== 'active');
 
-    count += issueMssgs.length;
-    count += proofMssgs.length;
     const wallet = await ctrl.wallet.publicDid();
     const creds = await ctrl.cred.records();
     return (ctx.body = {
-      label: invite.label,
       did: wallet.result.did,
-      messageCount: count,
-      credsCount: creds.length
+      label: wallet.result.label,
+      issuesCount: issues.length,
+      credsCount: creds.length,
+      proofsCount: proofs.length,
+      relCount: connections.length
     });
   } catch (err) {
     ctx.throw(err.message, 500);
