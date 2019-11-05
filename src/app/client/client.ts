@@ -3,6 +3,10 @@ import * as cluster from 'cluster';
 
 import AgentConfig from '../config';
 
+import db from './db';
+
+// db.allDocs().then(itm => {});
+
 let client: AgentController;
 
 if (cluster.isWorker) {

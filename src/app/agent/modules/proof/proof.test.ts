@@ -37,7 +37,7 @@ const PREFIX = 'PROOF: ';
 
 let connectionId: string;
 
-describe.only('PROOF: controller tests', async function() {
+describe('PROOF: controller tests', async function() {
   before('PROOF: create a  relationship', async function() {
     this.timeout(5000);
     let testAgentInvite = await testAgentConnection.createInvitation();
