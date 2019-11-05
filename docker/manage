@@ -1,0 +1,332 @@
+#!/bin/bash
+export MSYS_NO_PATHCONV=1
+export DOCKERHOST=${APPLICATION_URL-$(docker run --rm --net=host codenvy/che-ip)}
+set -e
+
+S2I_EXE=s2i
+if [ -z $(type -P "$S2I_EXE") ]; then
+  echo -e "The ${S2I_EXE} executable is needed and not on your path."
+  echo -e "It can be downloaded from here: https://github.com/openshift/source-to-image/releases"
+  echo -e "Make sure you extract the binary and place it in a directory on your path."
+  exit 1
+fi
+
+SCRIPT_HOME="$(cd "$(dirname "$0")" && pwd)"
+
+# =================================================================================================================
+# Usage:
+# -----------------------------------------------------------------------------------------------------------------
+usage() {
+  cat <<-EOF
+    
+      Usage: $0 [command] [options]
+    
+      Commands:
+    
+      up -  Builds the images, creates the application containers
+            and starts the services based on the docker-compose.yml file.
+
+            You can pass in a list of containers to start.  
+            By default all containers will be started.
+            
+            The API_URL used by tob-web can also be redirected.
+
+            Examples:
+            $0 start
+            $0 start alice-agent
+
+      start - Same as up 
+    
+      restart - Re-starts the application containers, 
+                useful when updating one of the container images during development.
+
+            You can pass in a list of containers to be restarted.  
+            By default all containers will be restarted.
+
+            Examples:
+            $0 start
+            $0 start faber-agent
+
+      logs - Display the logs from the docker compose run (ctrl-c to exit).
+
+      stop - Stops the services.  This is a non-destructive process.  The volumes and containers
+             are not deleted so they will be reused the next time you run start.
+    
+      down - Brings down the services and removes the volumes (storage) and containers.
+      rm - Same as down
+    
+      registerDids - Register the DIDs for the issuer services.
+                     This is intended for development use.
+    
+                     Examples:
+                     $0 registerDids seed=my_awesome_did_00000000000000000
+                     - This will register the DID using the provided seed with the locally running von-network instance.
+
+EOF
+  exit 1
+}
+# -----------------------------------------------------------------------------------------------------------------
+# Default Settings:
+# -----------------------------------------------------------------------------------------------------------------
+DEFAULT_CONTAINERS="alice-agent faber-agent acme-agent node-controller"
+# -----------------------------------------------------------------------------------------------------------------
+# Functions:
+# -----------------------------------------------------------------------------------------------------------------
+function echoRed (){
+  _msg=${1}
+  _red='\e[31m'
+  _nc='\e[0m' # No Color
+  echo -e "${_red}${_msg}${_nc}"
+}
+
+function echoYellow (){
+  _msg=${1}
+  _yellow='\e[33m'
+  _nc='\e[0m' # No Color
+  echo -e "${_yellow}${_msg}${_nc}"
+}
+
+configureEnvironment() {
+
+  if [ -f .env ]; then
+    while read line; do
+      if [[ ! "$line" =~ ^\# ]] && [[ "$line" =~ .*= ]]; then
+        export ${line//[$'\r\n']}
+      fi
+    done <.env
+  fi
+
+  for arg in "$@"; do
+    # Remove recognized arguments from the list after processing.
+    shift
+
+    # echo "arg: ${arg}"
+    # echo "Remaining: ${@}"
+
+    case "$arg" in
+      *=*)
+        # echo "Exporting ..."
+        export "${arg}"
+        ;;
+      *)
+        # echo "Saving for later ..."
+        # If not recognized, save it for later procesing ...
+        set -- "$@" "$arg"
+        ;;
+    esac
+  done
+
+
+  # global
+  export COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-indy-demo}"
+  export LEDGER_URL=${LEDGER_URL-http://$DOCKERHOST:9000}
+  export WALLET_TYPE="indy"
+
+  # node-controller
+  export WEB_HOST_NAME="0.0.0.0"
+  export WEB_HOST_PORT="8080"
+  export CONTROLLER_EXPOSED_PORT="3000"
+  export CONTROLLER_HTTP_PORT_ALICE=3050
+  export CONTROLLER_HTTP_PORT_FABER=3051
+  export CONTROLLER_HTTP_PORT_ACME=3052
+
+  # alice-agent
+  export ALICE_AGENT_NAME="Alice"
+  export ALICE_ADMIN_PORT=8051
+  export ALICE_HTTP_PORT=8050
+  export ALICE_WEBHOOK_URL=${ALICE_WEBHOOK_URL:-http://$DOCKERHOST:$CONTROLLER_HTTP_PORT_ALICE}
+  export ALICE_AGENT_ENDPOINT=${ALICE_AGENT_ENDPOINT:-http://$DOCKERHOST:$ALICE_HTTP_PORT}
+  export ALICE_WALLET_SEED="alice_seed_000000000000000000000"
+
+  # faber-agent
+  export FABER_AGENT_NAME="Faber"
+  export FABER_ADMIN_PORT=8021
+  export FABER_HTTP_PORT=8020
+  export FABER_WEBHOOK_URL=${FABER_WEBHOOK_URL:-http://$DOCKERHOST:$CONTROLLER_HTTP_PORT_FABER}
+  export FABER_AGENT_ENDPOINT=${FABER_AGENT_ENDPOINT:-http://$DOCKERHOST:$ALICE_HTTP_PORT}
+  export FABER_WALLET_SEED="faber_seed_000000000000000000000"
+
+  # acme-agent
+  export ACME_AGENT_NAME="Faber"
+  export ACME_ADMIN_PORT=8031
+  export ACME_HTTP_PORT=8030
+  export ACME_WEBHOOK_URL=${ACME_WEBHOOK_URL:-http://$DOCKERHOST:$CONTROLLER_HTTP_PORT_ACME}
+  export ACME_AGENT_ENDPOINT=${ACME_AGENT_ENDPOINT:-http://$DOCKERHOST:$ALICE_HTTP_PORT}
+  export ACME_WALLET_SEED="acme_seed_0000000000000000000000"
+}
+
+getInputParams() {
+  ARGS=""
+
+  for arg in $@; do
+    case "$arg" in
+    *=*)
+      # Skip it
+      ;;
+    *)
+      ARGS+=" $arg"
+      ;;
+    esac
+  done
+
+  echo ${ARGS}
+}
+
+getStartupParams() {
+  CONTAINERS=""
+  ARGS=""
+
+  for arg in $@; do
+    case "$arg" in
+    *=*)
+      # Skip it
+      ;;
+    -*)
+      ARGS+=" $arg"
+      ;;
+    *)
+      CONTAINERS+=" $arg"
+      ;;
+    esac
+  done
+
+  if [ -z "$CONTAINERS" ]; then
+    CONTAINERS="$DEFAULT_CONTAINERS"
+  fi
+
+  echo ${ARGS} ${CONTAINERS}
+}
+
+deleteVolumes() {
+  _projectName=${COMPOSE_PROJECT_NAME:-docker}
+
+  echo "Stopping and removing any running containers ..."
+  docker-compose down -v
+
+  _pattern="^${_projectName}_\|^docker_"
+  _volumes=$(docker volume ls -q | grep ${_pattern})
+
+  if [ ! -z "${_volumes}" ]; then
+    echo "Removing project volumes ..."
+    echo ${_volumes} | xargs docker volume rm
+  else
+    echo "No project volumes exist."
+  fi
+
+  echo "Removing build cache ..."
+  rm -Rf ../client/tob-web/.cache
+}
+
+registerDids() {
+  _seeds=${@}
+  if [ -z "${_seeds}" ]; then
+    echo -e \\n"registerDids; Missing parameter!"\\n
+    exit 1
+  fi
+
+  for _seed in ${_seeds}; do
+    registerDid ${_seed}
+  done
+}
+
+registerDid() {
+  _seed=${1}
+  if [ -z "${_seed}" ]; then
+    echo -e \\n"registerDid; Missing parameter!"\\n
+    exit 1
+  fi
+  _seedJson=$(getSeedJson ${_seed})
+  _ledgerUri=$(getLedgerRegistrationUrl)
+
+  echo -e \\n"Registering ${_seed} with the ledger ..."
+  curl -X POST \
+    ${_ledgerUri} \
+    -H 'content-type: application/json' \
+    -d "${_seedJson}"
+}
+
+getSeedJson() {
+  _seed=${1}
+  if [ -z "${_seed}" ]; then
+    echo -e \\n"getSeedJson; Missing parameter!"\\n
+    exit 1
+  fi
+
+  echo "{\"seed\": \"${_seed}\"}"
+}
+
+generateSeeds() {
+  echo ${INDY_WALLET_SEED}
+}
+
+getLedgerRegistrationUrl() {
+  if [[ ("${LEDGER_URL}" == "http://${DOCKERHOST}:9000") && ("${DOCKERHOST}" != "localhost") ]]; then
+    _ledgerUrl="http://localhost:9000"
+  else
+    _ledgerUrl="${LEDGER_URL}"
+  fi
+
+  echo "${_ledgerUrl}/register"
+}
+
+toLower() {
+  echo $(echo ${@} | tr '[:upper:]' '[:lower:]')
+}
+
+echoError (){
+  _msg=${1}
+  _red='\033[0;31m'
+  _nc='\033[0m' # No Color
+  echo -e "${_red}${_msg}${_nc}" >&2
+}
+
+functionExists() {
+  (
+    if [ ! -z ${1} ] && type ${1} &>/dev/null; then
+      return 0
+    else
+      return 1
+    fi
+  )
+}
+# =================================================================================================================
+
+pushd ${SCRIPT_HOME} >/dev/null
+COMMAND=$(toLower ${1})
+shift || COMMAND=usage
+
+case "${COMMAND}" in
+  start|up)
+    _startupParams=$(getStartupParams --force-recreate $@)
+    configureEnvironment "$@"
+    docker-compose up -d --build --remove-orphans ${_startupParams} 
+    docker-compose logs -f
+    ;;
+  restart)
+    _startupParams=$(getStartupParams $@)
+    configureEnvironment "$@"
+    docker-compose stop ${_startupParams}
+    docker-compose up -d --build --remove-orphans ${_startupParams}
+    ;;
+  logs)
+    configureEnvironment "$@"
+    docker-compose logs -f
+    ;;
+  stop)
+    configureEnvironment
+    docker-compose stop 
+    ;;
+  rm|down)
+    configureEnvironment
+    deleteVolumes
+    ;;
+  registerdids)
+    configureEnvironment "$@"
+    registerDids $(generateSeeds)
+    ;;
+  *)
+    usage
+    ;;
+esac
+
+popd >/dev/null
