@@ -113,8 +113,16 @@ services:
       - ledger-nodes
     networks:
       - indy_demo
+    volumes:
+      - ./src:/home/node/app/src
+      - ./nodemon.json:/home/node/app/nodemon.json
+    expose:
+      - "3000"
     ports:
       - ${CONTROLLER_EXPOSED_PORT}:${WEB_HOST_PORT}
+      - "3000:3000"
+      - "9229:9229"
+    command: npm start
 
   ledger-browser:
     build:
