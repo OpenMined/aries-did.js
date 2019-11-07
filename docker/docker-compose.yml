@@ -153,11 +153,7 @@ services:
       - 9707:9707
       - 9708:9708
     environment:
-      - IP=${IP}
-      - IPS=${IPS}
       - DOCKERHOST=${DOCKERHOST}
-      - LOG_LEVEL=${LOG_LEVEL}
-      - RUST_LOG=${RUST_LOG}
     volumes:
       - nodes-data:/home/indy/ledger
 
