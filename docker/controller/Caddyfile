@@ -1,0 +1,13 @@
+{%WEB_HOST_NAME%}:{%WEB_HOST_PORT%} {
+    # Uncomment the following to enable logging;
+    log stdout
+    errors stdout
+
+    # enable gzip compression
+    gzip
+
+    root /srv/
+
+    # Openly exposed health check endpoint for OpenShift
+    status 200 /health
+}
