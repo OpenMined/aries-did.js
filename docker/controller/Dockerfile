@@ -1,6 +1,7 @@
 FROM node:10.15.3-alpine
 
-WORKDIR /home/node/app
+WORKDIR /usr/src/app
+
 ADD package*.json ./
 ADD nodemon.json ./
 

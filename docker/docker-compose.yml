@@ -125,6 +125,20 @@ services:
       # - "9229:9229"
     command: npm run serve
 
+  alice-web:
+    build:
+      context: https://github.com/bluecollardev/edx-ariescloud-client.git
+      dockerfile: Dockerfile
+    depends_on:
+      - node-controller
+    command: npm start
+    environment:
+      - DOCKERHOST=${DOCKERHOST}
+    networks:
+      - indy_demo
+    ports:
+      - 4200:4200
+
   ledger-browser:
     build:
       context: https://github.com/bcgov/von-network.git
