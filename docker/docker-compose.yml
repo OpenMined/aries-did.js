@@ -1,6 +1,5 @@
 version: "3"
 services:
-
   alice-agent:
     image: bcgovimages/aries-cloudagent:py36-1.11-1_0.3.5
     networks:
@@ -36,7 +35,7 @@ services:
         --admin-insecure-mode \
         --label ${ALICE_AGENT_NAME}",
       ]
-    
+
   faber-agent:
     image: bcgovimages/aries-cloudagent:py36-1.11-1_0.3.5
     networks:
@@ -72,7 +71,7 @@ services:
         --admin-insecure-mode \
         --label ${FABER_AGENT_NAME}",
       ]
-    
+
   acme-agent:
     image: bcgovimages/aries-cloudagent:py36-1.11-1_0.3.5
     networks:
@@ -122,12 +121,15 @@ services:
       - indy_demo
     ports:
       - ${CONTROLLER_EXPOSED_PORT}:${WEB_HOST_PORT}
+      # - "3000:3000"
+      # - "9229:9229"
+    command: npm run serve
 
   ledger-browser:
     build:
       context: https://github.com/bcgov/von-network.git
       dockerfile: Dockerfile
-    command: 'bash -c ''sleep 10; ./scripts/start_webserver.sh;'''
+    command: "bash -c 'sleep 10; ./scripts/start_webserver.sh;'"
     environment:
       - DOCKERHOST=${DOCKERHOST}
       - MAX_FETCH=50000
@@ -141,12 +143,12 @@ services:
     volumes:
       - webserver-cli:/home/indy/.indy-cli
       - webserver-ledger:/home/indy/ledger
-  
+
   ledger-nodes:
     build:
       context: https://github.com/bcgov/von-network.git
       dockerfile: Dockerfile
-    command: 'bash -c ''./scripts/start_nodes.sh'''
+    command: "bash -c './scripts/start_nodes.sh'"
     networks:
       - indy_demo
     ports:

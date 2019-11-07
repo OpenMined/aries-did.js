@@ -72,14 +72,14 @@ DEFAULT_CONTAINERS="alice-agent faber-agent acme-agent node-controller ledger-br
 # -----------------------------------------------------------------------------------------------------------------
 # Functions:
 # -----------------------------------------------------------------------------------------------------------------
-function echoRed (){
+function echoRed() {
   _msg=${1}
   _red='\e[31m'
   _nc='\e[0m' # No Color
   echo -e "${_red}${_msg}${_nc}"
 }
 
-function echoYellow (){
+function echoYellow() {
   _msg=${1}
   _yellow='\e[33m'
   _nc='\e[0m' # No Color
@@ -91,7 +91,7 @@ configureEnvironment() {
   if [ -f .env ]; then
     while read line; do
       if [[ ! "$line" =~ ^\# ]] && [[ "$line" =~ .*= ]]; then
-        export ${line//[$'\r\n']}
+        export ${line//[$'\r\n']/}
       fi
     done <.env
   fi
@@ -104,18 +104,17 @@ configureEnvironment() {
     # echo "Remaining: ${@}"
 
     case "$arg" in
-      *=*)
-        # echo "Exporting ..."
-        export "${arg}"
-        ;;
-      *)
-        # echo "Saving for later ..."
-        # If not recognized, save it for later procesing ...
-        set -- "$@" "$arg"
-        ;;
+    *=*)
+      # echo "Exporting ..."
+      export "${arg}"
+      ;;
+    *)
+      # echo "Saving for later ..."
+      # If not recognized, save it for later procesing ...
+      set -- "$@" "$arg"
+      ;;
     esac
   done
-
 
   # global
   export COMPOSE_PROJECT_NAME="${COMPOSE_PROJECT_NAME:-indy-demo}"
@@ -124,7 +123,7 @@ configureEnvironment() {
 
   # node-controller
   export WEB_HOST_NAME="0.0.0.0"
-  export WEB_HOST_PORT="8080"
+  export WEB_HOST_PORT="3000"
   export CONTROLLER_EXPOSED_PORT="3000"
   export CONTROLLER_HTTP_PORT_ALICE=3050
   export CONTROLLER_HTTP_PORT_FABER=3051
@@ -240,9 +239,9 @@ registerDid() {
 
   echo -e \\n"Registering ${_seed} with the ledger ..."
   curl -X POST \
-    ${_ledgerUri} \
-    -H 'content-type: application/json' \
-    -d "${_seedJson}"
+  ${_ledgerUri} \
+  -H 'content-type: application/json' \
+  -d "${_seedJson}"
 }
 
 getSeedJson() {
@@ -273,7 +272,7 @@ toLower() {
   echo $(echo ${@} | tr '[:upper:]' '[:lower:]')
 }
 
-echoError (){
+echoError() {
   _msg=${1}
   _red='\033[0;31m'
   _nc='\033[0m' # No Color
@@ -296,45 +295,45 @@ COMMAND=$(toLower ${1})
 shift || COMMAND=usage
 
 case "${COMMAND}" in
-  start|up)
-    echoYellow "Starting up... This can take a couple of minutes."
-    _startupParams=$(getStartupParams $@)
-    configureEnvironment "$@"
-    docker-compose\
-        --log-level ERROR up \
-        --build --remove-orphans \
-        -d ${_startupParams}
-      docker-compose \
-        --log-level ERROR logs \
-        -f
-    ;;
-  restart)
-    _startupParams=$(getStartupParams $@)
-    configureEnvironment "$@"
-    docker-compose stop ${_startupParams}
-    docker-compose up -d --build --remove-orphans ${_startupParams}
-    ;;
-  logs)
-    configureEnvironment "$@"
-    docker-compose logs -f
-    ;;
-  stop)
-    configureEnvironment
-    docker-compose stop 
-    ;;
-  rm|down)
-    configureEnvironment
-      docker-compose \
-        --log-level ERROR down \
-        -v
-    ;;
-  registerdids)
-    configureEnvironment "$@"
-    registerDids $(generateSeeds)
-    ;;
-  *)
-    usage
-    ;;
+start | up)
+  echoYellow "Starting up... This can take a couple of minutes."
+  _startupParams=$(getStartupParams $@)
+  configureEnvironment "$@"
+  docker-compose\
+  --log-level ERROR up \
+  --build --remove-orphans \
+  -d ${_startupParams}
+  docker-compose \
+  --log-level ERROR logs \
+  -f
+  ;;
+restart)
+  _startupParams=$(getStartupParams $@)
+  configureEnvironment "$@"
+  docker-compose stop ${_startupParams}
+  docker-compose up -d --build --remove-orphans ${_startupParams}
+  ;;
+logs)
+  configureEnvironment "$@"
+  docker-compose logs -f
+  ;;
+stop)
+  configureEnvironment
+  docker-compose stop
+  ;;
+rm | down)
+  configureEnvironment
+  docker-compose \
+  --log-level ERROR down \
+  -v
+  ;;
+registerdids)
+  configureEnvironment "$@"
+  registerDids $(generateSeeds)
+  ;;
+*)
+  usage
+  ;;
 esac
 
 popd >/dev/null

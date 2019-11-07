@@ -1,15 +1,13 @@
-# build stage
-FROM node:lts-alpine as build-stage
-WORKDIR /app
-COPY controller/package*.json ./
-RUN npm install
-COPY controller/ .
+FROM node:10.15.3-alpine
 
-ENV PATH="/app/node_modules/typescript/bin:${PATH}"
+WORKDIR /home/node/app
+ADD package*.json ./
+ADD nodemon.json ./
 
-RUN npm run build
+ADD src ./src
 
-# production stage
-FROM abiosoft/caddy:1.0.0 as production-stage
-COPY docker/controller/Caddyfile /etc/Caddyfile
-COPY --from=build-stage /app/dist /srv
+RUN npm i
+RUN npm run build:database
+RUN npm install dotenv --global
+
+USER node
