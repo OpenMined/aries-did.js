@@ -13,7 +13,9 @@ services:
     entrypoint: /bin/bash
     command: [
         "-c",
-        "curl -d '{\"seed\":\"${ALICE_WALLET_SEED}\", \"role\":\"TRUST_ANCHOR\", \"alias\":\"${ALICE_AGENT_NAME}\"}' -X POST ${LEDGER_URL}/register; \
+        "echo Waiting for ledger to be ready...;
+        sleep 60;
+        curl -d '{\"seed\":\"${ALICE_WALLET_SEED}\", \"role\":\"TRUST_ANCHOR\", \"alias\":\"${ALICE_AGENT_NAME}\"}' -X POST ${LEDGER_URL}/register; \
         sleep 2; \
         aca-py start \
         --inbound-transport http '0.0.0.0' ${ALICE_HTTP_PORT} \
@@ -47,7 +49,9 @@ services:
     entrypoint: /bin/bash
     command: [
         "-c",
-        "curl -d '{\"seed\":\"${FABER_WALLET_SEED}\", \"role\":\"TRUST_ANCHOR\", \"alias\":\"${FABER_AGENT_NAME}\"}' -X POST ${LEDGER_URL}/register; \
+        "echo Waiting for ledger to be ready...;
+        sleep 60;
+        curl -d '{\"seed\":\"${FABER_WALLET_SEED}\", \"role\":\"TRUST_ANCHOR\", \"alias\":\"${FABER_AGENT_NAME}\"}' -X POST ${LEDGER_URL}/register; \
         sleep 2; \
         aca-py start \
         --inbound-transport http '0.0.0.0' ${FABER_HTTP_PORT} \
@@ -81,7 +85,9 @@ services:
     entrypoint: /bin/bash
     command: [
         "-c",
-        "curl -d '{\"seed\":\"${ACME_WALLET_SEED}\", \"role\":\"TRUST_ANCHOR\", \"alias\":\"${ACME_AGENT_NAME}\"}' -X POST ${LEDGER_URL}/register; \
+        "echo Waiting for ledger to be ready...;
+        sleep 60;
+        curl -d '{\"seed\":\"${ACME_WALLET_SEED}\", \"role\":\"TRUST_ANCHOR\", \"alias\":\"${ACME_AGENT_NAME}\"}' -X POST ${LEDGER_URL}/register; \
         sleep 2; \
         aca-py start \
         --inbound-transport http '0.0.0.0' ${ACME_HTTP_PORT} \
@@ -124,11 +130,10 @@ services:
     command: 'bash -c ''sleep 10; ./scripts/start_webserver.sh;'''
     environment:
       - DOCKERHOST=${DOCKERHOST}
-      - ANONYMOUS=${ANONYMOUS:-1}
-      - MAX_FETCH=${MAX_FETCH:-50000}
-      - RESYNC_TIME=${RESYNC_TIME:-120}
-      - REGISTER_NEW_DIDS=${REGISTER_NEW_DIDS:-True}
-      - LEDGER_INSTANCE_NAME=${LEDGER_INSTANCE_NAME:-localhost}
+      - MAX_FETCH=50000
+      - RESYNC_TIME=120
+      - REGISTER_NEW_DIDS=True
+      - LEDGER_INSTANCE_NAME=localhost
     networks:
       - indy_demo
     ports:
