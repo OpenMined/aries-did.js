@@ -77,15 +77,15 @@ router.post('/', async (ctx: Koa.Context) => {
       return ctx.throw(400, `missing ${key} field`);
     }
   }
+  console.log(issue.credDefId.slice(issue.credDefId.indexOf('_')));
   try {
-    // let sliced = id.slice(id.indexOf('_') + 1, id.length + 1);
-
     const newIssue = await client.issue.issueOfferSend(
       issue.connectionId,
       issue.comment,
       issue.attrs,
-      issue.credDefId.slice(issue.credDefId.indexOf('_'))
+      issue.credDefId
     );
+    console;
     return (ctx.body = { _id: newIssue.credential_definition_id });
   } catch (err) {
     return ctx.throw(500, err.message);

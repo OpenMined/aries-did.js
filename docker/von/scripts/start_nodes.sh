@@ -21,7 +21,7 @@ if [ ! -d "/home/indy/ledger/sandbox/keys" ]; then
     fi
 fi
 
-cat <<EOF > supervisord.conf
+cat <<EOF >supervisord.conf
 [supervisord]
 logfile = /tmp/supervisord.log
 logfile_maxbytes = 50MB

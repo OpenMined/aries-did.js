@@ -46,6 +46,7 @@ router.get('/', async (ctx: Koa.Context) => {
                     issue.connection_id === id && issue.initiator === 'external'
                 )
                 .map(itm => {
+                  console.log(itm);
                   return {
                     _id: itm.credential_exchange_id,
                     label: res.their_label,
@@ -56,7 +57,8 @@ router.get('/', async (ctx: Koa.Context) => {
                     did: res.their_did,
                     credId: itm.credential_id,
                     credDefId: itm.credential_definition_id,
-                    initiator: itm.initiator
+                    initiator: itm.initiator,
+                    cred: itm.credential
                     // schema: credDefs.rows.filter(
                     //   doc => doc.id === itm.credential_definition_id
                     // )[0].doc
