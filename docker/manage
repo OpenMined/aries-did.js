@@ -297,10 +297,16 @@ shift || COMMAND=usage
 
 case "${COMMAND}" in
   start|up)
-    _startupParams=$(getStartupParams --force-recreate $@)
+    echoYellow "Starting up... This can take a couple of minutes."
+    _startupParams=$(getStartupParams $@)
     configureEnvironment "$@"
-    docker-compose up -d --build --remove-orphans ${_startupParams} 
-    docker-compose logs -f
+    docker-compose\
+        --log-level ERROR up \
+        --build --remove-orphans \
+        -d ${_startupParams}
+      docker-compose \
+        --log-level ERROR logs \
+        -f
     ;;
   restart)
     _startupParams=$(getStartupParams $@)
@@ -318,7 +324,9 @@ case "${COMMAND}" in
     ;;
   rm|down)
     configureEnvironment
-    deleteVolumes
+      docker-compose \
+        --log-level ERROR down \
+        -v
     ;;
   registerdids)
     configureEnvironment "$@"
