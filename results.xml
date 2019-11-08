@@ -1,40 +1,60 @@
-<testsuite name="Mocha Tests" tests="38" failures="0" errors="0" skipped="6" timestamp="Wed, 23 Oct 2019 17:23:38 GMT" time="4.658">
-<testcase classname="connection model results" name="should create a new invitation" time="0.059"/>
-<testcase classname="connection model results" name="should receive an invitation" time="0.096"/>
+<testsuite name="Mocha Tests" tests="35" failures="0" errors="7" skipped="6" timestamp="Fri, 08 Nov 2019 22:55:17 GMT" time="16.079">
+<testcase classname="connection model results" name="should create a new invitation" time="0.061"/>
+<testcase classname="connection model results" name="should receive an invitation" time="0.094"/>
 <testcase classname="connection model results" name="should accept an invitation" time="0"/>
-<testcase classname="connection model results" name="CONNECTION: should respond to an invitation" time="0.001"/>
-<testcase classname="connection model results" name="should have active connections" time="0.188"/>
-<testcase classname="connection model results" name="should get a single connection" time="0.026"/>
+<testcase classname="connection model results" name="CONNECTION: should respond to an invitation" time="0"/>
+<testcase classname="connection model results" name="should have active connections" time="0.108"/>
+<testcase classname="connection model results" name="should get a single connection" time="0.032"/>
 <testcase classname="connection model results" name="should make a connection active" time="0"><skipped/></testcase>
-<testcase classname="connection model results" name="should remove all connections" time="0.113"/>
-<testcase classname="create new credDef" name="should return a credential definition id" time="0.036"/>
-<testcase classname="create new credDef" name="should not return a cred def id" time="0.014"/>
+<testcase classname="connection model results" name="should remove all connections" time="0.296"/>
+<testcase classname="create new credDef" name="should return a credential definition id" time="2.001"><failure>Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\agent\modules\credential-definition\credential-definition.test.ts)
+Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\agent\modules\credential-definition\credential-definition.test.ts)
+    at listOnTimeout (internal/timers.js:531:17)
+    at processTimers (internal/timers.js:475:7)</failure></testcase>
+<testcase classname="create new credDef" name="should not return a cred def id" time="0.019"/>
 <testcase classname="CREDENTIAL: model tests" name="CREDENTIAL: should get a list of active credentials" time="0"><skipped/></testcase>
-<testcase classname="ISSUE: issue credential model tests" name="ISSUE:  should send a credential offer" time="0.066"/>
-<testcase classname="ISSUE: issue credential model tests" name="ISSUE:  should get active records" time="0.012"/>
-<testcase classname="ISSUE: issue credential model tests" name="ISSUE:  should get all testagent active records" time="0.01"/>
-<testcase classname="ISSUE: issue credential model tests" name="ISSUE:  should get received offers" time="0.01"/>
-<testcase classname="ISSUE: issue credential model tests" name="ISSUE:  should get sent offers" time="0.01"/>
-<testcase classname="ISSUE: issue credential model tests" name="ISSUE:  should respond to a a sent offer" time="0.181"/>
-<testcase classname="ISSUE: issue credential model tests" name="ISSUE:  should issue a credential" time="0.1"/>
-<testcase classname="ISSUE: issue credential model tests" name="ISSUE: should store a received credential" time="0.098"/>
+<testcase classname="ISSUE: issue credential model tests" name="&#x22;before all&#x22; hook: ISSUE: create a relationship for issue cred test for &#x22;ISSUE:  should send a credential offer&#x22;" time="2"><failure>Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\agent\modules\issue\issue.test.ts)
+Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\agent\modules\issue\issue.test.ts)
+    at listOnTimeout (internal/timers.js:531:17)
+    at processTimers (internal/timers.js:475:7)</failure></testcase>
 <testcase classname="PROOF: controller tests" name="PROOF: should fetch credentials for a presentation request from the wallet by ID and referent" time="0"><skipped/></testcase>
 <testcase classname="PROOF: controller tests" name="PROOF: should send a presentation proposal" time="0"/>
 <testcase classname="PROOF: controller tests" name="PROOF: should send a free presentation request not bound to any proposal" time="0.001"/>
 <testcase classname="PROOF: controller tests" name="PROOF: send a presentation request in reference to a proposal (by presex ID)" time="0"/>
-<testcase classname="PROOF: controller tests" name="PROOF: should build a proof request object" time="0.13"/>
-<testcase classname="PROOF: controller tests" name="PROOF: should send a free presentation request not bound to any proposal" time="0.126"/>
-<testcase classname="PROOF: controller tests" name="PROOF: should verify a received presentation (by presex id)" time="0.047"/>
+<testcase classname="PROOF: controller tests" name="PROOF: should build a proof request object" time="2.001"><failure>Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\agent\modules\proof\proof.test.ts)
+Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\agent\modules\proof\proof.test.ts)
+    at listOnTimeout (internal/timers.js:531:17)
+    at processTimers (internal/timers.js:475:7)</failure></testcase>
+<testcase classname="PROOF: controller tests" name="PROOF: should send a free presentation request not bound to any proposal" time="2"><failure>Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\agent\modules\proof\proof.test.ts)
+Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\agent\modules\proof\proof.test.ts)
+    at listOnTimeout (internal/timers.js:531:17)
+    at processTimers (internal/timers.js:475:7)</failure></testcase>
+<testcase classname="PROOF: controller tests" name="PROOF: should verify a received presentation (by presex id)" time="2"><failure>Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\agent\modules\proof\proof.test.ts)
+Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\agent\modules\proof\proof.test.ts)
+    at listOnTimeout (internal/timers.js:531:17)
+    at processTimers (internal/timers.js:475:7)</failure></testcase>
 <testcase classname="PROOF: controller tests" name="PROOF: should should remove an existing presentation exchange record (by presex ID)" time="0"/>
 <testcase classname="PROOF: controller tests" name="PROOF:  should get all records" time="0"><skipped/></testcase>
-<testcase classname="PROOF: controller tests" name="PROOF: should fetch a single presentation exchange record by ID" time="0.016"/>
-<testcase classname="SCHEMA: create new schema" name="should return a schema id" time="0.029"/>
-<testcase classname="SCHEMA: create new schema" name="should not return a schema id" time="0.016"/>
-<testcase classname="SCHEMA: create new schema" name="should return a credDef id" time="0.011"/>
-<testcase classname="create new credential definition from API" name="should return a cred-def id" time="0.122"/>
-<testcase classname="create new credential definition from API" name="should not return a cred-def id" time="0.086"/>
+<testcase classname="PROOF: controller tests" name="PROOF: should fetch a single presentation exchange record by ID" time="0.014"><failure>expected undefined not to be undefined
+AssertionError: expected undefined not to be undefined
+    at Context.&#x3C;anonymous&#x3E; (src\app\agent\modules\proof\proof.test.ts:112:29)
+    at runMicrotasks (&#x3C;anonymous&#x3E;)
+    at processTicksAndRejections (internal/process/task_queues.js:93:5)</failure></testcase>
+<testcase classname="SCHEMA: create new schema" name="should return a schema id" time="0.713"/>
+<testcase classname="SCHEMA: create new schema" name="should not return a schema id" time="0.018"/>
+<testcase classname="SCHEMA: create new schema" name="should return a credDef id" time="0.058"/>
+<testcase classname="create new credential definition from API" name="should return a cred-def id" time="2.004"><failure>Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\client\cred-defs\cred-def.test.ts)
+Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure &#x22;done()&#x22; is called; if returning a Promise, ensure it resolves. (C:\Users\seanh\Documents\GitHub\aries-cloudcontroller-node\src\app\client\cred-defs\cred-def.test.ts)
+    at listOnTimeout (internal/timers.js:531:17)
+    at processTimers (internal/timers.js:475:7)</failure></testcase>
+<testcase classname="create new credential definition from API" name="should not return a cred-def id" time="0.238"/>
+<testcase classname="CREDENTIAL API: controller suite tests" name="CREDENTIAL API: should get credentials" time="0"><skipped/></testcase>
+<testcase classname="DB: model tests" name="DB: should delete all records" time="0"/>
+<testcase classname="DB: model tests" name="DB: should insert a record" time="0.001"/>
+<testcase classname="DB: model tests" name="DB: should get all records" time="0"/>
+<testcase classname="DB: model tests" name="DB: should sync data" time="0"/>
 <testcase classname="API should handle invitations" name="should create an invitation" time="0"><skipped/></testcase>
 <testcase classname="API should handle invitations" name="should receive an invitation" time="0"><skipped/></testcase>
-<testcase classname="API should handle relationships" name="should get an array of relationships" time="0.016"/>
+<testcase classname="API should handle relationships" name="should get an array of relationships" time="0.014"/>
 <testcase classname="API should handle relationships" name="should get a single relationship record" time="0"/>
 </testsuite>

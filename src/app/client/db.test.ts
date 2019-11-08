@@ -11,7 +11,7 @@ const prefix = 'DB: ';
 
 const dbprefix = 'cdef';
 
-describe.only(prefix + 'model tests', function() {
+describe(prefix + 'model tests', function() {
   it(prefix + 'should delete all records', function() {
     // store.cleanDatabase().then(itm => console.log(itm));
   });
@@ -37,7 +37,7 @@ describe.only(prefix + 'model tests', function() {
     let credSync = async (id: string): Promise<boolean> => {
       const ctrl = new AgentController('http://localhost:8051/');
       let record = await ctrl.credDef.getCredentialDefinition(id);
-      console.log('the record', record)
+      console.log('the record', record);
       if (!record) return false;
       return true;
     };

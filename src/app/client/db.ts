@@ -1,6 +1,7 @@
 import * as PouchDB from 'pouchdb';
 
 import * as pouchdbfind from 'pouchdb-find';
+import { ITestResult } from '../test-suite/app';
 
 PouchDB.plugin(pouchdbfind);
 
@@ -12,7 +13,7 @@ export interface ICredDefStore {
   schema_id: string;
 }
 
-export type DBPrefixType = 'cdef';
+export type DBPrefixType = 'cdef' | 'test';
 
 export interface IDBGetOptions {
   prefix?: DBPrefixType;
@@ -23,6 +24,7 @@ export interface IDBGetOptions {
 
 export interface IBaseDBRecord {
   _id: string;
+  _rev?: string;
 }
 
 export interface ICredDef extends IBaseDBRecord {
@@ -33,18 +35,18 @@ export interface ICredDef extends IBaseDBRecord {
   _rev?: string;
 }
 
-export type DBRecordType = ICredDef;
+export type DBRecordType = ICredDef | ITestResult;
 
 export interface IDBInsertOptions {
   prefix: DBPrefixType;
   record: DBRecordType;
 }
 
-class DataStore {
+export class DataStore {
   _db: PouchDB.Database;
 
   constructor(options: { url?: string; name?: string }) {
-    let { url = 'http://node-database:5984/', name = 'data' } = options;
+    let { url = 'http://localhost:5984/', name = 'data' } = options;
     this._db = new PouchDB(url + name);
   }
 

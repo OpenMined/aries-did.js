@@ -2,7 +2,7 @@ import * as Koa from 'koa';
 import * as Router from 'koa-router';
 
 const routerOpts: Router.IRouterOptions = {
-  prefix: '/topic/issue-credential'
+  prefix: '/connections'
 };
 
 const router: Router = new Router(routerOpts);

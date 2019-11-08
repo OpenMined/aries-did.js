@@ -33,7 +33,9 @@ services:
         --seed '${ALICE_WALLET_SEED}' \
         --admin '0.0.0.0' ${ALICE_ADMIN_PORT} \
         --admin-insecure-mode \
-        --label ${ALICE_AGENT_NAME}",
+        --webhook-url 'http://host.docker.internal:3050'
+        --label ${ALICE_AGENT_NAME}\
+        ",
       ]
 
   faber-agent:
@@ -139,7 +141,6 @@ services:
     ports:
       - "3000:3000"
       - "3001:3001"
-      - "3050:3050"
     command: npm run testsuite
 
   node-database:
