@@ -120,10 +120,19 @@ services:
     networks:
       - indy_demo
     ports:
-      - ${CONTROLLER_EXPOSED_PORT}:${WEB_HOST_PORT}
+      - "3000:3000"
       - "3001:3001"
       - "3002:3002"
     command: npm run serve
+
+  node-database:
+    image: "couchdb:2.1.1"
+    ports:
+      - 5984:5984
+    networks:
+      - indy_demo
+    volumes:
+      - /usr/local/var/lib/couchdb
 
   alice-web:
     build:
