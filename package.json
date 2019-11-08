@@ -8,7 +8,7 @@
     "test-watch": "nodemon --exec npm test",
     "lint": "tslint --project tsconfig.json --format stylish",
     "build": "tsc",
-    "serve": "ts-node src/server.ts",
+    "serve": "ts-node src/demo.ts",
     "start": "nodemon",
     "start:agent": "sh start-agent.sh",
     "start:von": "sh start.sh",

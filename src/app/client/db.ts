@@ -46,7 +46,7 @@ class DataStore {
   _db: PouchDB.Database;
 
   constructor(options: { url?: string; name?: string }) {
-    let { url = 'http://localhost:5984/', name = 'data' } = options;
+    let { url = 'http://0.0.0.0:5984/', name = 'data' } = options;
     this._db = new PouchDB(url + name);
   }
 

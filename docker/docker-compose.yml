@@ -121,8 +121,8 @@ services:
       - indy_demo
     ports:
       - ${CONTROLLER_EXPOSED_PORT}:${WEB_HOST_PORT}
-      # - "3000:3000"
-      # - "9229:9229"
+      - "3001:3001"
+      - "3002:3002"
     command: npm run serve
 
   alice-web:
