@@ -12,16 +12,11 @@ let ports = [3000, 3001, 3002];
 
 if (cluster.isMaster) {
   // for(let)
-  const db = exec(`pouchdb-server --port 5984`);
-  db.once('close', (code, signal) => {
-    console.log(signal);
-    console.log('db started', process.env.DB_PORT);
-    for (let port of ports) {
-      const env = process.env;
-      env.PORT = port.toString();
-      cluster.fork(env);
-    }
-  });
+  for (let port of ports) {
+    const env = process.env;
+    env.PORT = port.toString();
+    cluster.fork(env);
+  }
 } else {
   app.listen(process.env.PORT, () => {
     console.log('worker process', cluster.worker.id);

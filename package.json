@@ -9,6 +9,7 @@
     "lint": "tslint --project tsconfig.json --format stylish",
     "build": "tsc",
     "serve": "ts-node src/demo.ts",
+    "testsuite": "ts-node src/server.ts",
     "start": "nodemon",
     "start:agent": "sh start-agent.sh",
     "start:von": "sh start.sh",
@@ -62,6 +63,7 @@
     "pouchdb": "^7.1.1",
     "pouchdb-find": "^7.1.1",
     "pouchdb-server": "^4.2.0",
+    "rxjs": "^6.5.3",
     "superagent": "^5.1.0",
     "uuid": "^3.3.3"
   },

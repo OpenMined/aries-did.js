@@ -125,6 +125,23 @@ services:
       - "3002:3002"
     command: npm run serve
 
+  node-testsuite:
+    build:
+      context: ..
+      dockerfile: docker/controller/Dockerfile
+    environment:
+      WEB_HOST_NAME: ${WEB_HOST_NAME}
+      WEB_HOST_PORT: ${WEB_HOST_PORT}
+    depends_on:
+      - ledger-nodes
+    networks:
+      - indy_demo
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "3050:3050"
+    command: npm run testsuite
+
   node-database:
     image: "couchdb:2.1.1"
     ports:
@@ -147,6 +164,34 @@ services:
       - indy_demo
     ports:
       - 4200:4200
+
+  faber-web:
+    build:
+      context: https://github.com/bluecollardev/edx-ariescloud-client.git
+      dockerfile: Dockerfile
+    depends_on:
+      - node-controller
+    command: npm run faber
+    environment:
+      - DOCKERHOST=${DOCKERHOST}
+    networks:
+      - indy_demo
+    ports:
+      - 4201:4201
+
+  acme-web:
+    build:
+      context: https://github.com/bluecollardev/edx-ariescloud-client.git
+      dockerfile: Dockerfile
+    depends_on:
+      - node-controller
+    command: npm run acme
+    environment:
+      - DOCKERHOST=${DOCKERHOST}
+    networks:
+      - indy_demo
+    ports:
+      - 4202:4202
 
   ledger-browser:
     build:

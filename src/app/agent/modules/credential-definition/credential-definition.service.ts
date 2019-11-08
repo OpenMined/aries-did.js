@@ -22,7 +22,7 @@ export class CredentialDefinitionService {
     try {
       const res = await request
         .post(`${this._apiUrl}${segment}`)
-        .send({ schema_id: schemaId });
+        .send({ schema_id: schemaId, tag: 'default' });
       // if (!id) throw new Error('no credential id found');
       return res.body;
     } catch (err) {

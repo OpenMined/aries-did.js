@@ -4,8 +4,6 @@ import * as pouchdbfind from 'pouchdb-find';
 
 PouchDB.plugin(pouchdbfind);
 
-import { AgentController } from '../agent/agent.model';
-
 export interface ICredDefStore {
   _id: string;
   name: string;
@@ -46,7 +44,7 @@ class DataStore {
   _db: PouchDB.Database;
 
   constructor(options: { url?: string; name?: string }) {
-    let { url = 'http://0.0.0.0:5984/', name = 'data' } = options;
+    let { url = 'http://node-database:5984/', name = 'data' } = options;
     this._db = new PouchDB(url + name);
   }
 
