@@ -23,9 +23,15 @@ router.get('/', async (ctx: Koa.Context) => {
 
     const wallet = await ctrl.wallet.publicDid();
     const creds = await ctrl.cred.records();
+    const invite = await ctrl.connection.createInvitation();
+
+    const destroy = await ctrl.connection.removeConnection(invite['@id']);
+
     return (ctx.body = {
       did: wallet.result.did,
-      label: wallet.result.label,
+      verkey: wallet.result.verkey,
+      label: invite.label,
+      endpoint: invite.serviceEndpoint,
       issuesCount: issues.length,
       credsCount: creds.length,
       proofsCount: proofs.length,

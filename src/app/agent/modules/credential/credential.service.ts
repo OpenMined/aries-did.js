@@ -11,7 +11,7 @@ export class CredentialService {
   async getCredentialById(id: string) {
     try {
       const res = await request.get(`${this._url}${segment}${id}`);
-      return res.body;
+      return res;
     } catch (err) {
       throw err.message;
     }

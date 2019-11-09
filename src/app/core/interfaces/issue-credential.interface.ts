@@ -1,24 +1,13 @@
 export interface ICredentialRecord {
-  credential_proposal_dict: any;
-  state: string;
-  credential_request: any;
-  updated_at: string;
-  raw_credential: any;
-  credential: any;
-  initiator: string;
-  credential_definition_id: string;
-  credential_request_metadata: any;
+  referent: string;
+  _id: string;
+  attrs: {
+    [key: string]: string;
+  }[];
   schema_id: string;
-  credential_offer: any;
-  auto_offer: boolean;
-  credential_id: string;
-  error_msg: string;
-  parent_thread_id: string;
-  created_at: string;
-  thread_id: string;
-  credential_exchange_id: string;
-  connection_id: string;
-  auto_issue: boolean;
+  cred_def_id: string;
+  rev_reg_id: string;
+  cred_rev_id: string;
 }
 
 export interface cred_proposal {

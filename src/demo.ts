@@ -10,6 +10,8 @@ import { execFile, exec } from 'child_process';
 
 let ports = [3000, 3001, 3002];
 
+
+
 if (cluster.isMaster) {
   // for(let)
   for (let port of ports) {

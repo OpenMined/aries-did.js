@@ -76,16 +76,22 @@ router.post('/', async (ctx: Koa.Context) => {
       return ctx.throw(400, `missing ${key} field`);
     }
   }
-  console.log(issue.credDefId.slice(issue.credDefId.indexOf('_')));
+
+  const schema = await db.getRecord({
+    _id: issue.credDefId
+  });
+
+  console.log(schema);
+  // console.log(issue.credDefId.slice(issue.credDefId.indexOf('_') + 1));
   try {
     const newIssue = await client.issue.issueOfferSend(
       issue.connectionId,
       issue.comment,
       issue.attrs,
-      issue.credDefId
+      issue.credDefId.slice(issue.credDefId.indexOf('_') + 1)
     );
     console;
-    return (ctx.body = { _id: newIssue.credential_definition_id });
+    return (ctx.body = { _id: newIssue.credential_exchange_id });
   } catch (err) {
     return ctx.throw(500, err.message);
   }
@@ -107,6 +113,7 @@ router.get('/:id', async (ctx: Koa.Context) => {
   looks up record to ensure it exists.
 */
 router.post('/:id', async (ctx: Koa.Context) => {
+  console.log(ctx.params.id);
   const id = ctx.params.id;
   // const state = ctx.params.state;
   const issues = await ctrl.issue.records();

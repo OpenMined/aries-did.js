@@ -45,9 +45,15 @@ router.post('/', async (ctx: Koa.Context) => {
 router.get('/', async (ctx: Koa.Context) => {
   try {
     let credDefs = (await db.getRecords({ prefix: 'cdef' })) as any[];
+    const issued = await ctrl.issue.records();
+
     return (ctx.body = credDefs.map(itm => {
       let { _id, attributes, schema_name: name, schema_version: version } = itm;
-      return { _id, attributes, name, version };
+
+      const records = issued.filter(
+        issue => 'cdef_' + issue.credential_definition_id === itm._id
+      );
+      return { _id, attributes, name, version, count: records.length, records };
     }));
   } catch (err) {
     return ctx.throw(500);

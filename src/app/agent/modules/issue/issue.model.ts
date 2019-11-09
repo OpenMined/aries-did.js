@@ -57,7 +57,7 @@ export class Issue {
     comment: string,
     attributes: ICredentialAttributes[],
     credential_definition_id: string,
-    autoIssue: boolean = true
+    autoIssue: boolean = false
   ): IIssueOffer {
     return {
       connection_id,
@@ -133,6 +133,7 @@ export class Issue {
     credDefId: string
   ) {
     const credOffer = this.formatSendOffer(connId, comment, attrs, credDefId);
+    console.log('formatted', credOffer);
     try {
       if (credOffer != null) {
         const res = await this._issueSvc.sendOffer(credOffer);
