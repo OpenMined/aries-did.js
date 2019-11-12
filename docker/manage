@@ -68,7 +68,7 @@ EOF
 # -----------------------------------------------------------------------------------------------------------------
 # Default Settings:
 # -----------------------------------------------------------------------------------------------------------------
-DEFAULT_CONTAINERS="alice-agent faber-agent acme-agent node-controller ledger-browser ledger-nodes alice-web faber-web acme-web node-database"
+DEFAULT_CONTAINERS="alice-agent faber-agent acme-agent ledger-browser ledger-nodes alice-web faber-web acme-web node-database node-controller"
 # -----------------------------------------------------------------------------------------------------------------
 # Functions:
 # -----------------------------------------------------------------------------------------------------------------

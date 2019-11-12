@@ -23,6 +23,7 @@ services:
         --genesis-url '${LEDGER_URL}/genesis' \
         --auto-accept-invites \
         --auto-accept-requests \
+        --auto-ping-connection \
         --auto-respond-messages \
         --auto-respond-credential-proposal \
         --auto-respond-credential-offer \
@@ -33,7 +34,6 @@ services:
         --admin '0.0.0.0' ${ALICE_ADMIN_PORT} \
         --admin-insecure-mode \
         --label ${ALICE_AGENT_NAME}",
-        --webhook-url 'http://host.docker.internal:3000',
       ]
 
   faber-agent:
@@ -59,6 +59,7 @@ services:
         --genesis-url '${LEDGER_URL}/genesis' \
         --auto-accept-invites \
         --auto-accept-requests \
+        --auto-ping-connection \
         --auto-respond-messages \
         --auto-respond-credential-proposal \
         --auto-respond-credential-offer \
@@ -69,7 +70,6 @@ services:
         --admin '0.0.0.0' ${FABER_ADMIN_PORT} \
         --admin-insecure-mode \
         --label ${FABER_AGENT_NAME}",
-        --webhook-url 'http://host.docker.internal:3000',
       ]
 
   acme-agent:
@@ -95,6 +95,7 @@ services:
         --genesis-url '${LEDGER_URL}/genesis' \
         --auto-accept-invites \
         --auto-accept-requests \
+        --auto-ping-connection \
         --auto-respond-messages \
         --auto-respond-credential-proposal \
         --auto-respond-credential-offer \
@@ -123,23 +124,6 @@ services:
       - "3001:3001"
       - "3002:3002"
     command: npm run serve
-
-  node-testsuite:
-    build:
-      context: ..
-      dockerfile: docker/controller/Dockerfile
-    environment:
-      WEB_HOST_NAME: ${WEB_HOST_NAME}
-      WEB_HOST_PORT: ${WEB_HOST_PORT}
-    depends_on:
-      - ledger-nodes
-    networks:
-      - indy_demo
-    ports:
-      - "3000:3000"
-      - "3001:3001"
-      - "3050:3050"
-    command: npm run testsuite
 
   node-database:
     image: "couchdb:2.1.1"

@@ -6,10 +6,12 @@ import { resolve } from "path";
 config({ path: resolve(__dirname, "./app/config.env") });
 
 import app from "./app/app";
+import { execFile, exec } from "child_process";
 
-let ports = [3001, 3002];
+let ports = [3000, 3001, 3002];
 
 if (cluster.isMaster) {
+  // for(let)
   for (let port of ports) {
     const env = process.env;
     env.PORT = port.toString();

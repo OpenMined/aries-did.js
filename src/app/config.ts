@@ -1,7 +1,7 @@
-import { resolve } from 'path';
-import { config } from 'dotenv';
+import { resolve } from "path";
+import { config } from "dotenv";
 
-config({ path: resolve(__dirname, './config.env') });
+config({ path: resolve(__dirname, "./config.env") });
 
 export interface IAgentConfig {
   [key: string]: string;
@@ -9,7 +9,7 @@ export interface IAgentConfig {
 
 export const AGENT_URL = process.env.AGENT_URL;
 export const TEST_AGENT_URL = process.env.TEST_AGENT_URL;
-export const DEBUG = process.env.DEBUG === 'true';
+export const DEBUG = process.env.DEBUG === "true";
 export const ACME_AGENT_URL = process.env.ACME_AGENT_URL;
 export const PORT = process.env.PORT;
 export const HOOKS_PORT = process.env.HOOKS_PORT;
@@ -26,7 +26,6 @@ export default class AgentConfig implements IAgentConfig {
       testAgentUrl: TEST_AGENT_URL,
       acmeAgentUrl: ACME_AGENT_URL,
       debug: DEBUG,
-      port: PORT,
       hooksPort: HOOKS_PORT
     }
   ) {

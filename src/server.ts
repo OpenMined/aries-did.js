@@ -15,7 +15,6 @@ const agents = process.env.AGENT_COUNT || 1;
 if (cluster.isMaster) {
   console.log("forked");
   cluster.fork();
-  app.listen(3000);
 } else {
   const id = cluster.worker.id - 1;
   app.listen(ports[id + 1]);
