@@ -82,7 +82,7 @@ export interface IProofProposalRequestResponse {
 export interface IProposalAttributes {
   name: string;
   cred_def_id: string;
-  'mime-type': string;
+  "mime-type": string;
   value: string;
 }
 
@@ -95,11 +95,38 @@ export interface IProposalPredicates {
 
 export interface IProposalSend {
   presentation_proposal: {
-    '@type': string;
+    "@type": string;
     attributes: IProposalAttributes[];
     predicates: IProposalPredicates;
   };
   auto_present: boolean;
   comment: string;
   connection_id: string;
+}
+
+export interface IProofProposal {
+  connection_id: string;
+  proof_request: ProofRequest;
+}
+export interface ProofRequest {
+  version: string;
+  name: string;
+  requested_predicates: RequestedPredicates;
+  requested_attributes: RequestedAttributes;
+}
+export interface RequestedPredicates {}
+export interface RequestedAttributes {
+  [key: string]: IRestrictions;
+}
+export interface IRestrictions {
+  name: string;
+  restrictions?: RestrictionsEntity[] | null;
+}
+export interface RestrictionsEntity {
+  issuer_did: string;
+  schema_version: string;
+  schema_id: string;
+  cred_def_id: string;
+  schema_name: string;
+  // attr::corp_num::value: string;
 }

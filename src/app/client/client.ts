@@ -1,9 +1,9 @@
-import { AgentController } from '../agent/agent.model';
-import * as cluster from 'cluster';
+import { AgentController } from "../agent/agent.model";
+import * as cluster from "cluster";
 
-import AgentConfig from '../config';
+import AgentConfig from "../config";
 
-import db from './db';
+import db from "./db";
 
 // db.allDocs().then(itm => {});
 
@@ -17,9 +17,9 @@ if (cluster.isWorker) {
     agentConfig.testAgentUrl,
     agentConfig.acmeAgentUrl
   ];
-  console.log('the client mappidingId', mapping[id]);
+  console.log("the client mappidingId", agentConfig.testAgentUrl);
 
-  client = new AgentController(mapping[id]);
+  client = new AgentController(agentConfig.testAgentUrl);
 } else {
   let agentConfig = new AgentConfig();
   client = new AgentController(agentConfig.agentUrl);

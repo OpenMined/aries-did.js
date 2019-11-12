@@ -1,15 +1,15 @@
-import * as Koa from 'koa';
-import * as Router from 'koa-router';
+import * as Koa from "koa";
+import * as Router from "koa-router";
 
-import client from '../client';
-import { IRecordsResult } from '../../../app/core/interfaces/issue-credential.interface';
-import dataStore from '../db';
+import client from "../client";
+import { IRecordsResult } from "../../../app/core/interfaces/issue-credential.interface";
+import dataStore from "../db";
 
 const ctrl = client;
 const db = dataStore;
 
 const routerOpts: Router.IRouterOptions = {
-  prefix: '/issues'
+  prefix: "/issues"
 };
 
 const router = new Router(routerOpts);
@@ -21,14 +21,16 @@ const mapIssue = (itm: IRecordsResult) => {
     proposal: itm.credential_proposal_dict,
     created: itm.created_at,
     updated: itm.updated_at,
-    state: itm.state
+    state: itm.state,
+    role: itm.role,
+    initiator: itm.initiator
   };
 };
 
-router.get('/', async (ctx: Koa.Context) => {
+router.get("/", async (ctx: Koa.Context) => {
   try {
     let res = await ctrl.issue.records();
-    const credDefs = (await db.getRecords({ prefix: 'cdef' })) as any[];
+    const credDefs = (await db.getRecords({ prefix: "cdef" })) as any[];
     return (ctx.body = await Promise.all(
       Array.from(new Set(res.map(issue => issue.connection_id))).map(id => {
         return ctrl.connection.getConnections({}, id).then(conn => {
@@ -38,10 +40,11 @@ router.get('/', async (ctx: Koa.Context) => {
               .map(itm => {
                 let obj = {
                   ...itm,
+                  role: itm.role,
                   _id: itm.credential_exchange_id,
                   created: itm.created_at,
                   name: credDefs.filter(
-                    def => def._id === 'cdef_' + itm.credential_definition_id
+                    def => def._id === "cdef_" + itm.credential_definition_id
                   )[0].schema_name
                 };
                 return obj;
@@ -52,8 +55,6 @@ router.get('/', async (ctx: Koa.Context) => {
               name: conn.their_label,
               count: issues.length,
               did: conn.their_did,
-              role: conn.their_role,
-              alias: conn.alias,
               records: issues
             };
           }
@@ -65,8 +66,8 @@ router.get('/', async (ctx: Koa.Context) => {
   }
 });
 
-router.post('/', async (ctx: Koa.Context) => {
-  let params = ['connectionId', 'credDefId', 'comment', 'attrs'];
+router.post("/", async (ctx: Koa.Context) => {
+  let params = ["connectionId", "credDefId", "comment", "attrs"];
 
   let issue = ctx.request.body;
   // console.log(issue);
@@ -88,7 +89,7 @@ router.post('/', async (ctx: Koa.Context) => {
       issue.connectionId,
       issue.comment,
       issue.attrs,
-      issue.credDefId.slice(issue.credDefId.indexOf('_') + 1)
+      issue.credDefId.slice(issue.credDefId.indexOf("_") + 1)
     );
     console;
     return (ctx.body = { _id: newIssue.credential_exchange_id });
@@ -97,7 +98,7 @@ router.post('/', async (ctx: Koa.Context) => {
   }
 });
 
-router.get('/:id', async (ctx: Koa.Context) => {
+router.get("/:id", async (ctx: Koa.Context) => {
   const id = ctx.params.id;
   try {
     let res = await ctrl.issue.records();
@@ -112,7 +113,7 @@ router.get('/:id', async (ctx: Koa.Context) => {
   post by id.
   looks up record to ensure it exists.
 */
-router.post('/:id', async (ctx: Koa.Context) => {
+router.post("/:id", async (ctx: Koa.Context) => {
   console.log(ctx.params.id);
   const id = ctx.params.id;
   // const state = ctx.params.state;
@@ -120,11 +121,11 @@ router.post('/:id', async (ctx: Koa.Context) => {
   const issue = issues.filter(itm => itm.credential_exchange_id === id)[0];
   if (!issue) return ctx.throw(404);
   try {
-    if (issue.state === 'offer_received') {
+    if (issue.state === "offer_received") {
       let res = await ctrl.issue.sendRequestById(id);
       return (ctx.body = res);
     }
-    if (issue.state === 'request_received') {
+    if (issue.state === "request_received") {
       let res = await ctrl.issue.sendIssueById(
         id,
         issue.credential_proposal_dict.credential_proposal.attributes,
@@ -132,7 +133,7 @@ router.post('/:id', async (ctx: Koa.Context) => {
       );
       return (ctx.body = res);
     }
-    if (issue.state === 'credential_received') {
+    if (issue.state === "credential_received") {
       let res = await ctrl.issue.sendStoreById(id);
       return (ctx.body = res);
     }
@@ -142,7 +143,7 @@ router.post('/:id', async (ctx: Koa.Context) => {
   }
 });
 
-router.delete('/:id', async (ctx: Koa.Context) => {
+router.delete("/:id", async (ctx: Koa.Context) => {
   const id = ctx.params.id;
   try {
     const res = await ctrl.issue.removeById(id);

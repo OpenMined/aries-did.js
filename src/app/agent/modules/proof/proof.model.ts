@@ -1,12 +1,13 @@
-import { ProofService } from './proof.service';
+import { ProofService } from "./proof.service";
 import {
   IProofRequest,
   IProofRecord
-} from '../../../core/interfaces/proof.interface';
-import { Schema } from '../schema/schema.model';
-import { CredentialDefinition } from '../credential-definition/credential-definition.model';
-import { ISchema } from '../../../core/interfaces/schema.interface';
-import * as uuid from 'uuid/v1';
+} from "../../../core/interfaces/proof.interface";
+import { Schema } from "../schema/schema.model";
+import { CredentialDefinition } from "../credential-definition/credential-definition.model";
+import { ISchema } from "../../../core/interfaces/schema.interface";
+import * as uuid from "uuid/v1";
+import { ICredDefGetResponse } from "src/app/core/interfaces/credential-definition.interface";
 
 /*
   the chain for creating proof requests requires an established relationships
@@ -33,7 +34,7 @@ export class Proof {
   */
 
   sendProposal() {
-    return 'method not implemented';
+    return "method not implemented";
   }
 
   constructor(apiUrl: string, schema: Schema, credDef: CredentialDefinition) {
@@ -48,11 +49,11 @@ export class Proof {
       if (res.body.results) return res.body.results;
       return res.body;
     } catch (err) {
-      throw new Error('error in records with message: ' + err.message);
+      throw new Error("error in records with message: " + err.message);
     }
   }
 
-  async getRecordById(id: string) {
+  async getRecordById(id: string): Promise<ICredDefGetResponse> {
     let res = await this._proofSvc.getProofRecords(id);
     return res.body;
   }
@@ -75,7 +76,7 @@ export class Proof {
     );
 
     const proofRequest = {
-      version: '1.0',
+      version: "1.0",
       connection_id,
       proof_request: {
         requested_attributes: {},
@@ -121,7 +122,7 @@ export class Proof {
 
   async verifyProofRequest(id: string) {
     try {
-      let res = await this._proofSvc.postByPresExId('verify-presentation', id);
+      let res = await this._proofSvc.postByPresExId("verify-presentation", id);
       return res;
     } catch (err) {
       throw new Error(err.message);
@@ -145,6 +146,6 @@ export class Proof {
   }
 
   sendPresentation(id: string) {
-    return 'method not implemented';
+    return "method not implemented";
   }
 }

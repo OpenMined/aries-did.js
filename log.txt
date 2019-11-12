@@ -1196,3 +1196,7 @@
 [Fri, 08 Nov 2019 04:34:05 GMT] [info] [<0.000.0>] pouchdb-server has started on http://0.0.0.0:5984/
 [Fri, 08 Nov 2019 04:34:05 GMT] [info] [<0.000.0>] navigate to http://0.0.0.0:5984/_utils for the Fauxton UI.
 [Fri, 08 Nov 2019 04:35:20 GMT] [info] [<0.000.0>] 172.17.0.1 - - GET / 200
+[Tue, 12 Nov 2019 10:42:05 GMT] [info] [<0.000.0>] pouchdb-server has started on http://127.0.0.1:5984/
+[Tue, 12 Nov 2019 10:42:05 GMT] [info] [<0.000.0>] navigate to http://127.0.0.1:5984/_utils for the Fauxton UI.
+[Tue, 12 Nov 2019 10:42:19 GMT] [info] [<0.000.0>] 127.0.0.1 - - GET /data/cdef_Bqqp9wananY4uW2pRHACiT%3A3%3ACL%3A23%3Adefault? 404
+[Tue, 12 Nov 2019 10:42:19 GMT] [info] [<0.000.0>] 127.0.0.1 - - PUT /data/cdef_Bqqp9wananY4uW2pRHACiT%3A3%3ACL%3A23%3Adefault 201

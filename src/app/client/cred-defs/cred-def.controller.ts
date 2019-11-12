@@ -1,10 +1,10 @@
-import * as Koa from 'koa';
-import * as Router from 'koa-router';
+import * as Koa from "koa";
+import * as Router from "koa-router";
 
-import { CredDefService } from './cred-def.service';
+import { CredDefService } from "./cred-def.service";
 
-import client from '../client';
-import DB from '../db';
+import client from "../client";
+import DB from "../db";
 
 const db = DB;
 
@@ -21,48 +21,63 @@ export interface ICredDef {
 }
 
 const routerOpts: Router.IRouterOptions = {
-  prefix: '/credential-definitions'
+  prefix: "/credential-definitions"
 };
 
 const router = new Router(routerOpts);
 
-router.post('/', async (ctx: Koa.Context) => {
+router.post("/", async (ctx: Koa.Context) => {
   let schema = ctx.request.body;
   try {
     const res = await credDefSvc.createCredDef(schema);
-    console.log('schema response', res);
-    let credDef = { ...schema, _id: res.id };
-    await db.insertRecord({ prefix: 'cdef', record: credDef });
+    console.log("schema response", res);
+    let credDef = { schemaId: res.schemaId, _id: res.id, ...schema };
+
+    await db.insertRecord({ prefix: "cdef", record: credDef });
     return (ctx.body = { _id: res.id });
   } catch (err) {
-    if (err.name === 'conflict') {
+    if (err.name === "conflict") {
       return ctx.body;
     }
     ctx.throw(400, err);
   }
 });
 
-router.get('/', async (ctx: Koa.Context) => {
+router.get("/", async (ctx: Koa.Context) => {
   try {
-    let credDefs = (await db.getRecords({ prefix: 'cdef' })) as any[];
+    let credDefs = (await db.getRecords({ prefix: "cdef" })) as any[];
     const issued = await ctrl.issue.records();
 
     return (ctx.body = credDefs.map(itm => {
-      let { _id, attributes, schema_name: name, schema_version: version } = itm;
+      let {
+        _id,
+        attributes,
+        schema_name: name,
+        schema_version: version,
+        schemaId
+      } = itm;
 
       const records = issued.filter(
-        issue => 'cdef_' + issue.credential_definition_id === itm._id
+        issue => "cdef_" + issue.credential_definition_id === itm._id
       );
-      return { _id, attributes, name, version, count: records.length, records };
+      return {
+        _id,
+        attributes,
+        name,
+        version,
+        count: records.length,
+        records,
+        schemaId
+      };
     }));
   } catch (err) {
     return ctx.throw(500);
   }
 });
 
-router.get('/:id', async (ctx: Koa.Context) => {
+router.get("/:id", async (ctx: Koa.Context) => {
   try {
-    const records = (await db.getRecords({ prefix: 'cdef' })) as any[];
+    const records = (await db.getRecords({ prefix: "cdef" })) as any[];
     return (ctx.body = records
       .map(itm => {
         let {
@@ -79,7 +94,7 @@ router.get('/:id', async (ctx: Koa.Context) => {
   }
 });
 
-router.delete('/:id', async (ctx: Koa.Context) => {
+router.delete("/:id", async (ctx: Koa.Context) => {
   console.log(ctx.params.id);
   try {
     return (ctx.body = await db.removeRecord({ _id: ctx.params.id }));

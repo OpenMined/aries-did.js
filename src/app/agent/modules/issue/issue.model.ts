@@ -3,21 +3,21 @@ import {
   IIssueSend,
   IIssueOffer,
   IRecordsResult
-} from '../../../../app/core/interfaces/issue-credential.interface';
-import { IssueService } from './issue.service';
+} from "../../../../app/core/interfaces/issue-credential.interface";
+import { IssueService } from "./issue.service";
 
 export type IssueCredentialRecordStateType =
-  | 'offer_sent'
-  | 'offer_received'
-  | 'request_sent'
-  | 'proposal_sent'
-  | 'proposal_received'
-  | 'request_received'
-  | 'issued'
-  | 'credential_received'
-  | 'stored';
+  | "offer_sent"
+  | "offer_received"
+  | "request_sent"
+  | "proposal_sent"
+  | "proposal_received"
+  | "request_received"
+  | "issued"
+  | "credential_received"
+  | "stored";
 
-export type IssueCredentialFilterType = 'state' | 'credential_exchange_id';
+export type IssueCredentialFilterType = "state" | "credential_exchange_id";
 
 export class Issue {
   private _issueSvc: IssueService;
@@ -66,7 +66,7 @@ export class Issue {
       credential_preview: {
         attributes: attributes
       },
-      'auto-issue': autoIssue
+      auto_issue: false
     };
   }
 
@@ -114,7 +114,7 @@ export class Issue {
         let res = await this._issueSvc.issueCredentialSend(cred);
         return res.body;
       } else {
-        throw new Error('cred not defined');
+        throw new Error("cred not defined");
       }
     } catch (err) {
       return err;
@@ -133,13 +133,13 @@ export class Issue {
     credDefId: string
   ) {
     const credOffer = this.formatSendOffer(connId, comment, attrs, credDefId);
-    console.log('formatted', credOffer);
+    console.log("formatted", credOffer);
     try {
       if (credOffer != null) {
         const res = await this._issueSvc.sendOffer(credOffer);
         return res.body;
       } else {
-        throw new Error('cred offer not defined');
+        throw new Error("cred offer not defined");
       }
     } catch (err) {
       throw new Error(err.message);
@@ -151,7 +151,7 @@ export class Issue {
 
   async sendOfferById(credExId: string) {
     try {
-      let res = await this._issueSvc.postById(credExId, 'send-offer');
+      let res = await this._issueSvc.postById(credExId, "send-offer");
       return res.body;
     } catch (err) {
       throw new Error(err.message);
@@ -163,7 +163,7 @@ export class Issue {
   */
   async sendRequestById(credExId: string) {
     try {
-      let res = await this._issueSvc.postById(credExId, 'send-request');
+      let res = await this._issueSvc.postById(credExId, "send-request");
       return res.body;
     } catch (err) {
       throw new Error(err.message);
@@ -178,11 +178,11 @@ export class Issue {
     attributes: ICredentialAttributes[],
     comment: string,
     // TODO: this is hard-coded until it becomes a problem
-    type: string = 'did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/credential-preview'
+    type: string = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/issue-credential/1.0/credential-preview"
   ) {
     let credential_preview = {
       credential_preview: {
-        '@type': type,
+        "@type": type,
         attributes
       },
       comment
@@ -190,7 +190,7 @@ export class Issue {
     try {
       let res = await this._issueSvc.postById(
         credExId,
-        'issue',
+        "issue",
         credential_preview
       );
       return res.body;
@@ -205,7 +205,7 @@ export class Issue {
 
   async sendStoreById(credExId: string) {
     try {
-      let res = await this._issueSvc.postById(credExId, 'store');
+      let res = await this._issueSvc.postById(credExId, "store");
       return res.body;
     } catch (err) {
       throw new Error(err.message);
@@ -214,7 +214,7 @@ export class Issue {
 
   async removeById(credExId: string) {
     try {
-      let res = await this._issueSvc.postById(credExId, 'remove');
+      let res = await this._issueSvc.postById(credExId, "remove");
       return res.body;
     } catch (err) {
       throw new Error(err.message);

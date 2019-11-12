@@ -15,8 +15,8 @@ export interface cred_proposal {
     attributes: any[];
     comment: string;
     cred_def_id: string;
-    '@id': string;
-    '@type': string;
+    "@id": string;
+    "@type": string;
   };
 }
 
@@ -35,18 +35,19 @@ export interface IRecordsResult {
   connection_id: string;
   credential_definition_id: string;
   credential_offer: {};
-  auto_issue: true;
+  auto_issue: boolean;
   credential_request: {};
   credential: any;
   schema_id: string;
   parent_thread_id: string;
   credential_exchange_id: string;
   credential_request_metadata: {};
+  role: string;
 }
 
 export interface ICredentialAttributes {
   name: string;
-  'mime-type'?: string;
+  "mime-type"?: string;
   value: string;
 }
 
@@ -68,7 +69,7 @@ export interface ICredentialPreview {
 }
 
 export interface IIssueOffer {
-  'auto-issue': boolean;
+  auto_issue: boolean;
   connection_id: string;
   comment: string;
   credential_definition_id: string;
@@ -118,7 +119,7 @@ export interface ICredentialSendProposalResponse {
   thread_id: string;
   credential_exchange_id: string;
   connection_id: string;
-  auto_issue: true;
+  auto_issue: boolean;
 }
 
 export interface ICredExRecordResponse {
