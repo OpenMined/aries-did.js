@@ -1,5 +1,5 @@
-import { readdir, readFile } from 'fs';
-import { AgentController } from 'src/app/agent/agent.model';
+import { readdir, readFile } from "fs";
+import { AgentController } from "../../../agent/agent.model";
 
 export const readSchema = (path: string, agentController: AgentController) => {
   readdir(path, (err, items) => {

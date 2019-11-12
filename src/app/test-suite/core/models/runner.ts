@@ -1,5 +1,5 @@
-import { AgentController } from 'src/app/agent/agent.model';
-import { Results, IResult } from './results';
+import { AgentController } from "../../../agent/agent.model";
+import { Results, IResult } from "./results";
 
 export interface IRunner {
   agent: AgentController;

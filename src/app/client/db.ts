@@ -1,6 +1,6 @@
-import * as PouchDB from 'pouchdb';
+import * as PouchDB from "pouchdb";
 
-import * as pouchdbfind from 'pouchdb-find';
+import * as pouchdbfind from "pouchdb-find";
 
 PouchDB.plugin(pouchdbfind);
 
@@ -12,7 +12,7 @@ export interface ICredDefStore {
   schema_id: string;
 }
 
-export type DBPrefixType = 'cdef';
+export type DBPrefixType = "cdef";
 
 export interface IDBGetOptions {
   prefix?: DBPrefixType;
@@ -44,7 +44,7 @@ class DataStore {
   _db: PouchDB.Database;
 
   constructor(options: { url?: string; name?: string }) {
-    let { url = 'http://localhost:5984/', name = 'data' } = options;
+    let { url = "http://node-database:5984/", name = "data" } = options;
     this._db = new PouchDB(url + name);
   }
 
@@ -68,7 +68,7 @@ class DataStore {
       const query = this._db.allDocs({
         include_docs: include_docs,
         startkey: prefix || undefined,
-        endkey: prefix + '\ufff0'
+        endkey: prefix + "\ufff0"
       });
 
       let res = await query;
@@ -91,7 +91,7 @@ class DataStore {
     results.forEach(async itm => {
       let { _id: id } = itm as { _id: string };
 
-      let sliced = id.slice(id.indexOf('_') + 1, id.length + 1);
+      let sliced = id.slice(id.indexOf("_") + 1, id.length + 1);
       try {
         let hasRecord = await func(sliced);
         // console.log('resolved value', hasRecord);

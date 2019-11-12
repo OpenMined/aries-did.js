@@ -1,5 +1,5 @@
-import { CredentialService } from './credential.service';
-import { ICredentialRecord } from 'src/app/core/interfaces/issue-credential.interface';
+import { CredentialService } from "./credential.service";
+import { ICredentialRecord } from "../../../core/interfaces/issue-credential.interface";
 
 export class Credential {
   _credSvc: CredentialService;

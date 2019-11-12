@@ -2,9 +2,8 @@ import * as Koa from "koa";
 import * as Router from "koa-router";
 import * as uuid from "uuid/v1";
 import client from "../client";
-import { AgentController } from "src/app/agent/agent.model";
-import { IConnection } from "src/app/core/interfaces/agent.interface";
-import { IConnectionsResult } from "src/app/core/interfaces/connection.interface";
+import { AgentController } from "../../agent/agent.model";
+import { IConnectionsResult } from "../../core/interfaces/connection.interface";
 
 // TODO: move this to core
 export type ProofStateType =

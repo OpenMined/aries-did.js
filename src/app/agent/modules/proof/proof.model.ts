@@ -9,7 +9,6 @@ import { Schema } from "../schema/schema.model";
 import { CredentialDefinition } from "../credential-definition/credential-definition.model";
 import { ISchema } from "../../../core/interfaces/schema.interface";
 import * as uuid from "uuid/v1";
-import { ICredDefGetResponse } from "src/app/core/interfaces/credential-definition.interface";
 
 /*
   the chain for creating proof requests requires an established relationships

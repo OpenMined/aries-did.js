@@ -12,14 +12,10 @@ let client: AgentController;
 if (cluster.isWorker) {
   let id = cluster.worker.id - 1;
   let agentConfig = new AgentConfig();
-  let mapping = [
-    agentConfig.agentUrl,
-    agentConfig.testAgentUrl,
-    agentConfig.acmeAgentUrl
-  ];
-  console.log("the client mappidingId", agentConfig.testAgentUrl);
+  let mapping = [agentConfig.testAgentUrl, agentConfig.acmeAgentUrl];
+  console.log("the client mappidingId", mapping[id]);
 
-  client = new AgentController(agentConfig.testAgentUrl);
+  client = new AgentController(mapping[id]);
 } else {
   let agentConfig = new AgentConfig();
   client = new AgentController(agentConfig.agentUrl);
