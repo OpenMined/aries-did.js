@@ -1,7 +1,9 @@
 import { ProofService } from "./proof.service";
 import {
   IProofRequest,
-  IProofRecord
+  IProofRecord,
+  IProofRecordsResponse,
+  IProofProposalRequestResponse
 } from "../../../core/interfaces/proof.interface";
 import { Schema } from "../schema/schema.model";
 import { CredentialDefinition } from "../credential-definition/credential-definition.model";
@@ -53,7 +55,7 @@ export class Proof {
     }
   }
 
-  async getRecordById(id: string): Promise<ICredDefGetResponse> {
+  async getRecordById(id: string): Promise<IProofProposalRequestResponse> {
     let res = await this._proofSvc.getProofRecords(id);
     return res.body;
   }
@@ -105,6 +107,7 @@ export class Proof {
 
   async sendProofRequest(proofRequest: IProofRequest<any>, presExId?: string) {
     try {
+      console.log(proofRequest);
       const res = await this._proofSvc.postProof(proofRequest);
       if (res.status === 200) return res.body;
       else
@@ -122,12 +125,18 @@ export class Proof {
 
   async verifyProofRequest(id: string) {
     try {
-      let res = await this._proofSvc.postByPresExId("verify-presentation", id);
+      let res = await this._proofSvc.postByPresExId(
+        ["present-proof", "verify-presentation"],
+        id
+      );
       return res;
     } catch (err) {
       throw new Error(err.message);
     }
   }
+  //  http://localhost:8021/present-proof/records/vasdf/send-presentation
+
+  // "http://localhost:8051/present-proof/records/e5510c05-c54d-44a9-81e4-77f96c04887c/send-presentation"
 
   async removeAllProofRequests() {
     const results = await this._proofSvc.getProofRecords();
@@ -144,8 +153,24 @@ export class Proof {
     let res = await this._proofSvc.remove(id);
     return res.body;
   }
+  //localhost:8021/present-proof/records/id/send-presentation
 
-  sendPresentation(id: string) {
-    return "method not implemented";
+  async sendPresentation(id: string, pres: any) {
+    return await this._proofSvc.postByPresExId(
+      ["present-proof", "send-presentation"],
+      id,
+      pres
+    );
+  }
+
+  async getProofCredentials(id: string) {
+    try {
+      let res = await this._proofSvc.getByPresExId(
+        "present-proof",
+        "credentials",
+        id
+      );
+      return res;
+    } catch {}
   }
 }

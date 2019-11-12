@@ -1,16 +1,18 @@
-import * as request from 'superagent';
+import * as request from "superagent";
 import {
   IProofRecordsResponse,
   IProofRequest
-} from '../../../core/interfaces/proof.interface';
+} from "../../../core/interfaces/proof.interface";
 
 export type ProofPostRouteSegmentType =
-  | 'send-request'
-  | 'send-presentation'
-  | 'verify-presentation'
-  | 'remove';
+  | "send-request"
+  | "send-presentation"
+  | "verify-presentation"
+  | "remove"
+  | "credentials"
+  | "present-proof";
 
-const segment = 'present-proof/';
+const segment = "present-proof/";
 export class ProofService {
   private _url: string;
   constructor(url: string) {
@@ -23,7 +25,7 @@ export class ProofService {
   */
   async getProofRecords(presExId?: string) {
     try {
-      const baseUrl = this._url + segment + 'records';
+      const baseUrl = this._url + segment + "records";
       const res = presExId
         ? await request.get(`${baseUrl}/${presExId}`)
         : await request.get(baseUrl);
@@ -39,10 +41,10 @@ export class ProofService {
 
   async getCredentials(presExId: string): Promise<IProofRecordsResponse> {
     try {
-      const baseUrl = this._url + segment + 'records/';
+      const baseUrl = this._url + segment + "records/";
       const res = await request.get(`${baseUrl}${presExId}/credentials`);
       if (res.status === 200) return res.body;
-      throw new Error('find credentials by Id failed');
+      throw new Error("find credentials by Id failed");
     } catch (err) {
       return err;
     }
@@ -56,7 +58,7 @@ export class ProofService {
   */
   async postProof(
     proof: IProofRequest<any>,
-    endSegment?: 'send-proposal' | 'send-request'
+    endSegment?: "send-proposal" | "send-request"
   ) {
     try {
       const path = `${this._url}${segment}send-request`;
@@ -77,13 +79,31 @@ export class ProofService {
     to respond to a request in reference to a proposal
   */
   async postByPresExId(
+    segments: ProofPostRouteSegmentType[],
+    presExId: string,
+    data = {}
+  ): Promise<IProofRecordsResponse> {
+    try {
+      const res = await request
+        .post(`${this._url}${segments[0]}/records/${presExId}/${segments[1]}`)
+        .send(data);
+      // .send(data);
+      if (res.status === 200) return res.body;
+      throw new Error(`send proposal failed with status ${res.status}`);
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async getByPresExId(
     // data: IProposalSend,
     segment: ProofPostRouteSegmentType,
+    segmentTwo: string,
     presExId: string
   ): Promise<IProofRecordsResponse> {
     try {
-      const res = await request.post(
-        `${this._url}${segment}records/${presExId}/${segment}`
+      const res = await request.get(
+        `${this._url}${segment}/records/${presExId}/${segmentTwo}`
       );
       // .send(data);
       if (res.status === 200) return res.body;

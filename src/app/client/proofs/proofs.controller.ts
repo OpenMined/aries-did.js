@@ -70,20 +70,14 @@ router.get("/", async (ctx: Koa.Context) => {
 });
 
 router.post("/", async (ctx: Koa.Context) => {
-  let proof = ctx.request.body;
+  console.log(ctx.request.body);
   try {
-    const proofRequest = await ctrl.proof.buildProofRequest(
-      proof.schemaDef,
-      proof.connectionId,
-      proof.comment,
-      proof.names
-    );
-    const res = await ctrl.proof.sendProofRequest(proofRequest);
+    const res = await ctrl.proof.sendProofRequest(ctx.request.body);
 
     ctx.status = 201;
 
-    console.log(JSON.stringify(proofRequest, null, 2));
-    return (ctx.body = { _id: res });
+    // console.log(JSON.stringify(proofRequest, null, 2));
+    return (ctx.body = { _id: res.presentation_exchange_id });
   } catch (err) {
     ctx.throw(500, err.message);
   }
@@ -93,6 +87,9 @@ router.get("/:id", async (ctx: Koa.Context) => {
   let id = ctx.params.id;
   try {
     let res = await ctrl.proof.getRecordById(id);
+    // if (res.state ===) {
+
+    // }
 
     // let proof = res.filter(itm => itm.presentation_exchange_id === id);
     if (!res) return ctx.throw(404);
@@ -124,8 +121,9 @@ async function credDefRestricts(id: string) {
 
 function buildEntity() {}
 
-router.get("/presentation/attributes", async ctx => {
+router.post("/presentation/attributes", async ctx => {
   const { credId, schemaId, relId } = ctx.request.body;
+  console.log(credId, schemaId, relId);
 
   const resMap = {
     credId: (id: string) => ctrl.credDef.getCredentialDefinition(id),
@@ -178,17 +176,64 @@ router.get("/presentation/attributes", async ctx => {
 
   return (ctx.response.body = {
     proofProposal,
-    data: [cred, schema, connection]
+    data: { cred, schema, connection }
   });
 });
 
 router.post("/:id", async (ctx: Koa.Context) => {
-  let id = ctx.params.id;
-
+  let { id } = ctx.params;
+  const obj = ctx.request.body;
+  console.log("object", obj);
   try {
-    console.log("the id", id);
     let proof = await ctrl.proof.getRecordById(id);
     if (!proof) return ctx.throw(404);
+
+    if (proof.state === "request_received") {
+      let cred = await ctrl.proof.sendPresentation(id, obj);
+      if (cred) return (ctx.body = cred);
+      else return ctx.throw(404);
+    }
+    if (proof.state === "presentation_received") {
+      let proof = await ctrl.proof.verifyProofRequest(id);
+      if (proof) return (ctx.body = proof);
+      else return ctx.throw(404);
+    }
+
+    return proof;
+  } catch (err) {
+    return ctx.throw(err);
+  }
+});
+
+router.post("/:id/:ref", async (ctx: Koa.Context) => {
+  let { id, revid } = ctx.params;
+  const obj = ctx.body;
+  console.log(obj);
+  try {
+    let proof = await ctrl.proof.getRecordById(id);
+    if (!proof) return ctx.throw(404);
+    let state = proof.state as any;
+    if (state === "request_received") {
+      let cred = await ctrl.proof.getProofCredentials(id);
+      if (cred) return (ctx.body = cred);
+      else ctx.throw(404);
+    }
+
+    return proof;
+  } catch (err) {
+    return ctx.throw(err);
+  }
+});
+
+router.get("/creds/:id", async (ctx: Koa.Context) => {
+  let id = ctx.params.id;
+  try {
+    let proof = await ctrl.proof.getRecordById(id);
+    if (!proof) return ctx.throw(404);
+    let cred = await ctrl.proof.getProofCredentials(id);
+    if (cred) return (ctx.body = cred);
+    else ctx.throw(404);
+
     return proof;
   } catch (err) {
     return ctx.throw(err);

@@ -133,11 +133,12 @@ export class Issue {
     credDefId: string
   ) {
     const credOffer = this.formatSendOffer(connId, comment, attrs, credDefId);
-    console.log("formatted", credOffer);
+    console.log("formatted", JSON.stringify(credOffer, null, 2));
     try {
       if (credOffer != null) {
         const res = await this._issueSvc.sendOffer(credOffer);
-        return res.body;
+        if (res.body) return res.body;
+        throw new Error("no credential created");
       } else {
         throw new Error("cred offer not defined");
       }

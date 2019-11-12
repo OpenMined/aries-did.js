@@ -65,12 +65,19 @@ router.get("/", async (ctx: Koa.Context) => {
     ctx.throw(500, err.message);
   }
 });
+// TODO: I know this is an idiot schema
+router.get("/flat", async (ctx: Koa.Context) => {
+  try {
+    return (ctx.body = await ctrl.issue.records());
+  } catch (err) {
+    return ctx.throw(err.message);
+  }
+});
 
 router.post("/", async (ctx: Koa.Context) => {
   let params = ["connectionId", "credDefId", "comment", "attrs"];
 
   let issue = ctx.request.body;
-  // console.log(issue);
 
   for (let key in issue) {
     if (!params.some(param => param === key)) {
@@ -78,11 +85,12 @@ router.post("/", async (ctx: Koa.Context) => {
     }
   }
 
-  const schema = await db.getRecord({
-    _id: issue.credDefId
-  });
+  const credDef = await ctrl.credDef._credentialSvc.getCredentialDefinition(
+    issue.credDefId.slice(issue.credDefId.indexOf("_") + 1)
+  );
 
-  console.log(schema);
+  console.log(credDef);
+
   // console.log(issue.credDefId.slice(issue.credDefId.indexOf('_') + 1));
   try {
     const newIssue = await client.issue.issueOfferSend(
@@ -91,7 +99,6 @@ router.post("/", async (ctx: Koa.Context) => {
       issue.attrs,
       issue.credDefId.slice(issue.credDefId.indexOf("_") + 1)
     );
-    console;
     return (ctx.body = { _id: newIssue.credential_exchange_id });
   } catch (err) {
     return ctx.throw(500, err.message);

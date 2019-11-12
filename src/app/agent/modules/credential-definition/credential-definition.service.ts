@@ -1,10 +1,10 @@
-import * as request from 'superagent';
+import * as request from "superagent";
 
 export interface ICredDefSendResponse {
   credential_definition_id: string;
 }
-const apiUrl = 'http://localhost:8051/';
-const segment = 'credential-definitions';
+const apiUrl = "http://localhost:8051/";
+const segment = "credential-definitions";
 
 export class CredentialDefinitionService {
   private _apiUrl: string;
@@ -22,7 +22,7 @@ export class CredentialDefinitionService {
     try {
       const res = await request
         .post(`${this._apiUrl}${segment}`)
-        .send({ schema_id: schemaId, tag: 'default' });
+        .send({ schema_id: schemaId, tag: "default" });
       // if (!id) throw new Error('no credential id found');
       return res.body;
     } catch (err) {
@@ -35,6 +35,7 @@ export class CredentialDefinitionService {
   */
   async getCredentialDefinition(id: string) {
     const path = `${this._apiUrl}${segment}/${id}`;
+    console.log(path);
     try {
       const res = await request.get(path);
       return res;
