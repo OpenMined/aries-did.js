@@ -69,7 +69,7 @@ router.get("/", async (ctx: Koa.Context) => {
         records,
         schemaId
       };
-    }));
+    })).filter(issue => issue._id !== undefined);
   } catch (err) {
     return ctx.throw(500);
   }

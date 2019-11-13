@@ -12,11 +12,13 @@ let ports = [3000, 3001, 3002];
 
 const agents = process.env.AGENT_COUNT || 1;
 
-if (cluster.isMaster) {
-  console.log("forked");
-  cluster.fork();
-} else {
-  const id = cluster.worker.id - 1;
-  app.listen(ports[id + 1]);
-  console.log("app started on", ports[id]);
-}
+// if (cluster.isMaster) {
+//   console.log("forked");
+//   cluster.fork();
+// } else {
+//   const id = cluster.worker.id - 1;
+//   app.listen(ports[id + 1]);
+//   console.log("app started on", ports[id]);
+// }
+
+app.listen(3005);

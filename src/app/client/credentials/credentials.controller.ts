@@ -1,20 +1,20 @@
-import * as Koa from 'koa';
-import * as Router from 'koa-router';
+import * as Koa from "koa";
+import * as Router from "koa-router";
 
-import client from '../client';
-import DB from '../db';
-import { IConnectionsResult } from '../../core/interfaces/connection.interface';
+import client from "../client";
+import DB from "../db";
+import { IConnectionsResult } from "../../core/interfaces/connection.interface";
 
 const ctrl = client;
 const db = DB;
 
 const routerOpts: Router.IRouterOptions = {
-  prefix: '/credentials'
+  prefix: "/credentials"
 };
 
 const router = new Router(routerOpts);
 
-router.get('/', async (ctx: Koa.Context) => {
+router.get("/", async (ctx: Koa.Context) => {
   try {
     const creds = await client.cred.records();
 
@@ -49,7 +49,7 @@ router.get('/', async (ctx: Koa.Context) => {
   }
 });
 
-router.get('/:id', async (ctx: Koa.Context) => {
+router.get("/:id", async (ctx: Koa.Context) => {
   const { id } = ctx.params;
   try {
     const creds = await client.cred.records({ _id: id });
