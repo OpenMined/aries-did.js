@@ -31,11 +31,16 @@ Let the UN be Alice, Google be Faber and our user be Acme.
 
 ## Building Relationships Between Cloud Agents
 
-First we need to create some connections to the other nodes in the eco-system. Below is the landing page of the cloud-agent. We'll walk through a connection set up using the cloud agent GUI;
+First we need to create some connections to the other nodes in the eco-system. When two Agents connect, they do so with the PeerDID protocol. Each Agent shares a DID document with the other. For each relationship that an Agent has, it creates and shares a unique DID document. In this sense, the Agent assumes a different identity with different key pairs for each entity it interacts with.
 
+Below is the landing page of the cloud-agent. We'll walk through a connection set up using the cloud agent GUI;
 
 ![Step 0](images/relationship0.png)
 ![Step 1](images/relationship1.png)
 ![Step 2](images/relationship2.png)
 ![Step 3](images/relationship3.png)
 ![Step 4](images/relationship4.png)
+
+Sharing DiD documents with the PeerDID protocol facilitates an encrypted channel. However, at this stage, trust has not been established. Trust is achieved by sharing proofs and proof requests over this channel.
+
+## Defining Credentials
