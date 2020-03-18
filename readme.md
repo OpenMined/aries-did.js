@@ -55,6 +55,19 @@ Sharing DiD documents with the PeerDID protocol facilitates an encrypted channel
 
 Next we will be creating some credentials. Navigate to the address below and select create.
 
+![Step 0](images/create-cred0.png)
+
+We then fill out the details of our given credential and submit it. The credential is written to the blockchain along with the public DID document of the issuer. We are then redirected to the credential issuer page.
+
+![Step 0](images/create-cred1.png)
+
+## Issuing Credentials
+
+
 `localhost:4200/issuer/manage`
 
 ![Step 0](images/create-cred0.png)
+
+Now fill out the details of the desired credential and a.
+
+![Step 1](images/create-cred1.png)
