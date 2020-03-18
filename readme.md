@@ -55,6 +55,6 @@ Sharing DiD documents with the PeerDID protocol facilitates an encrypted channel
 
 Next we will be creating some credentials. Navigate to the address below and select create.
 
-`localhost:4200/issuer`
+`localhost:4200/issuer/manage`
 
 ![Step 0](images/create-cred0.png)
