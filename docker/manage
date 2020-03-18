@@ -18,29 +18,29 @@ SCRIPT_HOME="$(cd "$(dirname "$0")" && pwd)"
 # -----------------------------------------------------------------------------------------------------------------
 usage() {
   cat <<-EOF
-    
+
       Usage: $0 [command] [options]
-    
+
       Commands:
-    
+
       up -  Builds the images, creates the application containers
             and starts the services based on the docker-compose.yml file.
 
-            You can pass in a list of containers to start.  
+            You can pass in a list of containers to start.
             By default all containers will be started.
-            
+
             The API_URL used by tob-web can also be redirected.
 
             Examples:
             $0 start
             $0 start alice-agent
 
-      start - Same as up 
-    
-      restart - Re-starts the application containers, 
+      start - Same as up
+
+      restart - Re-starts the application containers,
                 useful when updating one of the container images during development.
 
-            You can pass in a list of containers to be restarted.  
+            You can pass in a list of containers to be restarted.
             By default all containers will be restarted.
 
             Examples:
@@ -51,13 +51,13 @@ usage() {
 
       stop - Stops the services.  This is a non-destructive process.  The volumes and containers
              are not deleted so they will be reused the next time you run start.
-    
+
       down - Brings down the services and removes the volumes (storage) and containers.
       rm - Same as down
-    
+
       registerDids - Register the DIDs for the issuer services.
                      This is intended for development use.
-    
+
                      Examples:
                      $0 registerDids seed=my_awesome_did_00000000000000000
                      - This will register the DID using the provided seed with the locally running von-network instance.
@@ -146,7 +146,7 @@ configureEnvironment() {
   export FABER_WALLET_SEED="faber_seed_000000000000000000000"
 
   # acme-agent
-  export ACME_AGENT_NAME="Faber"
+  export ACME_AGENT_NAME="Acme"
   export ACME_ADMIN_PORT=8031
   export ACME_HTTP_PORT=8030
   export ACME_WEBHOOK_URL=${ACME_WEBHOOK_URL:-http://$DOCKERHOST:$CONTROLLER_HTTP_PORT_ACME}
