@@ -36,9 +36,17 @@ First we need to create some connections to the other nodes in the eco-system. W
 Below is the landing page of the cloud-agent. We'll walk through a connection set up using the cloud agent GUI;
 
 ![Step 0](images/relationship0.png)
-![Step 1](images/relationship1.png)
+
+First, click create/ accept request on the respective agents. Then copy the connection request url into the recipients window.
+
 ![Step 2](images/relationship2.png)
+
+The recipient will be asked whether they accept this connection. Accept the connection.
+
 ![Step 3](images/relationship3.png)
+
+The connection will now appear on the landing page of the Agent who generated the request. 
+
 ![Step 4](images/relationship4.png)
 
 Sharing DiD documents with the PeerDID protocol facilitates an encrypted channel. However, at this stage, trust has not been established. Trust is achieved by sharing proofs and proof requests over this channel.
