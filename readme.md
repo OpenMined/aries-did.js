@@ -31,4 +31,11 @@ Let the UN be Alice, Google be Faber and our user be Acme.
 
 ## Building Relationships Between Cloud Agents
 
-First we need to create some connections to the other nodes in the eco-system.
+First we need to create some connections to the other nodes in the eco-system. Below is the landing page of the cloud-agent. We'll walk through a connection set up using the cloud agent GUI;
+
+
+![Step 0](images/relationship0.png)
+![Step 1](images/relationship1.png)
+![Step 2](images/relationship2.png)
+![Step 3](images/relationship3.png)
+![Step 4](images/relationship4.png)
