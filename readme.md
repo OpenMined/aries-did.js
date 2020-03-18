@@ -60,14 +60,5 @@ Next we will be creating some credentials. Navigate to the address below and sel
 We then fill out the details of our given credential and submit it. The credential is written to the blockchain along with the public DID document of the issuer. We are then redirected to the credential issuer page.
 
 ![Step 0](images/create-cred1.png)
-
+s
 ## Issuing Credentials
-
-
-`localhost:4200/issuer/manage`
-
-![Step 0](images/create-cred0.png)
-
-Now fill out the details of the desired credential and a.
-
-![Step 1](images/create-cred1.png)
