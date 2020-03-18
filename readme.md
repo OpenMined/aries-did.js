@@ -40,7 +40,7 @@ Below is the landing page of the cloud-agent. We'll walk through a connection se
 
 ![Step 0](images/relationship0.png)
 
-First, click create/ accept request on the respective agents. Then copy the connection request url into the recipients window.
+First, click create/ accept request on the respective agents. Then copy the connection request url into the recipients window. This would usually be done through a QR code.
 
 ![Step 2](images/relationship2.png)
 
