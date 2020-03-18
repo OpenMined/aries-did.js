@@ -19,6 +19,9 @@ Once the nodes have set up properly, they will be accessible on the following ur
 - For Faber, navigate to: http://localhost:4201
 - For Acme, navigate to: http://localhost:4202
 
+If you'd like to learn how to interact with Agents via command line, [this blog] (https://www.google.com)
+ is really useful.
+
 ## Building a Credential Eco-System for Anonymous Verification of Google Account
 
 We'd like users to be able to prove they are eligible for COVID screening without the service provider knowing the identity of the user. We can do this using DID documents, Verifiable Credentials (VCs) and some distributed identity concepts. We have a simple ecosystem to facilitate this which is outlined below;
