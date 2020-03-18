@@ -52,3 +52,9 @@ The connection will now appear on the landing page of the Agent who generated th
 Sharing DiD documents with the PeerDID protocol facilitates an encrypted channel. However, at this stage, trust has not been established. Trust is achieved by sharing proofs and proof requests over this channel. In the next step we will define a credential which we can issue and verify.
 
 ## Defining Credentials
+
+Next we will be creating some credentials. Navigate to the address below and select create.
+
+`localhost:4200/issuer`
+
+![Step 0](images/create-cred0.png)
