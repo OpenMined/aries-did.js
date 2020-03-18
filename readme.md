@@ -45,10 +45,10 @@ The recipient will be asked whether they accept this connection. Accept the conn
 
 ![Step 3](images/relationship3.png)
 
-The connection will now appear on the landing page of the Agent who generated the request. 
+The connection will now appear on the landing page of the Agent who generated the request.
 
 ![Step 4](images/relationship4.png)
 
-Sharing DiD documents with the PeerDID protocol facilitates an encrypted channel. However, at this stage, trust has not been established. Trust is achieved by sharing proofs and proof requests over this channel.
+Sharing DiD documents with the PeerDID protocol facilitates an encrypted channel. However, at this stage, trust has not been established. Trust is achieved by sharing proofs and proof requests over this channel. In the next step we will define a credential which we can issue and verify.
 
 ## Defining Credentials
