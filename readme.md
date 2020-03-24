@@ -7,7 +7,18 @@ Clone the repository locally.
 Run in docker:
 
 `$ cd ./docker`
+
+
 `$ sh manage up`
+or
+`$ ./manage up`
+
+
+## Troubleshooting
+
+* You might need to make the manage file executable
+* 
+
 
 If you're worried the set up script has failed because you can't connect, make sure to give this plenty of time. In my case it took ~8 minutes to set up.
 
