@@ -62,7 +62,7 @@
     "pouchdb-server": "^4.2.0",
     "rxjs": "^6.5.3",
     "superagent": "^5.1.0",
-    "uuid": "^3.3.3"
+    "uuid": "^3.4.0"
   },
   "_moduleAliases": {
     "@agent": "dist/app/agent",
